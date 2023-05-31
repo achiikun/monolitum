@@ -9,7 +9,7 @@ No documentation is written by now. The framework is in development.
 
 ## Modules
 
-The main module of the framework is called ´monolitum´. The code is inside submodules (nested packages).
+The main module of the framework is called <code>monolitum</code>. The code is inside submodules (nested packages).
 
 The file [notes.md](notes.md) contains the dependencies between themselves.
 
