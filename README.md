@@ -7,6 +7,8 @@ Minimum PHP version: **5.6**
 
 No documentation is written by now. The framework is in development.
 
+Demo projects will be available soon. PHP language has never been so pretty.
+
 ## Modules
 
 The main module of the framework is called <code>monolitum</code>. The code is inside submodules (nested packages).
