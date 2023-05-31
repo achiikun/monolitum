@@ -29,7 +29,7 @@ https://github.com/twbs/bootstrap
 
 Code of Font Awesome is used. Licence is in this repo:
 
-[https://github.com/twbs/bootstrap](https://github.com/FortAwesome/Font-Awesome)
+https://github.com/FortAwesome/Font-Awesome
 
 ### WangEditor
 
@@ -41,4 +41,4 @@ https://github.com/wangeditor-team/wangEditor/tree/master
 
 Some code is based on Naucon's HtmlBuilder library. License is in this repo:
 
-[https://github.com/wangeditor-team/wangEditor/tree/master](https://github.com/naucon/HtmlBuilder)
+https://github.com/naucon/HtmlBuilder
