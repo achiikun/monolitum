@@ -1,6 +1,8 @@
 <?php
 namespace monolitum\frontend;
 
+use monolitum\core\Renderable;
+use monolitum\core\Renderable_Node;
 use monolitum\frontend\css\Style;
 use monolitum\frontend\html\HtmlElement;
 
@@ -113,7 +115,17 @@ class ElementComponent extends Component
     {
 
         $rc = parent::render();
-        $rc->renderTo($this->element);
+        if($rc !== null){
+            if(is_array($rc)){
+                /** @var Renderable $renderable */
+                foreach ($rc as $renderable) {
+                    if($renderable !== null)
+                        $renderable->renderTo($this->element);
+                }
+            }else{
+                $rc->renderTo($this->element);
+            }
+        }
 
         return Rendered::of($this->element);
     }

@@ -62,7 +62,7 @@ class HtmlBuilder
                 if (in_array($key, $this->_nonFilteredAttributes) || $htmlElement->isAttributeNotFiltered($key)) {
                     $attributes[] = $key . '="' . $value . '"';
                 } else {
-                    $value = filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_AMP);
+                    $value = filter_var($value, FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_ENCODE_AMP);
                     $attributes[] = $key . '="' . $value . '"';
                 }
             }
@@ -106,7 +106,7 @@ class HtmlBuilder
                     if($childElement->isRaw()){
                         $output.= $childElement->getContent();
                     }else{
-                        $output.= filter_var($childElement->getContent(), FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_AMP);
+                        $output.= filter_var($childElement->getContent(), FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_ENCODE_AMP);
                     }
                 } else {
                     $output.= $this->render($childElement);

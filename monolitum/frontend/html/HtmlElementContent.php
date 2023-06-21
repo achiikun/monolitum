@@ -9,13 +9,15 @@
  */
 namespace monolitum\frontend\html;
 
+use monolitum\core\Renderable;
+
 /**
  * Html Element Content Class
  *
  * @package    HtmlBuilder
  * @author     Sven Sanzenbacher
  */
-class HtmlElementContent
+class HtmlElementContent implements Renderable
 {
     /**
      * @access      protected
@@ -75,5 +77,11 @@ class HtmlElementContent
     {
         $this->raw = $raw;
         return $this;
+    }
+
+    function renderTo($element)
+    {
+        if($element instanceof HtmlElement)
+            $element->addChildElement($this);
     }
 }

@@ -9,6 +9,7 @@
  */
 namespace monolitum\frontend\html;
 
+use monolitum\core\Renderable;
 use monolitum\frontend\css\Style;
 
 /**
@@ -17,7 +18,7 @@ use monolitum\frontend\css\Style;
  * @package    HtmlBuilder
  * @author     Sven Sanzenbacher
  */
-class HtmlElement
+class HtmlElement implements Renderable
 {
 
     /**
@@ -290,10 +291,10 @@ class HtmlElement
     /**
      * add html element as child element
      *
-     * @param       HtmlElement        $element
+     * @param       HtmlElement|HtmlElementContent        $element
      * @return      HtmlElement
      */
-    public function addChildElement(HtmlElement $element)
+    public function addChildElement($element)
     {
         $this->childElementCollection[] = $element;
         return $this;
@@ -362,4 +363,9 @@ class HtmlElement
         return $htmlBuilder->render($this);
     }
 
+    function renderTo($element)
+    {
+        if($element instanceof HtmlElement)
+            $element->addChildElement($this);
+    }
 }

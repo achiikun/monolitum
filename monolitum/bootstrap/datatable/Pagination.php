@@ -35,12 +35,12 @@ class Pagination extends BSElementComponent
     /**
      * @var string|null
      */
-    private $firstText;
+    private $firstText = null;
 
     /**
      * @var string|null
      */
-    private $lastText;
+    private $lastText = null;
 
     private $maxDisplayedPages = 5;
 
@@ -113,22 +113,22 @@ class Pagination extends BSElementComponent
     }
 
     /**
-     * @param string|null $nextText
+     * @param string|null $firstText
      * @return $this
      */
-    public function firstText($nextText)
+    public function firstText($firstText)
     {
-        $this->firstText = $nextText;
+        $this->firstText = $firstText;
         return $this;
     }
 
     /**
-     * @param string|null $nextText
+     * @param string|null $lastText
      * @return $this
      */
-    public function lastText($nextText)
+    public function lastText($lastText)
     {
-        $this->lastText = $nextText;
+        $this->lastText = $lastText;
         return $this;
     }
 

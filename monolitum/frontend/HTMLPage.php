@@ -101,7 +101,11 @@ class HTMLPage extends Component {
         
         $body = new HtmlElement('body');
         parent::executeComponent();
-        parent::render()->renderTo($body);
+
+        $rendered = parent::render();
+        if($rendered !== null)
+            $rendered->renderTo($body);
+
         foreach($this->body_components as $body_component){
             $this->executeChild($body_component);
             $rendered = $body_component->render();
