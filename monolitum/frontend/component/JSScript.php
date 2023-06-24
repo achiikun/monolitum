@@ -3,6 +3,7 @@
 namespace monolitum\frontend\component;
 
 use monolitum\core\GlobalContext;
+use monolitum\core\Renderable_Node;
 use monolitum\frontend\Rendered;
 use monolitum\backend\params\Path;
 use monolitum\backend\res\Active_Resolve_Res;
@@ -10,7 +11,7 @@ use monolitum\backend\res\ResResolver;
 use monolitum\frontend\html\HtmlElement;
 use monolitum\frontend\html\HtmlElementContent;
 
-class JSScript extends Head{
+class JSScript extends Renderable_Node implements Head{
 
     /**
      * @var Path

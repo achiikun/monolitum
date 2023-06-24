@@ -3,12 +3,13 @@
 namespace monolitum\fontawesome;
 
 use monolitum\core\GlobalContext;
+use monolitum\core\Node;
 use monolitum\frontend\component\CSSLink;
 use monolitum\frontend\component\Head;
 use monolitum\frontend\Rendered;
 use monolitum\backend\params\Path;
 
-class FA_Head extends Head
+class FA_Head extends Node implements Head
 {
 
     public function __construct($builder = null)
@@ -23,11 +24,6 @@ class FA_Head extends Head
         parent::buildNode();
     }
 
-    public function render()
-    {
-        return Rendered::ofEmpty();
-    }
-
     /**
      * @return FA_Head
      */
@@ -38,4 +34,8 @@ class FA_Head extends Head
     }
 
 
+    function onNotReceived()
+    {
+        // TODO: Implement onNotReceived() method.
+    }
 }

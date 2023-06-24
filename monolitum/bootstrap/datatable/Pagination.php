@@ -294,6 +294,7 @@ class Pagination extends BSElementComponent
         $li->addClass("page-item");
 
         $a = new A();
+        $a->bsStyle()->textNoWrap();
         $a->addClass("page-link");
         if($isActive)
             $a->addClass("active");

@@ -77,6 +77,12 @@ class Query_Result extends \NoRewindIterator
         $this->stmt = $stmt;
     }
 
+    #[\ReturnTypeWillChange]
+    public function valid()
+    {
+        return $this->hasNext();//!is_null($this->nextRow);
+    }
+
     public function hasNext()
     {
         if($this->finished)
@@ -84,12 +90,13 @@ class Query_Result extends \NoRewindIterator
         if($this->nextRow != null)
             return true;
         $this->nextRow = $this->next();
-        return $this->nextRow != null;
+        return $this->nextRow !== null;
     }
 
     /**
      * @return Entity|null
      */
+    #[\ReturnTypeWillChange]
     public function next()
     {
         if($this->finished)
@@ -169,19 +176,16 @@ class Query_Result extends \NoRewindIterator
         $this->stmt->closeCursor();
     }
 
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return $this->nextRow;
     }
 
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return $this->iteratorKey;
-    }
-
-    public function valid()
-    {
-        return !is_null($this->nextRow);
     }
 
 }

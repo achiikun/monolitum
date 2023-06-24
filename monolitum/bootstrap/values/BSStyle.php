@@ -220,6 +220,16 @@ class BSStyle
         return $this;
     }
 
+    /**
+     * @param $float BSFloat|BSFloatResponsive
+     * @return $this
+     */
+    public function float($float)
+    {
+        $float->buildInto($this->element);
+        return $this;
+    }
+
     public function float_start()
     {
         $this->element->addClass("float-start");

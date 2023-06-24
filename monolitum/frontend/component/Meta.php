@@ -3,10 +3,11 @@
 namespace monolitum\frontend\component;
 
 use monolitum\core\GlobalContext;
+use monolitum\core\Renderable_Node;
 use monolitum\frontend\Rendered;
 use monolitum\frontend\html\HtmlElement;
 
-class Meta extends Head{
+class Meta extends Renderable_Node implements Head{
 
     /**
      * @var string

@@ -1,11 +1,16 @@
 # MODULES
 
+## : monolitum\legacy_moment
+Copypaste of Moment.php library
+
+### Dependencies
+_No dependencies_
 
 ## : monolitum\core
 Engine of the framework
 
 ### Dependencies
-_No dependencies_
+- monolitum\legacy_moment
 
 
 ## : monolitum\entity

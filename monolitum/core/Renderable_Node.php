@@ -112,11 +112,15 @@ abstract class Renderable_Node extends Node implements Active {
             foreach ($this->childs as $child) {
                 if($child instanceof Renderable_Node)
                     $rendered[] = $child->render();
+                else if($child instanceof Renderable)
+                    $rendered[] = $child;
             }
             return $rendered;
         }else{
             if($this->childs instanceof Renderable_Node)
                 return $this->childs->render();
+            else if($this->childs instanceof Renderable)
+                return $this->childs;
         }
         return null;
     }

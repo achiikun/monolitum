@@ -7,16 +7,7 @@ use monolitum\core\Active;
 use monolitum\core\Renderable_Node;
 use monolitum\core\panic\DevPanic;
 
-abstract class Head extends Renderable_Node implements Active {
+interface Head extends Active {
 
-    public function __construct($builder = null)
-    {
-        parent::__construct($builder);
-    }
-
-    public function onNotReceived()
-    {
-        throw new DevPanic();
-    }
 
 }

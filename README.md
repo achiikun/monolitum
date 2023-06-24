@@ -19,6 +19,12 @@ The file [notes.md](notes.md) contains the dependencies between themselves.
 
 There is some copy-pasted code in order this framework to be self-contained.
 
+### Moment.philosophy
+
+Code of Moment.php is is copied into this repository. License is in this repo:
+
+https://github.com/fightbulc/moment.php
+
 ### Bootstrap
 
 Code of Twitter Bootstrap is used. Licence is in this repo:

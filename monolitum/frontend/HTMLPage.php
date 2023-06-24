@@ -2,6 +2,8 @@
 
 namespace monolitum\frontend;
 
+use monolitum\core\Node;
+use monolitum\core\Renderable;
 use monolitum\core\Renderable_Node;
 use monolitum\frontend\component\Body;
 use monolitum\frontend\component\Head;
@@ -92,10 +94,17 @@ class HTMLPage extends Component {
         
         $head = new HtmlElement('head');
         foreach($this->head_components as $head_component){
-            $this->executeChild($head_component);
-            $rendered = $head_component->render();
+            if($head_component instanceof Node)
+                $this->executeChild($head_component);
+
+            $rendered = null;
+            if($head_component instanceof Renderable_Node)
+                $rendered = $head_component->render();
+            else if($head_component instanceof Renderable)
+                $rendered = $head_component;
             if($rendered !== null)
                 $rendered->renderTo($head);
+
         }
         $html->addChildElement($head);
         

@@ -153,7 +153,7 @@ class HtmlElement implements Renderable
      */
     public function getAttribute($key)
     {
-        if (array_key_exists($key, $this->attributeMap)){
+        if ($this->attributeMap != null && array_key_exists($key, $this->attributeMap)){
             return $this->attributeMap[$key];
         }
         return null;
@@ -165,7 +165,7 @@ class HtmlElement implements Renderable
      */
     public function hasAttribute($key)
     {
-        return array_key_exists($key, $this->attributeMap);
+        return $this->attributeMap != null && array_key_exists($key, $this->attributeMap);
     }
 
     /**

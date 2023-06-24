@@ -2,6 +2,7 @@
 
 namespace monolitum\bootstrap;
 
+use monolitum\bootstrap\values\BSColSpan;
 use monolitum\bootstrap\values\BSColSpanResponsive;
 use monolitum\core\GlobalContext;
 use monolitum\frontend\ElementComponent_Ext;
@@ -20,7 +21,7 @@ class Ext_Col extends ElementComponent_Ext
     }
 
     /**
-     * @param int|BSColSpanResponsive $size
+     * @param int|BSColSpan|BSColSpanResponsive $size
      * @return $this
      */
     public function span($size) {
@@ -35,6 +36,8 @@ class Ext_Col extends ElementComponent_Ext
         $elementComponent = $this->getElementComponent();
         if($this->span != null){
             if($this->span instanceof BSColSpanResponsive){
+                $this->span->buildInto($elementComponent);
+            }else if($this->span instanceof BSColSpan){
                 $this->span->buildInto($elementComponent);
             }else{
                 $elementComponent->addClass("col-" . $this->span);
