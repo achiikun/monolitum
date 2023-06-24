@@ -19,7 +19,7 @@ The file [notes.md](notes.md) contains the dependencies between themselves.
 
 There is some copy-pasted code in order this framework to be self-contained.
 
-### Moment.philosophy
+### Moment.php
 
 Code of Moment.php is is copied into this repository. License is in this repo:
 
