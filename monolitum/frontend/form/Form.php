@@ -57,11 +57,22 @@ class Form extends ElementComponent
     private $onValidated = null;
 
     /**
-     * @var callable
+     * Prevents the form to be validated. If this flag is enabled, the form is not validated. (The coming fields are kept, dough)
+     * @var bool
      */
     private $notValidate = null;
 
+    /**
+     * Every form field is disabled if this flag is enabled
+     * @var bool
+     */
     private $disabled = false;
+
+    /**
+     * If this flag is enabled, form fields are not reporting error or validation.
+     * @var bool
+     */
+    private $silentValidation;
 
     /**
      * The POST had a correct formid value.
@@ -203,6 +214,19 @@ class Form extends ElementComponent
         $this->onValidated = $onValidated;
     }
 
+    public function validateSilenty($silentValidation=true)
+    {
+        $this->silentValidation = $silentValidation;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSilentValidation()
+    {
+        return $this->silentValidation;
+    }
+
     public function notValidate($notValidate=true)
     {
         $this->notValidate = $notValidate;
@@ -273,7 +297,7 @@ class Form extends ElementComponent
      */
     public function isValid($attr)
     {
-        if($this->build_isValidating){
+        if($this->build_isValidating && !$this->silentValidation){
             if($this->entityModel->hasAttr($attr)){
                 $validatedValue = $this->createValidatedValue($attr);
                 return $validatedValue->isValid();

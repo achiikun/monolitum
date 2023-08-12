@@ -2,7 +2,6 @@
 
 namespace monolitum\auth;
 
-use APB_BackOffice\entities\User;
 use monolitum\core\Active;
 use monolitum\core\Find;
 use monolitum\core\GlobalContext;
@@ -86,7 +85,7 @@ class Auth_Manager extends Renderable_Node implements Active
     }
 
     /**
-     * @param User $user
+     * @param Entity $user
      * @param string $plainPassword
      * @return $this
      */
@@ -120,7 +119,7 @@ class Auth_Manager extends Renderable_Node implements Active
             ->store()
             ->execute();
 
-        /** @var User|null $user */
+        /** @var Entity|null $user */
         $this->user = $userIterable->first();
 
         if($this->user == null){
@@ -138,7 +137,7 @@ class Auth_Manager extends Renderable_Node implements Active
             if(! session_id())
                 session_start();
 
-            $_SESSION['username'] = $this->user->getString(User::username);
+            $_SESSION['username'] = $this->user->getString($this->usernameAttr);
 
             return true;
         }
@@ -162,7 +161,7 @@ class Auth_Manager extends Renderable_Node implements Active
                 ->store()
                 ->execute();
 
-            /** @var User|null $user */
+            /** @var Entity|null $user */
             $this->user = $userIterable->first();
 
             if($this->user == null)
@@ -188,7 +187,7 @@ class Auth_Manager extends Renderable_Node implements Active
                 ->store()
                 ->execute();
 
-            /** @var User|null $user */
+            /** @var Entity|null $user */
             $this->user = $userIterable->first();
 
         }
