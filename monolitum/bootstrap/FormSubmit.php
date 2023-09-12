@@ -2,9 +2,10 @@
 namespace monolitum\bootstrap;
 
 use monolitum\core\GlobalContext;
+use monolitum\frontend\ElementComponent;
 use monolitum\frontend\html\HtmlElement;
 
-class FormSubmit extends BSElementComponent
+class FormSubmit extends ElementComponent
 {
     
     public function __construct(callable $builder)

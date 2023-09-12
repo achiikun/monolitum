@@ -6,9 +6,10 @@ use monolitum\core\GlobalContext;
 use monolitum\backend\res\Active_Resolve_Res;
 use monolitum\backend\params\Path;
 use monolitum\backend\res\ResResolver;
+use monolitum\frontend\ElementComponent;
 use monolitum\frontend\html\HtmlElement;
 
-class Img extends BSElementComponent
+class Img extends ElementComponent
 {
 
     /**

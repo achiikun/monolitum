@@ -75,7 +75,7 @@ class Link
     }
 
     /**
-     * @param array<string> $addParams
+     * @param array<string> $removeParams
      * @return $this
      */
     public function removeParams(...$removeParams){

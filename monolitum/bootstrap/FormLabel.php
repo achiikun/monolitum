@@ -2,9 +2,10 @@
 namespace monolitum\bootstrap;
 
 use monolitum\core\GlobalContext;
+use monolitum\frontend\ElementComponent;
 use monolitum\frontend\html\HtmlElement;
 
-class FormLabel extends BSElementComponent
+class FormLabel extends ElementComponent
 {
 
     /**

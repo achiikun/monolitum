@@ -13,7 +13,7 @@ class Query_Like
     /**
      * @var array<string>
      */
-    private $params = [];
+    private $params;
 
     /**
      * @param string $string

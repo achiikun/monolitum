@@ -1,11 +1,12 @@
 <?php
 
-namespace monolitum\bootstrap;
+namespace monolitum\frontend\component;
 
 use monolitum\core\GlobalContext;
+use monolitum\frontend\ElementComponent;
 use monolitum\frontend\html\HtmlElement;
 
-class Ul extends BSElementComponent
+class Ul extends ElementComponent
 {
 
     public function __construct($builder = null)

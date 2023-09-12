@@ -1,8 +1,12 @@
 <?php
 
-namespace monolitum\bootstrap\values;
+namespace monolitum\bootstrap\style;
 
-class BSColSpan extends ResponsiveProperty
+use monolitum\bootstrap\values\ResponsiveProperty;
+use monolitum\core\GlobalContext;
+use monolitum\frontend\ElementComponent_Ext;
+
+class BSColSpan implements ResponsiveProperty
 {
 
     /**
@@ -66,6 +70,15 @@ class BSColSpan extends ResponsiveProperty
         return new BSColSpan(1);
     }
 
+    public function add(){
+        GlobalContext::add(
+            new ElementComponent_Ext(
+                function (ElementComponent_Ext $it) {
+                    $this->buildInto($it->getElementComponent());
+                })
+        );
+    }
+
     /**
      * @return int
      */
@@ -77,5 +90,10 @@ class BSColSpan extends ResponsiveProperty
     public function buildInto($component, $inverted = false)
     {
         $component->addClass("col-" . $this->getValue($inverted));
+    }
+
+    public function buildIntoResponsive($component, $responsiveValue, $inverted = false)
+    {
+        $component->addClass("col-" . $responsiveValue . "-" . $this->getValue($inverted));
     }
 }

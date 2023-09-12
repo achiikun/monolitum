@@ -5,9 +5,10 @@ namespace monolitum\core;
 interface Passive{
 
     /**
-     * @param Active $active
+     * @param $active Active
+     * @param $currentDepth int
      * @return Active
      */
-    function _receive($active);
+    function _receive($active, $currentDepth);
 
 }

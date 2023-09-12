@@ -2,10 +2,6 @@
 
 namespace monolitum\bootstrap;
 
-use monolitum\backend\params\Link;
-use monolitum\backend\params\Path;
-use monolitum\backend\res\HrefResolver;
-
 class Nav_Item_Dropdown extends Nav_Item
 {
 

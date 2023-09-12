@@ -3,9 +3,10 @@
 namespace monolitum\bootstrap;
 
 use monolitum\core\GlobalContext;
+use monolitum\frontend\ElementComponent;
 use monolitum\frontend\html\HtmlElement;
 
-class Nav extends BSElementComponent
+class Nav extends ElementComponent
 {
 
     /**
@@ -95,11 +96,11 @@ class Nav extends BSElementComponent
         foreach ($this->items as $leftItem) {
 
             //<li class="nav-item">
-            $li = new Li();
+            $li = new HtmlElement('li');
             $li->addClass("nav-item");
 
             //<a class="nav-link active" aria-current="page" href="#">Home</a>
-            $a = new A();
+            $a = new HtmlElement('a');
             $a->addClass("nav-link");
             if($leftItem->isActive()){
                 $a->addClass("active");
@@ -107,13 +108,13 @@ class Nav extends BSElementComponent
             if($leftItem->isDisabled()){
                 $a->addClass("disabled");
             }else{
-                $a->setHref($leftItem->getLink());
+                $a->setAttribute("href", $leftItem->getLink(), false);
             }
             $a->setContent($leftItem->getText());
 
-            $li->append($a);
+            $li->addContent($a);
 
-            $this->append($li);
+            $this->push($li);
         }
 
         parent::executeComponent();

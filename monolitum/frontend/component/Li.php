@@ -1,47 +1,47 @@
 <?php
 
-namespace monolitum\bootstrap;
+namespace monolitum\frontend\component;
 
 use monolitum\core\GlobalContext;
 use monolitum\core\Renderable_Node;
 use monolitum\frontend\html\HtmlElement;
 
-class Span extends AbstractText
+class Li extends AbstractText
 {
 
     public function __construct($builder = null)
     {
-        parent::__construct(new HtmlElement("span"), $builder);
+        parent::__construct(new HtmlElement("li"), $builder);
     }
 
     /**
      * @param string|Renderable_Node $content
-     * @return Span
+     * @return Li
      */
     public static function of($content)
     {
-        $fc = new Span();
-        $fc->append($content);
+        $fc = new Li();
+        $fc->push($content);
         return $fc;
     }
 
     /**
      * @param callable $builder
-     * @return Span
+     * @return Li
      */
     public static function build($builder = null)
     {
-        $fc = new Span($builder);
+        $fc = new Li($builder);
         return $fc;
     }
 
     /**
      * @param callable $builder
-     * @return Span
+     * @return Li
      */
     public static function add($builder = null)
     {
-        $fc = new Span($builder);
+        $fc = new Li($builder);
         GlobalContext::add($fc);
         return $fc;
     }

@@ -6,7 +6,6 @@ use monolitum\core\GlobalContext;
 use monolitum\core\Node;
 use monolitum\frontend\component\CSSLink;
 use monolitum\frontend\component\Head;
-use monolitum\frontend\Rendered;
 use monolitum\backend\params\Path;
 
 class FA_Head extends Node implements Head

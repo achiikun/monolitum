@@ -9,6 +9,7 @@ use monolitum\backend\params\Path;
 use monolitum\core\Renderable_Node;
 use monolitum\backend\res\Active_Resolve_Href;
 use monolitum\backend\res\HrefResolver;
+use monolitum\frontend\component\AbstractText;
 use monolitum\frontend\html\HtmlElement;
 
 class Button extends AbstractText
@@ -101,7 +102,7 @@ class Button extends AbstractText
     public static function of($content)
     {
         $fc = new Button();
-        $fc->append($content);
+        $fc->push($content);
         return $fc;
     }
 

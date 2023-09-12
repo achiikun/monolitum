@@ -4,20 +4,21 @@ namespace monolitum\frontend\form;
 
 use monolitum\core\Find;
 use monolitum\entity\attr\Attr;
-use monolitum\frontend\Component;
+use monolitum\frontend\ElementComponent;
+use monolitum\frontend\html\HtmlElement;
 
-abstract class Form_Attr extends Component
+abstract class Form_Attr extends ElementComponent
 {
 
     /**
      * @var Form
      */
-    private $form;
+    protected $form;
 
     /**
      * @var Attr|string
      */
-    private $attr;
+    protected $attr;
 
     /**
      * @var AttrExt_Form
@@ -30,12 +31,23 @@ abstract class Form_Attr extends Component
     protected $label;
 
     /**
+     * @var bool
+     */
+    private $userSetInvalid = false;
+
+    /**
+     * @var string|ElementComponent
+     */
+    protected $invalidText;
+
+    /**
+     * @param HtmlElement $element
      * @param Attr|string $attrid
      * @param callable|null $builder
      */
-    public function __construct($attrid, $builder = null)
+    public function __construct($element, $attrid, $builder = null)
     {
-        parent::__construct($builder);
+        parent::__construct($element, $builder);
         $this->attr = $attrid;
     }
 
@@ -44,11 +56,22 @@ abstract class Form_Attr extends Component
         $this->form = Find::sync(Form::class);
         if(!($this->attr instanceof Attr))
             $this->attr = $this->form->getAttr($this->attr);
-        $this->form->_registerFormAttr($this->attr->getId());
+        $this->form->_registerFormAttr($this, $this->attr);
 
         $this->formExt = $this->attr->findExtension(AttrExt_Form::class);
 
         parent::buildNode();
+    }
+
+    /**
+     * @param string|ElementComponent $string
+     * @return $this
+     */
+    public function setInvalid($string=null)
+    {
+        $this->userSetInvalid = true;
+        $this->invalidText = $string;
+        return $this;
     }
 
     /**
@@ -85,7 +108,10 @@ abstract class Form_Attr extends Component
      */
     protected function isValid()
     {
-        return $this->form->isValid($this->attr);
+        $isValid = $this->form->isValid($this->attr);
+        if($isValid === null)
+            return null;
+        return $isValid && !$this->userSetInvalid;
     }
 
     /**

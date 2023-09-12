@@ -2,20 +2,18 @@
 
 namespace monolitum\bootstrap;
 
-use monolitum\backend\params\Link;
-use monolitum\backend\params\Path;
-use monolitum\backend\res\HrefResolver;
+use monolitum\frontend\ElementComponent;
 
 class Accordion_Item
 {
 
     /**
-     * @var string|BSElementComponent
+     * @var string|ElementComponent
      */
     private $header;
 
     /**
-     * @var string|BSElementComponent
+     * @var string|ElementComponent
      */
     private $body;
 
@@ -25,7 +23,7 @@ class Accordion_Item
     private $collapsed = true;
 
     /**
-     * @param BSElementComponent|string $header
+     * @param ElementComponent|string $header
      */
     public function header($header)
     {
@@ -34,7 +32,7 @@ class Accordion_Item
     }
 
     /**
-     * @param BSElementComponent|string $body
+     * @param ElementComponent|string $body
      */
     public function body($body)
     {
@@ -52,7 +50,7 @@ class Accordion_Item
     }
 
     /**
-     * @return BSElementComponent|string
+     * @return ElementComponent|string
      */
     public function getBody()
     {
@@ -60,7 +58,7 @@ class Accordion_Item
     }
 
     /**
-     * @return BSElementComponent|string
+     * @return ElementComponent|string
      */
     public function getHeader()
     {
@@ -76,8 +74,8 @@ class Accordion_Item
     }
 
     /**
-     * @param string|BSElementComponent $header
-     * @param string|BSElementComponent $body
+     * @param string|ElementComponent $header
+     * @param string|ElementComponent $body
      * @param bool $collapsed
      * @return Accordion_Item
      */

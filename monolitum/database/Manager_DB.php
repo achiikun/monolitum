@@ -34,7 +34,10 @@ class Manager_DB extends Manager implements Active, Interface_Entity_DB
      */
     private $prefix = "";
 
-    private Entities_Manager $entitiesManager;
+    /**
+     * @var Entities_Manager
+     */
+    private $entitiesManager;
 
     public function __construct($builder = null)
     {
@@ -294,7 +297,7 @@ class Manager_DB extends Manager implements Active, Interface_Entity_DB
 
     /**
      * @param Insert|Update|Delete $query
-     * @return array<int>
+     * @return array<int|bool>
      */
     public function executeUpdate($query)
     {

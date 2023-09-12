@@ -1,25 +1,26 @@
 <?php
 
-namespace monolitum\bootstrap;
+namespace monolitum\frontend\component;
 
 use monolitum\core\GlobalContext;
+use monolitum\frontend\ElementComponent;
 use monolitum\frontend\html\HtmlElement;
 
-class Div extends BSElementComponent
+class Hr extends ElementComponent
 {
 
     public function __construct($builder = null)
     {
-        parent::__construct(new HtmlElement("div"), $builder);
+        parent::__construct(new HtmlElement("hr"), $builder);
     }
 
     /**
      * @param callable $builder
-     * @return Div
+     * @return Hr
      */
     public static function add($builder = null)
     {
-        $fc = new Div($builder);
+        $fc = new Hr($builder);
         GlobalContext::add($fc);
         return $fc;
     }

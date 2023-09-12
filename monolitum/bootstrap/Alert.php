@@ -4,9 +4,10 @@ namespace monolitum\bootstrap;
 
 use monolitum\bootstrap\values\BSColor;
 use monolitum\core\GlobalContext;
+use monolitum\frontend\ElementComponent;
 use monolitum\frontend\html\HtmlElement;
 
-class Alert extends BSElementComponent
+class Alert extends ElementComponent
 {
 
     /**

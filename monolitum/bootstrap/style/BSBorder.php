@@ -1,8 +1,13 @@
 <?php
 
-namespace monolitum\bootstrap\values;
+namespace monolitum\bootstrap\style;
 
-class BSBorder implements BSBuiltIntoInterface
+use monolitum\bootstrap\values\BSBuiltIntoInterface;
+use monolitum\bootstrap\values\BSColor;
+use monolitum\core\GlobalContext;
+use monolitum\frontend\ElementComponent_Ext;
+
+class BSBorder extends ElementComponent_Ext implements BSBuiltIntoInterface
 {
 
     /**
@@ -110,10 +115,32 @@ class BSBorder implements BSBuiltIntoInterface
         return $this;
     }
 
+    /**
+     * @param $size int from 1 to 6
+     * @param $substractive boolean
+     * @return BSBorder
+     */
+    public static function addAll($size=1, $substractive=false){
+        /** @var BSBorder $border */
+        $border = GlobalContext::add(BSBorder::all($size, $substractive));
+        return $border;
+    }
+
     public static function all($size=1, $substractive=false){
         $border = new BSBorder();
         $border->width=$size;
         $border->substractive=$substractive;
+        return $border;
+    }
+
+    /**
+     * @param $size int from 1 to 6
+     * @param $substractive boolean
+     * @return BSBorder
+     */
+    public static function addTop($size=1, $substractive=false){
+        /** @var BSBorder $border */
+        $border = GlobalContext::add(BSBorder::top($size, $substractive));
         return $border;
     }
 
@@ -125,11 +152,33 @@ class BSBorder implements BSBuiltIntoInterface
         return $border;
     }
 
+    /**
+     * @param $size int from 1 to 6
+     * @param $substractive boolean
+     * @return BSBorder
+     */
+    public static function addBottom($size=1, $substractive=false){
+        /** @var BSBorder $border */
+        $border = GlobalContext::add(BSBorder::bottom($size, $substractive));
+        return $border;
+    }
+
     public static function bottom($size=1, $substractive=false){
         $border = new BSBorder();
         $border->which="bottom";
         $border->width=$size;
         $border->substractive=$substractive;
+        return $border;
+    }
+
+    /**
+     * @param $size int from 1 to 6
+     * @param $substractive boolean
+     * @return BSBorder
+     */
+    public static function addStart($size=1, $substractive=false){
+        /** @var BSBorder $border */
+        $border = GlobalContext::add(BSBorder::start($size, $substractive));
         return $border;
     }
 
@@ -141,12 +190,35 @@ class BSBorder implements BSBuiltIntoInterface
         return $border;
     }
 
+    /**
+     * @param $size int from 1 to 6
+     * @param $substractive boolean
+     * @return BSBorder
+     */
+    public static function addEnd($size=1, $substractive=false){
+        /** @var BSBorder $border */
+        $border = GlobalContext::add(BSBorder::end($size, $substractive));
+        return $border;
+    }
+
+    /**
+     * @param $size int from 1 to 6
+     * @param $substractive boolean
+     * @return BSBorder
+     */
     public static function end($size=1, $substractive=false){
         $border = new BSBorder();
         $border->which="end";
         $border->width=$size;
         $border->substractive=$substractive;
         return $border;
+    }
+
+    public function __construct()
+    {
+        parent::__construct(function (BSBorder $it){
+            $it->buildInto($it->getElementComponent());
+        });
     }
 
     public function buildInto($component)

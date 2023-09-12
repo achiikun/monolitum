@@ -1,8 +1,13 @@
 <?php
 
-namespace monolitum\bootstrap\values;
+namespace monolitum\bootstrap\style;
 
-class BSVerticalAlign extends ResponsiveProperty implements BSBuiltIntoInterface
+use monolitum\bootstrap\values\BSBuiltIntoInterface;
+use monolitum\bootstrap\values\ResponsiveProperty;
+use monolitum\core\GlobalContext;
+use monolitum\frontend\ElementComponent_Ext;
+
+class BSVerticalAlign extends ElementComponent_Ext implements ResponsiveProperty, BSBuiltIntoInterface
 {
 
     /**
@@ -13,8 +18,11 @@ class BSVerticalAlign extends ResponsiveProperty implements BSBuiltIntoInterface
     /**
      * @param string $value
      */
-    private function __construct($value)
+    function __construct($value)
     {
+        parent::__construct(null, function (BSVerticalAlign $it){
+            $it->buildInto($it->getElementComponent());
+        });
         $this->value = $value;
     }
 
@@ -39,6 +47,10 @@ class BSVerticalAlign extends ResponsiveProperty implements BSBuiltIntoInterface
         return new BSVerticalAlign("bottom");
     }
 
+    public function add(){
+        GlobalContext::add($this);
+    }
+
     /**
      * @return string
      */
@@ -50,5 +62,10 @@ class BSVerticalAlign extends ResponsiveProperty implements BSBuiltIntoInterface
     public function buildInto($component, $inverted = false)
     {
         $component->addClass("align-" . $this->value);
+    }
+
+    public function buildIntoResponsive($component, $responsiveValue, $inverted = false)
+    {
+        $component->addClass("align-" . $responsiveValue . "-" . $this->value);
     }
 }

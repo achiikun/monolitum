@@ -5,14 +5,22 @@ namespace monolitum\bootstrap;
 use monolitum\backend\globals\Active_NewId;
 use monolitum\backend\params\Link;
 use monolitum\backend\params\Path;
-use monolitum\bootstrap\values\BSVerticalAlign;
+use monolitum\bootstrap\style\BSStyle;
+use monolitum\bootstrap\style\BSVerticalAlign;
 use monolitum\core\GlobalContext;
 use monolitum\core\Renderable_Node;
 use monolitum\frontend\Component;
+use monolitum\frontend\component\A;
+use monolitum\frontend\component\Div;
+use monolitum\frontend\component\Hr;
+use monolitum\frontend\component\Li;
+use monolitum\frontend\component\Span;
+use monolitum\frontend\component\Ul;
 use monolitum\frontend\css\CSSSize;
+use monolitum\frontend\ElementComponent;
 use monolitum\frontend\html\HtmlElement;
 
-class NavBar extends BSElementComponent
+class NavBar extends ElementComponent
 {
 
     /**
@@ -46,7 +54,7 @@ class NavBar extends BSElementComponent
     private $leftItems = [];
 
     /**
-     * @var string|BSElementComponent
+     * @var string|ElementComponent
      */
     private $rightComponent;
 
@@ -129,7 +137,7 @@ class NavBar extends BSElementComponent
      * @param A $a
      * @return void
      */
-    public function setupItem($leftItem, BSElementComponent $a)
+    public function setupItem($leftItem, ElementComponent $a)
     {
         if ($leftItem->isActive()) {
             $a->addClass("active");
@@ -182,13 +190,13 @@ class NavBar extends BSElementComponent
                 if($this->brandTitle !== null){
                     if(is_string($this->brandTitle)){
                         $component = Span::of($this->brandTitle);
-                        $component->align(BSVerticalAlign::middle());
+                        $component->push(BSVerticalAlign::middle());
                     }
                     else
                         $component = $this->brandTitle;
 
                     if($this->brandIcon !== null)
-                        $component->marginLeft(2);
+                        $component->push(BSStyle::marginLeft(2));
 
                     $brand->append($component);
                 }
@@ -219,7 +227,7 @@ class NavBar extends BSElementComponent
                     $span = new Span();
                     $span->addClass("navbar-toggler-icon");
 
-                    $button->append($span);
+                    $button->push($span);
 
                 }
                 $fluid->append($button);
@@ -307,7 +315,7 @@ class NavBar extends BSElementComponent
                             $divCollapse->append($span);
 
                         }else{
-                            $this->rightComponent->marginLeft("auto");
+                            $this->rightComponent->push(BSStyle::marginLeft("auto"));
                             $divCollapse->append($this->rightComponent);
                         }
 
@@ -318,7 +326,7 @@ class NavBar extends BSElementComponent
 
             }
 
-            $this->append($fluid);
+            $this->push($fluid);
 
         }
 

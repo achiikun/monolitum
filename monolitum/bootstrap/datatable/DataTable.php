@@ -2,23 +2,23 @@
 
 namespace monolitum\bootstrap\datatable;
 
+use monolitum\bootstrap\style\BSVerticalAlign;
 use Iterator;
 use monolitum\backend\params\Link;
 use monolitum\backend\params\Manager_Params;
 use monolitum\backend\params\Path;
 use monolitum\backend\res\Active_Resolve_Href;
 use monolitum\backend\res\HrefResolver;
-use monolitum\bootstrap\BSElementComponent;
-use monolitum\bootstrap\values\BSVerticalAlign;
 use monolitum\core\GlobalContext;
 use monolitum\core\Renderable_Node;
 use monolitum\entity\attr\Attr;
 use monolitum\entity\Model;
 use monolitum\frontend\Component;
+use monolitum\frontend\ElementComponent;
 use monolitum\frontend\html\HtmlElement;
 use monolitum\frontend\Rendered;
 
-class DataTable extends BSElementComponent
+class DataTable extends ElementComponent
 {
 
     /**
@@ -78,7 +78,7 @@ class DataTable extends BSElementComponent
     {
         parent::__construct(new HtmlElement("table"), $builder);
         $this->addClass("table");
-        $this->bsStyle()->align(BSVerticalAlign::middle());
+        $this->push(BSVerticalAlign::middle());
     }
 
     /**

@@ -2,11 +2,14 @@
 
 namespace monolitum\bootstrap;
 
-use monolitum\core\GlobalContext;
 use monolitum\backend\globals\Active_NewId;
+use monolitum\core\GlobalContext;
+use monolitum\frontend\component\Div;
+use monolitum\frontend\component\H;
+use monolitum\frontend\ElementComponent;
 use monolitum\frontend\html\HtmlElement;
 
-class Accordion extends BSElementComponent
+class Accordion extends ElementComponent
 {
 
     /** @var array<Accordion_Item> */
@@ -47,13 +50,13 @@ class Accordion extends BSElementComponent
             $h2 = new H(2);
             $h2->addClass("accordion-header");
 
-            $button = new BSElementComponent(new HtmlElement("button"));
+            $button = new ElementComponent(new HtmlElement("button"));
             $button->addClass("accordion-button");
             if($item->isCollapsed())
                 $button->addClass("collapsed");
             $button->setAttribute("data-bs-toggle", "collapse");
             $button->setAttribute("data-bs-target", "#" . $idItem);
-            $button->append($item->getHeader()); // Already built
+            $button->push($item->getHeader()); // Already built
 
             $h2->append($button);
             $divItem->append($h2);
@@ -72,7 +75,7 @@ class Accordion extends BSElementComponent
             $divCollapse->append($divBody);
             $divItem->append($divCollapse);
 
-            $this->append($divItem);
+            $this->push($divItem);
 
         }
 

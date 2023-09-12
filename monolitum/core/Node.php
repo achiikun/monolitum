@@ -2,7 +2,6 @@
 
 namespace monolitum\core;
 
-use monolitum\core\Find;
 use monolitum\backend\router\Router_Panic;
 use monolitum\core\panic\Panic;
 
@@ -44,6 +43,11 @@ abstract class Node implements Passive {
     private $panicked = false;
 
     /**
+     * @var array<class-string, Passive>
+     */
+    private $passiveCacheByClassName = [];
+
+    /**
      * @param callable|null $builder
      */
     function __construct($builder = null){
@@ -73,16 +77,52 @@ abstract class Node implements Passive {
     {
         $this->panicRouter = $panicRouter;
     }
+
+    /**
+     * @param Active $active
+     * @return void
+     */
+    public function push($active){
+        $this->_receive($active, 0);
+    }
     
-    final function _receive($active) {
-        
-        $processed = $this->receiveActive($active);
+    final function _receive($active, $currentDepth) {
+
+        $processed = false;
+
+        if($active instanceof Find){
+            if($this instanceof $active->class){
+                $active->respond($this->ctx, $this);
+                return; // not cache
+            }else{
+                // find in cache
+                if(
+                    isset($this->passiveCacheByClassName[$active->class])
+                    || array_key_exists($active->class, $this->passiveCacheByClassName)
+                ){
+                    $active->respond($this->ctx, $this->passiveCacheByClassName[$active->class]);
+                    return; // not (re)cache
+                }
+            }
+        }else if($active instanceof Router_Panic){
+            $this->setPanicRouter($active);
+            $processed = true;
+        }else{
+            $processed = $this->receiveActive($active);
+        }
 
         if(!$processed) {
             if ($this->parent != null) {
-                $this->parent->_receive($active);
+                $this->parent->_receive($active, $currentDepth+1);
             }else{
                 $active->onNotReceived();
+            }
+        }else{
+            if($currentDepth === 0 && $active instanceof Find && $active->wantsToCache()) {
+                $response = $active->getResponded();
+                if($response != null){
+                    $this->passiveCacheByClassName[$active->class] = $response;
+                }
             }
         }
 
@@ -205,14 +245,6 @@ abstract class Node implements Passive {
 //            print_r(get_class($item));
 //            echo " ";
 //        }
-
-        if($active instanceof Find && $this instanceof $active->class){
-            $active->respond($this->ctx, $this);
-            return true;
-        }else if($active instanceof Router_Panic){
-            $this->setPanicRouter($active);
-            return true;
-        }
 
         return false;
     }

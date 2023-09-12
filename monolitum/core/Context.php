@@ -102,9 +102,9 @@ class Context{
             throw new DevPanic("Passive stack is empty");
         }else{
             if($passive !== null){
-                $passive->_receive($active);
+                $passive->_receive($active, 0);
             }else{
-                $this->passive->_receive($active);
+                $this->passive->_receive($active, 0);
             }
         }
     }

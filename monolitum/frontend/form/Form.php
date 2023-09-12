@@ -331,11 +331,12 @@ class Form extends ElementComponent
 
     /**
      * Called from form fields telling that the attribute it handles is present.
-     * @param Attr $formAttr
+     * @param Form_Attr $formAttr
+     * @param Attr $attr
      * @return void
      */
-    function _registerFormAttr($formAttr){
-        $this->formAttrs[] = $formAttr;
+    function _registerFormAttr($formAttr, $attr){
+        $this->formAttrs[] = $attr;
     }
 
     private function createValidatedValue(Attr $attr)
@@ -428,7 +429,7 @@ class Form extends ElementComponent
 
             $this->field_id->setAttribute("value", $this->formId, false);
 
-            $this->append($this->field_id);
+            $this->push($this->field_id);
 
         }
 
@@ -497,7 +498,7 @@ class Form extends ElementComponent
                     $elem->setAttribute("type", "hidden");
                     $elem->setAttribute("name", $key);
                     $elem->setAttribute("value", $value);
-                    $this->append($elem, 0);
+                    $this->push($elem, 0);
                 }
             }
         }

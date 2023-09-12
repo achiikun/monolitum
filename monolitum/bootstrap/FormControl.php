@@ -1,7 +1,9 @@
 <?php
 namespace monolitum\bootstrap;
 
-class FormControl extends BSElementComponent
+use monolitum\frontend\ElementComponent;
+
+class FormControl extends ElementComponent
 {
 
     /**

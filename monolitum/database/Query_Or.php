@@ -5,7 +5,7 @@ namespace monolitum\database;
 class Query_Or
 {
 
-    private $filters = [];
+    private $filters;
 
     /**
      * @param array $filters

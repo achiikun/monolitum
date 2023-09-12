@@ -1,8 +1,13 @@
 <?php
 
-namespace monolitum\bootstrap\values;
+namespace monolitum\bootstrap\style;
 
-class BSJustifyContent extends ResponsiveProperty implements BSBuiltIntoInterface
+use monolitum\bootstrap\values\BSBuiltIntoInterface;
+use monolitum\bootstrap\values\ResponsiveProperty;
+use monolitum\core\GlobalContext;
+use monolitum\frontend\ElementComponent_Ext;
+
+class BSJustifyContent implements ResponsiveProperty, BSBuiltIntoInterface
 {
 
     /**
@@ -38,6 +43,15 @@ class BSJustifyContent extends ResponsiveProperty implements BSBuiltIntoInterfac
         return new BSJustifyContent("around");
     }
 
+    public function add(){
+        GlobalContext::add(
+            new ElementComponent_Ext(
+                function (ElementComponent_Ext $it) {
+                    $this->buildInto($it->getElementComponent());
+                })
+        );
+    }
+
     /**
      * @return string
      */
@@ -49,5 +63,10 @@ class BSJustifyContent extends ResponsiveProperty implements BSBuiltIntoInterfac
     public function buildInto($component, $inverted = false)
     {
         $component->addClass("justify-content-" . $this->value);
+    }
+
+    public function buildIntoResponsive($component, $responsiveValue, $inverted = false)
+    {
+        $component->addClass("justify-content-" . $responsiveValue . "-" . $this->value);
     }
 }

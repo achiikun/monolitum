@@ -1,13 +1,13 @@
 <?php
 
-namespace monolitum\bootstrap;
+namespace monolitum\frontend\component;
 
-use monolitum\core\GlobalContext;
 use monolitum\backend\params\Link;
 use monolitum\backend\params\Path;
-use monolitum\core\Renderable_Node;
 use monolitum\backend\res\Active_Resolve_Href;
 use monolitum\backend\res\HrefResolver;
+use monolitum\core\GlobalContext;
+use monolitum\core\Renderable_Node;
 use monolitum\frontend\html\HtmlElement;
 
 class A extends AbstractText
@@ -67,7 +67,7 @@ class A extends AbstractText
     public static function of($content)
     {
         $fc = new A();
-        $fc->append($content);
+        $fc->push($content);
         return $fc;
     }
 

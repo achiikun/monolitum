@@ -149,7 +149,8 @@ class Auth_Manager extends Renderable_Node implements Active
         if($this->user == null){
 
             if(! session_id())
-                session_start();
+                throw new AuthPanic_NoUser();
+//                session_start();
 
             if(!isset($_SESSION['username']) || $_SESSION['username'] == null)
                 throw new AuthPanic_NoUser();
@@ -238,17 +239,18 @@ class Auth_Manager extends Renderable_Node implements Active
 
     private function logout()
     {
-        if(! session_id())
-            session_start();
-
-        $_SESSION['username'] = null;
+        if(session_id()){
+            session_destroy();
+        }
+//            session_start();
+//        $_SESSION['username'] = null;
 
     }
 
     private function isLoggedIn()
     {
         if(! session_id())
-            session_start();
+            return false;
 
         if(!isset($_SESSION['username']) || $_SESSION['username'] == null)
             return false;

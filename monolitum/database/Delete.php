@@ -62,7 +62,7 @@ class Delete
      */
     public function execute()
     {
-        return $this->getManager()->executeUpdate($this);
+        return $this->getManager()->executeUpdate($this)[0];
     }
 
     /**

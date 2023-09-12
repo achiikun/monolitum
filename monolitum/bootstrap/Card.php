@@ -3,9 +3,10 @@
 namespace monolitum\bootstrap;
 
 use monolitum\core\GlobalContext;
+use monolitum\frontend\ElementComponent;
 use monolitum\frontend\html\HtmlElement;
 
-class Card extends BSElementComponent
+class Card extends ElementComponent
 {
 
     private $breakpoint;

@@ -227,6 +227,15 @@ class HtmlElement implements Renderable
         return $this;
     }
 
+    public function removeClass(...$classes){
+        foreach ($classes as $class){
+            $key = array_search($class, $this->classes);
+            if($key !== false)
+                array_splice($array, $key, 1);
+        }
+        return $this;
+    }
+
     public function hasClasses(){
         return count($this->classes) > 0;
     }

@@ -4,6 +4,7 @@ namespace monolitum\bootstrap;
 
 use monolitum\core\GlobalContext;
 use monolitum\core\Renderable_Node;
+use monolitum\frontend\component\AbstractText;
 use monolitum\frontend\html\HtmlElement;
 
 class P extends AbstractText
@@ -24,7 +25,7 @@ class P extends AbstractText
             $fc = new P($content);
         } else{
             $fc = new P();
-            $fc->append($content);
+            $fc->push($content);
         }
         return $fc;
     }

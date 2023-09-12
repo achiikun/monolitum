@@ -2,9 +2,10 @@
 namespace monolitum\bootstrap;
 
 use monolitum\core\GlobalContext;
+use monolitum\frontend\ElementComponent;
 use monolitum\frontend\html\HtmlElement;
 
-class FormControl_Select_Option extends BSElementComponent
+class FormControl_Select_Option extends ElementComponent
 {
 
     /**

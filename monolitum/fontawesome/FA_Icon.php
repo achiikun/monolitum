@@ -2,10 +2,10 @@
 
 namespace monolitum\fontawesome;
 
-use monolitum\bootstrap\BSElementComponent;
+use monolitum\frontend\ElementComponent;
 use monolitum\frontend\html\HtmlElement;
 
-class FA_Icon extends BSElementComponent
+class FA_Icon extends ElementComponent
 {
 
     const SOLID = "solid";

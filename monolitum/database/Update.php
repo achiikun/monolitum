@@ -2,9 +2,7 @@
 
 namespace monolitum\database;
 
-use monolitum\entity\attr\Attr;
 use monolitum\entity\Model;
-use monolitum\core\panic\DevPanic;
 
 class Update extends Insert
 {

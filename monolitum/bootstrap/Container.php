@@ -3,9 +3,10 @@
 namespace monolitum\bootstrap;
 
 use monolitum\core\GlobalContext;
+use monolitum\frontend\ElementComponent;
 use monolitum\frontend\html\HtmlElement;
 
-class Container extends BSElementComponent
+class Container extends ElementComponent
 {
 
     /**

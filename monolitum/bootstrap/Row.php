@@ -2,13 +2,15 @@
 
 namespace monolitum\bootstrap;
 
+use monolitum\bootstrap\style\BSRow;
 use monolitum\core\GlobalContext;
+use monolitum\frontend\component\Div;
 
 class Row extends Div
 {
 
     /**
-     * @var Ext_Row
+     * @var BSRow
      */
     private $ext;
 
@@ -19,7 +21,7 @@ class Row extends Div
 
     protected function buildNode()
     {
-        $this->ext = Ext_Row::add();
+        $this->ext = BSRow::add();
         parent::buildNode();
     }
 
@@ -29,13 +31,13 @@ class Row extends Div
      */
     public function gap($value)
     {
-        $this->addClass("gap-" . $value);
+        $this->ext->gap($value);
         return $this;
     }
 
     /**
      * @param callable $builder
-     * @return Div
+     * @return Row
      */
     public static function add($builder = null)
     {

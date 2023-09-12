@@ -2,8 +2,6 @@
 
 namespace monolitum\core\panic;
 
-use monolitum\core\panic\Panic;
-
 class UserPanic extends Panic {
 
     /**

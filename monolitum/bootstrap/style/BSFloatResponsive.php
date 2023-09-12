@@ -1,8 +1,12 @@
 <?php
 
-namespace monolitum\bootstrap\values;
+namespace monolitum\bootstrap\style;
 
+use monolitum\bootstrap\values\BSBuiltIntoInterface;
+use monolitum\bootstrap\values\Responsive;
+use monolitum\core\GlobalContext;
 use monolitum\frontend\ElementComponent;
+use monolitum\frontend\ElementComponent_Ext;
 
 class BSFloatResponsive extends Responsive implements BSBuiltIntoInterface
 {
@@ -58,6 +62,15 @@ class BSFloatResponsive extends Responsive implements BSBuiltIntoInterface
     public static function of($def = null)
     {
         return new BSFloatResponsive($def);
+    }
+
+    public function add(){
+        GlobalContext::add(
+            new ElementComponent_Ext(
+                function (ElementComponent_Ext $it) {
+                    $this->buildInto($it->getElementComponent());
+                })
+        );
     }
 
     /**

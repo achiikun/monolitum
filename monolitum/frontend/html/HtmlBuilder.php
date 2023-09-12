@@ -59,12 +59,11 @@ class HtmlBuilder
             $attributes = array();
             $attributeArr = $htmlElement->getAttributes();
             foreach ($attributeArr as $key => $value) {
-                if (in_array($key, $this->_nonFilteredAttributes) || $htmlElement->isAttributeNotFiltered($key)) {
-                    $attributes[] = $key . '="' . $value . '"';
-                } else {
+                // Run filter var to make it able to append in html
+                if (!in_array($key, $this->_nonFilteredAttributes) && !$htmlElement->isAttributeNotFiltered($key)) {
                     $value = filter_var($value, FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_ENCODE_AMP);
-                    $attributes[] = $key . '="' . $value . '"';
                 }
+                $attributes[] = $key . '="' . $value . '"';
             }
             $output .= ' ' . implode(' ', $attributes);
         }

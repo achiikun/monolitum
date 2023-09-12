@@ -35,7 +35,8 @@ class HTMLPage extends Component {
      * @param Head $head_component
      */
     public function addHeadElement($head_component){
-        $this->head_components[] = $this->buildChild($head_component);
+        if($head_component instanceof Node)
+            $this->head_components[] = $this->buildChild($head_component);
     }
 
     /**

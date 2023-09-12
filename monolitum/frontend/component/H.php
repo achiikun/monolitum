@@ -1,6 +1,6 @@
 <?php
 
-namespace monolitum\bootstrap;
+namespace monolitum\frontend\component;
 
 use monolitum\core\GlobalContext;
 use monolitum\core\Renderable_Node;
@@ -22,7 +22,7 @@ class H extends AbstractText
     public static function of($level, $content)
     {
         $fc = new H($level);
-        $fc->append($content);
+        $fc->push($content);
         return $fc;
     }
 

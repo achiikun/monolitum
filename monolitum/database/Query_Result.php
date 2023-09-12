@@ -69,6 +69,8 @@ class Query_Result extends \NoRewindIterator
      */
     public function __construct($manager, $model, $select, $protectForUpdate, $stmt)
     {
+        parent::__construct(null);
+
         $this->manager = $manager;
         $this->entityManager = Find::syncFrom(Entities_Manager::class, $manager);
         $this->model = $model;

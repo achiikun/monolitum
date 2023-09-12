@@ -1,8 +1,12 @@
 <?php
 
-namespace monolitum\bootstrap\values;
+namespace monolitum\bootstrap\style;
 
-class BSDisplay extends ResponsiveProperty
+use monolitum\bootstrap\values\ResponsiveProperty;
+use monolitum\core\GlobalContext;
+use monolitum\frontend\ElementComponent_Ext;
+
+class BSDisplay extends ElementComponent_Ext implements ResponsiveProperty
 {
 
     /**
@@ -13,8 +17,11 @@ class BSDisplay extends ResponsiveProperty
     /**
      * @param string $value
      */
-    protected function __construct($value)
+    function __construct($value)
     {
+        parent::__construct(null, function (BSDisplay $it){
+            $it->buildInto($it->getElementComponent());
+        });
         $this->value = $value;
     }
 
@@ -51,22 +58,31 @@ class BSDisplay extends ResponsiveProperty
     }
 
     /**
-     * @return BSDisplayFlex
+     * @return BSDisplay_Flex
      */
     public static function flex(){
-        return new BSDisplayFlex("flex");
+        return new BSDisplay_Flex("flex");
     }
 
     /**
-     * @return BSDisplayFlex
+     * @return BSDisplay_Flex
      */
     public static function inline_flex(){
-        return new BSDisplayFlex("inline-flex");
+        return new BSDisplay_Flex("inline-flex");
+    }
+
+    public function add(){
+        GlobalContext::add($this);
     }
 
     public function buildInto($component, $inverted = false)
     {
-        parent::_buildInto($component, "d", $inverted);
+        $component->addClass("d-" . $this->getValue($inverted));
+    }
+
+    public function buildIntoResponsive($component, $responsiveValue, $inverted = false)
+    {
+        $component->addClass("d-" . $responsiveValue . "-" . $this->getValue($inverted));
     }
 
     /**

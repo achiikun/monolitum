@@ -2,7 +2,6 @@
 namespace monolitum\frontend;
 
 use monolitum\core\Renderable;
-use monolitum\core\Renderable_Node;
 use monolitum\frontend\css\Style;
 use monolitum\frontend\html\HtmlElement;
 
@@ -17,6 +16,11 @@ class ElementComponent extends Component
      * @var array<ElementComponent_Ext>
      */
     private $extensions = [];
+
+    /**
+     * @var array<string, string>
+     */
+    private $classAliases = null;
 
     /**
      * @param HtmlElement $element
@@ -56,6 +60,34 @@ class ElementComponent extends Component
      */
     public function addClass(...$classes) {
         $this->element->addClass(...$classes);
+        return $this;
+    }
+
+    /**
+     * Sets a class with an alias, if this class is reset with the same alias, the previous class is removed
+     * @param string $alias
+     * @param string $class
+     * @return $this
+     */
+    public function setClass($alias, $class = null)
+    {
+        if($this->classAliases !== null){
+            if(array_key_exists($alias, $this->classAliases)){
+                $this->element->removeClass($this->classAliases[$alias]);
+                if($class !== null){
+                    $this->element->addClass($class);
+                    $this->classAliases[$alias] = $class;
+                }else{
+                    unset($this->classAliases);
+                }
+            }else if($class !== null){
+                $this->element->addClass($class);
+                $this->classAliases[$alias] = $class;
+            }
+        }else if($class !== null){
+            $this->classAliases = array($alias => $class);
+            $this->element->addClass($class);
+        }
         return $this;
     }
 

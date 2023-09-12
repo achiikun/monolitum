@@ -7,7 +7,6 @@ use monolitum\entity\Entities_Manager;
 use monolitum\entity\Model;
 use monolitum\entity\ValidatedValue;
 use monolitum\core\Find;
-use monolitum\frontend\form\AttrExt_Form;
 use monolitum\backend\params\Manager_Params;
 use monolitum\backend\params\Validator;
 
@@ -34,6 +33,8 @@ class Form_Validator implements Validator
         $validated = $this->validator->validate($model, $attr);
         if(!$validated->isValid())
             return $validated;
+
+        /** @var AttrExt_Form $ext */
         $ext = $attr->findExtension(AttrExt_Form::class);
         if(!$ext)
             return $validated;
@@ -61,6 +62,7 @@ class Form_Validator implements Validator
 
         $validated = $varManager->validate($model, $attr);
 
+        /** @var AttrExt_Form $ext */
         $ext = $attr->findExtension(AttrExt_Form::class);
         if(!$ext)
             return $validated;

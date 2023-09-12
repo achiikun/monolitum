@@ -1,8 +1,6 @@
 <?php
 namespace monolitum\entity;
 
-use monolitum\entity\AttrExt_Validate;
-
 class AttrExt_Validate_String extends AttrExt_Validate
 {
 

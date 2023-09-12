@@ -2,9 +2,11 @@
 
 namespace monolitum\bootstrap;
 
+use monolitum\bootstrap\style\BSText;
 use monolitum\bootstrap\values\BSColor;
 use monolitum\core\GlobalContext;
 use monolitum\core\Renderable_Node;
+use monolitum\frontend\component\AbstractText;
 use monolitum\frontend\html\HtmlElement;
 
 class Badge extends AbstractText
@@ -24,8 +26,8 @@ class Badge extends AbstractText
     public static function of($content, $color)
     {
         $fc = new Badge();
-        $fc->append($content);
-        $fc->textBackgrundColor($color);
+        $fc->push($content);
+        $fc->push(BSText::textBackgroundColor($color));
         return $fc;
     }
 

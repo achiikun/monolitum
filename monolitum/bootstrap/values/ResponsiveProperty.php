@@ -4,28 +4,20 @@ namespace monolitum\bootstrap\values;
 
 use monolitum\frontend\ElementComponent;
 
-abstract class ResponsiveProperty
+interface ResponsiveProperty
 {
 
     /**
      * @param ElementComponent $component
-     * @param string $prefix
-     * @return void
-     */
-    public function _buildInto($component, $prefix, $inverted = false){
-        $component->addClass($prefix . "-" . $this->getValue($inverted));
-    }
-
-    /**
-     * @param ElementComponent $component
+     * @param string $responsiveValue
      * @param bool $inverted
      * @return void
      */
-    public abstract function buildInto($component, $inverted = false);
+    public function buildIntoResponsive($component, $responsiveValue, $inverted = false);
 
     /**
      * @return string
      */
-    public abstract function getValue($inverted = false);
+    public function getValue($inverted = false);
 
 }

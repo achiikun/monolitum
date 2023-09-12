@@ -1,8 +1,12 @@
 <?php
 
-namespace monolitum\bootstrap\values;
+namespace monolitum\bootstrap\style;
 
-class BSFloat extends ResponsiveProperty
+use monolitum\bootstrap\values\ResponsiveProperty;
+use monolitum\core\GlobalContext;
+use monolitum\frontend\ElementComponent_Ext;
+
+class BSFloat implements ResponsiveProperty
 {
 
     /**
@@ -30,6 +34,15 @@ class BSFloat extends ResponsiveProperty
         return new BSFloat("left");
     }
 
+    public function add(){
+        GlobalContext::add(
+            new ElementComponent_Ext(
+                function (ElementComponent_Ext $it) {
+                    $this->buildInto($it->getElementComponent());
+                })
+        );
+    }
+
     /**
      * @return string
      */
@@ -49,5 +62,10 @@ class BSFloat extends ResponsiveProperty
     public function buildInto($component, $inverted = false)
     {
         $component->addClass("float-" . $this->getValue($inverted));
+    }
+
+    public function buildIntoResponsive($component, $responsiveValue, $inverted = false)
+    {
+        $component->addClass("float-" . $responsiveValue . "-" . $this->getValue($inverted));
     }
 }

@@ -2,7 +2,7 @@
 
 namespace monolitum\bootstrap;
 
-use monolitum\bootstrap\values\BSColSpanResponsive;
+use monolitum\bootstrap\style\BSColSpanResponsive;
 use monolitum\core\GlobalContext;
 use monolitum\entity\attr\Attr;
 use monolitum\entity\attr\Attr_Bool;
@@ -11,36 +11,17 @@ use monolitum\entity\attr\Attr_Decimal;
 use monolitum\entity\attr\Attr_File;
 use monolitum\entity\attr\Attr_Int;
 use monolitum\entity\attr\Attr_String;
+use monolitum\frontend\Component;
+use monolitum\frontend\component\Div;
+use monolitum\frontend\ElementComponent;
 use monolitum\frontend\form\AttrExt_Form;
 use monolitum\frontend\form\AttrExt_Form_Int;
 use monolitum\frontend\form\AttrExt_Form_String;
 use monolitum\frontend\form\Form;
-use monolitum\frontend\Component;
-use monolitum\core\Find;
 use monolitum\frontend\html\HtmlElement;
 
-class Form_Attr extends BSElementComponent
+class Form_Attr extends \monolitum\frontend\form\Form_Attr
 {
-
-    /**
-     * @var Form
-     */
-    private $form;
-
-    /**
-     * @var Attr|string
-     */
-    private $attr;
-
-    /**
-     * @var AttrExt_Form
-     */
-    private $formExt;
-
-    /**
-     * @var string
-     */
-    private $label;
 
     /**
      * @var Component
@@ -48,19 +29,9 @@ class Form_Attr extends BSElementComponent
     private $formWrapper;
 
     /**
-     * @var bool
-     */
-    private $userSetInvalid = false;
-
-    /**
-     * @var string|BSElementComponent
+     * @var string|ElementComponent
      */
     private $formText = null;
-
-    /**
-     * @var string|BSElementComponent
-     */
-    private $invalidText;
 
     /**
      * @var bool
@@ -83,19 +54,8 @@ class Form_Attr extends BSElementComponent
      */
     public function __construct($attrid, $builder = null)
     {
-        parent::__construct(new HtmlElement("div"), $builder);
-        $this->attr = $attrid;
+        parent::__construct(new HtmlElement("div"), $attrid, $builder);
         $this->formWrapper = $this;
-    }
-
-    /**
-     * @param string $label
-     * @return $this
-     */
-    public function label($label)
-    {
-        $this->label = $label;
-        return $this;
     }
 
     /**
@@ -109,18 +69,7 @@ class Form_Attr extends BSElementComponent
     }
 
     /**
-     * @param string|BSElementComponent $string
-     * @return $this
-     */
-    public function setInvalid($string=null)
-    {
-        $this->userSetInvalid = true;
-        $this->invalidText = $string;
-        return $this;
-    }
-
-    /**
-     * @param BSElementComponent|string|null $formText
+     * @param ElementComponent|string|null $formText
      * @return $this
      */
     public function setFormText($formText)
@@ -130,49 +79,9 @@ class Form_Attr extends BSElementComponent
     }
 
     /**
-     * @return mixed|null
-     */
-    function getValue()
-    {
-        return $this->form->getValidatedValue($this->attr)->getValue();
-    }
-
-    /**
-     * @return string
-     */
-    protected function getName()
-    {
-        return $this->form->getAttrName($this->attr);
-    }
-
-    /**
-     * @return string
-     */
-    protected function getLabel()
-    {
-        $label = null;
-        if($this->formExt != null)
-            $label = $this->formExt->getLabel();
-        if($label == null)
-            $label = $this->label;
-        return $label;
-    }
-
-    /**
-     * @return bool|null
-     */
-    protected function isValid()
-    {
-        $isValid = $this->form->isValid($this->attr);
-        if($isValid === null)
-            return null;
-        return $isValid && !$this->userSetInvalid;
-    }
-
-    /**
      * @return bool
      */
-    protected function hasValue()
+    public function hasValue()
     {
         return $this->form->hasValue($this->attr);
     }
@@ -210,41 +119,29 @@ class Form_Attr extends BSElementComponent
         return $this;
     }
 
-    protected function buildNode()
-    {
-        $this->form = Find::sync(Form::class);
-        $this->form->_registerFormAttr($this);
-        if(!($this->attr instanceof Attr))
-            $this->attr = $this->form->getAttr($this->attr);
-
-        $this->formExt = $this->attr->findExtension(AttrExt_Form::class);
-
-        parent::buildNode();
-    }
-
     protected function executeNode()
     {
 
         $attr = $this->getAttr();
-        $ext = $this->getFormExt();
+//        $ext = $this->getFormExt();
 
         $invalidFeedback = null;
         if($this->isValid() === false && $this->invalidText){
             $invalidFeedback = new Div(function (Div $it){
                 $it->addClass("invalid-feedback");
-                $it->append($this->invalidText);
+                $it->push($this->invalidText);
             });
         }
 
         $formText = null;
         if($this->formText !== null){
-            if($this->formText instanceof BSElementComponent){
+            if($this->formText instanceof ElementComponent){
                 $formText = $this->formText;
                 $formText->addClass("form-text");
             }else{
                 $formText = new Div(function (Div $it){
                     $it->addClass("form-text");
-                    $it->append($this->formText);
+                    $it->push($this->formText);
                 });
             }
 
@@ -254,7 +151,7 @@ class Form_Attr extends BSElementComponent
 
             $this->formWrapper->addClass("form-check");
 
-            $this->formWrapper->append(
+            $this->formWrapper->push(
                 new FormControl_CheckBox(function(FormControl_CheckBox $it){
                     $it->setId($this->getName());
                     $it->setName($this->getName());
@@ -267,7 +164,7 @@ class Form_Attr extends BSElementComponent
                 })
                 );
 
-            $this->formWrapper->append(
+            $this->formWrapper->push(
                 new FormLabel(function(FormLabel $it){
                     $it->setName($this->getName());
                     $it->setContent($this->getLabel());
@@ -275,11 +172,11 @@ class Form_Attr extends BSElementComponent
             );
 
             if($invalidFeedback){
-                $this->formWrapper->append($invalidFeedback);
+                $this->formWrapper->push($invalidFeedback);
             }
 
             if($formText){
-                $this->formWrapper->append($formText);
+                $this->formWrapper->push($formText);
             }
 
             $this->labelRendersAfterControl = true;
@@ -304,35 +201,35 @@ class Form_Attr extends BSElementComponent
 
                 $formControlWrapper = new Div();
 
-                $formControlWrapper->append($formControl);
+                $formControlWrapper->push($formControl);
                 $this->isRow->buildInto($formControlWrapper);
 
                 if($this->labelRendersAfterControl){
-                    $this->formWrapper->append($formControlWrapper);
-                    $this->formWrapper->append($formLabel);
+                    $this->formWrapper->push($formControlWrapper);
+                    $this->formWrapper->push($formLabel);
                 }else{
-                    $this->formWrapper->append($formLabel);
-                    $this->formWrapper->append($formControlWrapper);
+                    $this->formWrapper->push($formLabel);
+                    $this->formWrapper->push($formControlWrapper);
                 }
 
             }else{
 
                 if($this->labelRendersAfterControl){
-                    $this->formWrapper->append($formControl);
-                    $this->formWrapper->append($formLabel);
+                    $this->formWrapper->push($formControl);
+                    $this->formWrapper->push($formLabel);
                 }else{
-                    $this->formWrapper->append($formLabel);
-                    $this->formWrapper->append($formControl);
+                    $this->formWrapper->push($formLabel);
+                    $this->formWrapper->push($formControl);
                 }
 
             }
 
             if($invalidFeedback){
-                $this->formWrapper->append($invalidFeedback);
+                $this->formWrapper->push($invalidFeedback);
             }
 
             if($formText){
-                $this->formWrapper->append($formText);
+                $this->formWrapper->push($formText);
             }
 
         }
@@ -394,6 +291,7 @@ class Form_Attr extends BSElementComponent
 
                         FormControl_Select_Option::add(function (FormControl_Select_Option $it) use ($selected, $itemKey, $itemValue) {
 
+                            $item = null;
                             if(is_string($itemKey)){
                                 $item = $itemKey;
                                 if(is_array($itemValue)){

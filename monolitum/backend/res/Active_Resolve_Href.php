@@ -69,8 +69,8 @@ class Active_Resolve_Href implements Active
         throw new DevPanic("No HrefProvider found");
     }
 
-    public function setParamsAlone()
+    public function setParamsAlone($setParamsAlone=true)
     {
-        $this->setParamsAlone = true;
+        $this->setParamsAlone = $setParamsAlone;
     }
 }

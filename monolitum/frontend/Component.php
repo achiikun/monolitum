@@ -27,25 +27,35 @@ class Component extends Renderable_Node implements Active{
     }
 
     /**
+     * @param Renderable_Node|HtmlElement|HtmlElementContent|string $active
+     * @param int|null $idx
+     * @return $this
+     */
+    public function push($active, $idx = null)
+    {
+        if ($active instanceof Renderable_Node) {
+            parent::push($active);
+        }else if(is_string($active)){
+            parent::push(new HtmlElementContent($active), $idx);
+        }else{
+            parent::push($active, $idx);
+        }
+        return $this;
+    }
+
+    /**
      * @param Renderable_Node|HtmlElement|HtmlElementContent|string $component
      * @return $this
      */
     public function append($component, $idx = null)
     {
-        if ($component instanceof Renderable_Node) {
-            parent::append($component);
-        }else if(is_string($component)){
-            parent::append(new HtmlElementContent($component), $idx);
-        }else{
-            parent::append($component, $idx);
-        }
-        return $this;
+        return $this->push($component, $idx);
     }
 
     protected function receiveActive($active)
     {
         if($active instanceof Renderable_Node && !($active instanceof Router_Panic) || $active instanceof HtmlElement){
-            $this->append($active);
+            $this->push($active);
             return true;
         }
 
