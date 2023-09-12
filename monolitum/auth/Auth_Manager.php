@@ -148,9 +148,10 @@ class Auth_Manager extends Renderable_Node implements Active
     {
         if($this->user == null){
 
-            if(! session_id())
+            if(session_id() === null)
                 throw new AuthPanic_NoUser();
-//                session_start();
+
+            session_start();
 
             if(!isset($_SESSION['username']) || $_SESSION['username'] == null)
                 throw new AuthPanic_NoUser();

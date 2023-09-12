@@ -14,7 +14,7 @@ class BSPage extends HTMLPage{
     {
         parent::buildPage();
 
-        Meta::push("viewport", "width=device-width, initial-scale=1.0");
+        Meta::add("viewport", "width=device-width, initial-scale=1.0");
 
         CSSLink::addLocal(Path::ofRelativeToClass(BSPage::class,"css","bootstrap-reboot.css"));
         CSSLink::addLocal(Path::ofRelativeToClass(BSPage::class,"css","bootstrap.css"));

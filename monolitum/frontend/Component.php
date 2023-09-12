@@ -6,6 +6,7 @@ use monolitum\backend\router\Router_Panic;
 use monolitum\core\Active;
 use monolitum\core\GlobalContext;
 use monolitum\core\panic\DevPanic;
+use monolitum\core\Renderable;
 use monolitum\core\Renderable_Node;
 use monolitum\frontend\html\HtmlElement;
 use monolitum\frontend\html\HtmlElementContent;
@@ -27,35 +28,26 @@ class Component extends Renderable_Node implements Active{
     }
 
     /**
-     * @param Renderable_Node|HtmlElement|HtmlElementContent|string $active
+     * @param Renderable_Node|Renderable|HtmlElement|HtmlElementContent|string $active
      * @param int|null $idx
      * @return $this
      */
-    public function push($active, $idx = null)
+    public function append($active, $idx=null)
     {
         if ($active instanceof Renderable_Node) {
-            parent::push($active);
+            parent::append($active);
         }else if(is_string($active)){
-            parent::push(new HtmlElementContent($active), $idx);
+            parent::append(new HtmlElementContent($active), $idx);
         }else{
-            parent::push($active, $idx);
+            parent::append($active, $idx);
         }
         return $this;
-    }
-
-    /**
-     * @param Renderable_Node|HtmlElement|HtmlElementContent|string $component
-     * @return $this
-     */
-    public function append($component, $idx = null)
-    {
-        return $this->push($component, $idx);
     }
 
     protected function receiveActive($active)
     {
         if($active instanceof Renderable_Node && !($active instanceof Router_Panic) || $active instanceof HtmlElement){
-            $this->push($active);
+            $this->append($active);
             return true;
         }
 

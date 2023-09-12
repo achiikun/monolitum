@@ -18,7 +18,7 @@ abstract class AbstractText extends ElementComponent
      */
     public function appendText($text)
     {
-        $this->push(new HtmlElementContent($text));
+        $this->append(new HtmlElementContent($text));
     }
 
 }

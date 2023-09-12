@@ -66,7 +66,7 @@ class BSStyle extends ElementComponent_Ext
 
     /**
      * @param int|float|string $size
-     * @return $this
+     * @return BSStyle
      */
     public static function paddingBottom($size) {
         return BSStyle::padding($size, BSBound::bottom());
@@ -82,7 +82,7 @@ class BSStyle extends ElementComponent_Ext
 
     /**
      * @param int|float|string $size
-     * @return $this
+     * @return BSStyle
      */
     public static function paddingLeft($size) {
         return BSStyle::padding($size, BSBound::left());
@@ -98,7 +98,7 @@ class BSStyle extends ElementComponent_Ext
 
     /**
      * @param int|float|string $size
-     * @return $this
+     * @return BSStyle
      */
     public static function paddingRight($size) {
         return BSStyle::padding($size, BSBound::right());
@@ -118,7 +118,7 @@ class BSStyle extends ElementComponent_Ext
      */
     public static function paddingAuto($axis) {
         return new BSStyle(function (BSStyle $it) use ($axis) {
-            $this->getElementComponent()->addClass("p" . $axis->getValue() . "-auto");
+            $it->getElementComponent()->addClass("p" . $axis->getValue() . "-auto");
         });
     }
 
@@ -142,24 +142,24 @@ class BSStyle extends ElementComponent_Ext
 
                 if ($bound != null)
                     if ($size == "auto")
-                        $this->getElementComponent()->addClass("m" . $bound->getValue() . "-" . $breakpoint . "-auto");
+                        $it->getElementComponent()->addClass("m" . $bound->getValue() . "-" . $breakpoint . "-auto");
                     else if ($size < 0)
-                        $this->getElementComponent()->addClass("m" . $bound->getValue() . "-" . $breakpoint . "-n" . (-$size));
+                        $it->getElementComponent()->addClass("m" . $bound->getValue() . "-" . $breakpoint . "-n" . (-$size));
                     else
-                        $this->getElementComponent()->addClass("m" . $bound->getValue() . "-" . $breakpoint . "-" . $size);
+                        $it->getElementComponent()->addClass("m" . $bound->getValue() . "-" . $breakpoint . "-" . $size);
                 else
-                    $this->getElementComponent()->addClass("m-" . $breakpoint . "-" . $size);
+                    $it->getElementComponent()->addClass("m-" . $breakpoint . "-" . $size);
 
             } else {
                 if ($bound != null)
                     if ($size == "auto")
-                        $this->getElementComponent()->addClass("m" . $bound->getValue() . "-auto");
+                        $it->getElementComponent()->addClass("m" . $bound->getValue() . "-auto");
                     else if ($size < 0)
-                        $this->getElementComponent()->addClass("m" . $bound->getValue() . "-n" . (-$size));
+                        $it->getElementComponent()->addClass("m" . $bound->getValue() . "-n" . (-$size));
                     else
-                        $this->getElementComponent()->addClass("m" . $bound->getValue() . "-" . $size);
+                        $it->getElementComponent()->addClass("m" . $bound->getValue() . "-" . $size);
                 else
-                    $this->getElementComponent()->addClass("m" . "-" . $size);
+                    $it->getElementComponent()->addClass("m" . "-" . $size);
             }
         });
     }
@@ -214,7 +214,7 @@ class BSStyle extends ElementComponent_Ext
      */
     public static function marginAuto($axis) {
         return new BSStyle(function (BSStyle $it) use ($axis) {
-            $this->getElementComponent()->addClass("m" . $axis->getValue() . "-auto");
+            $it->getElementComponent()->addClass("m" . $axis->getValue() . "-auto");
         });
     }
 
@@ -232,29 +232,30 @@ class BSStyle extends ElementComponent_Ext
      */
     public static function background($background){
         return new BSStyle(function (BSStyle $it) use ($background) {
-            $this->getElementComponent()->addClass("bg-" . $background->getValue());
+            $it->getElementComponent()->addClass("bg-" . $background->getValue());
         });
     }
 
     /**
      * @param BSTextAlign|BSTextAlignResponsive|BSVerticalAlign $align
-     * @return $this
+     * @return BSStyle
      */
-    public function align($align){
-        $align->buildInto($this->element);
-        return $this;
+    public static function align($align){
+        return new BSStyle(function (BSStyle $it) use ($align) {
+            $align->buildInto($it->getElementComponent());
+        });
     }
-
-    /**
-     * @param BSDisplay|BSDisplayResponsive $display
-     * @return $this
-     */
-    public function display($display)
-    {
-        $display->buildInto($this->getElementComponent());
-        return $this;
-    }
-
+//
+//    /**
+//     * @param BSDisplay|BSDisplayResponsive $display
+//     * @return $this
+//     */
+//    public function display($display)
+//    {
+//        $display->buildInto($this->getElementComponent());
+//        return $this;
+//    }
+//
     /**
      * @param $float BSFloat|BSFloatResponsive
      * @return $this

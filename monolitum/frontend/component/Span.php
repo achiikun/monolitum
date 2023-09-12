@@ -21,7 +21,7 @@ class Span extends AbstractText
     public static function of($content)
     {
         $fc = new Span();
-        $fc->push($content);
+        $fc->append($content);
         return $fc;
     }
 

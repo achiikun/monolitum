@@ -15,7 +15,7 @@ use monolitum\entity\Model;
 use PDO;
 use PDOStatement;
 
-class Query_Result extends \NoRewindIterator
+class Query_Result
 {
 
     /**
@@ -69,7 +69,6 @@ class Query_Result extends \NoRewindIterator
      */
     public function __construct($manager, $model, $select, $protectForUpdate, $stmt)
     {
-        parent::__construct(null);
 
         $this->manager = $manager;
         $this->entityManager = Find::syncFrom(Entities_Manager::class, $manager);
@@ -77,12 +76,6 @@ class Query_Result extends \NoRewindIterator
         $this->select = $select;
         $this->protectForUpdate = $protectForUpdate;
         $this->stmt = $stmt;
-    }
-
-    #[\ReturnTypeWillChange]
-    public function valid()
-    {
-        return $this->hasNext();//!is_null($this->nextRow);
     }
 
     public function hasNext()
@@ -98,7 +91,6 @@ class Query_Result extends \NoRewindIterator
     /**
      * @return Entity|null
      */
-    #[\ReturnTypeWillChange]
     public function next()
     {
         if($this->finished)
@@ -160,7 +152,6 @@ class Query_Result extends \NoRewindIterator
         return $entity;
 
     }
-
 
     public function first()
     {

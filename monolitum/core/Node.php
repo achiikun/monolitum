@@ -3,6 +3,7 @@
 namespace monolitum\core;
 
 use monolitum\backend\router\Router_Panic;
+use monolitum\core\panic\DevPanic;
 use monolitum\core\panic\Panic;
 
 abstract class Node implements Passive {
@@ -79,11 +80,13 @@ abstract class Node implements Passive {
     }
 
     /**
-     * @param Active $active
+     * @param Active $actives
      * @return void
      */
-    public function push($active){
-        $this->_receive($active, 0);
+    public function push(...$actives){
+        foreach ($actives as $active) {
+            $this->_receive($active, 0);
+        }
     }
     
     final function _receive($active, $currentDepth) {
@@ -165,7 +168,9 @@ abstract class Node implements Passive {
     }
     
     final function _execute(){
-        
+
+        assert($this->built);
+
         $this->ctx->pushPassive($this);
 
         if($this->panicked){
@@ -199,6 +204,8 @@ abstract class Node implements Passive {
      * @return Node
      */
     public function buildChild($child){
+        if($this->built)
+            throw new DevPanic("No adding childs after build");
         if($child instanceof Node)
             $child->_build($this->ctx, $this);
         return $child;
@@ -209,7 +216,8 @@ abstract class Node implements Passive {
      * @return Node
      */
     public function executeChild($child){
-        $child->_execute();
+        if($child instanceof Node)
+            $child->_execute();
         return $child;
     }
 
