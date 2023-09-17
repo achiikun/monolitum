@@ -173,9 +173,10 @@ class HtmlElement implements Renderable
      *
      * @param       string      $key        html element attribute key
      * @param       string      $value      html element attribute value
+     * @param       bool        $filter     set if this attribute must be filtered
      * @return      HtmlElement
      */
-    public function setAttribute($key, $value = null, $filter = true)
+    public function setAttribute($key, $value, $filter = true)
     {
         if (is_null($value)) {
             if($this->attributeMap !== null){

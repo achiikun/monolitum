@@ -32,7 +32,7 @@ class Manager_Href_Resolver extends Manager
 
     protected function receiveActive($active)
     {
-        if($active instanceof Active_Resolve_Href){
+        if($active instanceof Active_Create_HrefResolver){
             $active->setHrefResolver(new HrefResolver_Impl($this, $active->getLink(), $active->isSetParamsAlone()));
             return true;
         }

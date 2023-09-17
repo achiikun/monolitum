@@ -4,7 +4,7 @@ namespace monolitum\frontend\component;
 
 use monolitum\backend\params\Link;
 use monolitum\backend\params\Path;
-use monolitum\backend\res\Active_Resolve_Href;
+use monolitum\backend\res\Active_Create_HrefResolver;
 use monolitum\backend\res\HrefResolver;
 use monolitum\core\GlobalContext;
 use monolitum\core\Renderable_Node;
@@ -39,7 +39,7 @@ class A extends AbstractText
     {
 
         if($this->href){
-            $active = new Active_Resolve_Href($this->href);
+            $active = new Active_Create_HrefResolver($this->href);
             GlobalContext::add($active);
             $this->hrefResolver = $active->getHrefResolver();
         }

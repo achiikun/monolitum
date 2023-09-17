@@ -278,82 +278,90 @@ class BSStyle extends ElementComponent_Ext
         return $this;
     }
 
-    public function position_relative()
+    public static function position_relative()
     {
-        $this->element->addClass("position-relative");
-        return $this;
+        return new BSStyle(function (BSStyle $it) {
+            $it->getElementComponent()->addClass("position-relative");
+        });
     }
 
-    public function position_absolute()
+    public static function position_absolute()
     {
-        $this->element->addClass("position-absolute");
-        return $this;
+        return new BSStyle(function (BSStyle $it) {
+            $it->getElementComponent()->addClass("position-absolute");
+        });
     }
 
-    public function top($inside=true)
+    public static function top($inside=true)
     {
+        return new BSStyle(function (BSStyle $it) use ($inside) {
+            if ($inside === null) {
+                $it->getElementComponent()->addClass("top-0", "translate-middle-y");
+            } else if ($inside)
+                $it->getElementComponent()->addClass("top-0");
+            else
+                $it->getElementComponent()->addClass("bottom-100");
+        });
+    }
+
+    public static function bottom($inside=true)
+    {
+        return new BSStyle(function (BSStyle $it) use ($inside) {
         if($inside === null){
-            $this->element->addClass("top-0", "translate-middle-y");
+            $it->getElementComponent()->addClass("top-100", "translate-middle-y");
         }else if($inside)
-            $this->element->addClass("top-0");
+            $it->getElementComponent()->addClass("bottom-0");
         else
-            $this->element->addClass("bottom-100");
-        return $this;
+            $it->getElementComponent()->addClass("top-100");
+        });
     }
 
-    public function bottom($inside=true)
+    public static function middle($fromTop=null)
     {
-        if($inside === null){
-            $this->element->addClass("top-100", "translate-middle-y");
-        }else if($inside)
-            $this->element->addClass("bottom-0");
-        else
-            $this->element->addClass("top-100");
-        return $this;
-    }
-
-    public function middle($fromTop=null)
-    {
+        return new BSStyle(function (BSStyle $it) use ($fromTop) {
         if($fromTop === null){
-            $this->element->addClass("top-50", "translate-middle-y");
+            $it->getElementComponent()->addClass("top-50", "translate-middle-y");
         }else if($fromTop)
-            $this->element->addClass("top-50");
+            $it->getElementComponent()->addClass("top-50");
         else
-            $this->element->addClass("bottom-50");
-        return $this;
+            $it->getElementComponent()->addClass("bottom-50");
+        });
     }
 
-    public function start($inside=true)
+    public static function start($inside=true)
     {
+        return new BSStyle(function (BSStyle $it) use ($inside) {
         if($inside === null){
-            $this->element->addClass("start-0", "translate-middle-x");
+            $it->getElementComponent()->addClass("start-0", "translate-middle-x");
         }else if($inside)
-            $this->element->addClass("start-0");
+            $it->getElementComponent()->addClass("start-0");
         else
-            $this->element->addClass("end-100");
-        return $this;
+            $it->getElementComponent()->addClass("end-100");
+        });
     }
 
-    public function end($inside=true)
+    public static function end($inside=true)
     {
+        return new BSStyle(function (BSStyle $it) use ($inside) {
         if($inside === null){
-            $this->element->addClass("start-100", "translate-middle-x");
+            $it->getElementComponent()->addClass("start-100", "translate-middle-x");
         }else if($inside)
-            $this->element->addClass("end-0");
+            $it->getElementComponent()->addClass("end-0");
         else
-            $this->element->addClass("start-100");
-        return $this;
+            $it->getElementComponent()->addClass("start-100");
+        });
     }
 
-    public function center($fromStart=null)
+    public static function center($fromStart=null)
     {
+        return new BSStyle(function (BSStyle $it) use ($fromStart) {
         if($fromStart === null){
-            $this->element->addClass("start-50", "translate-middle-x");
+            $it->getElementComponent()->addClass("start-50", "translate-middle-x");
         }else if($fromStart)
-            $this->element->addClass("end-50");
+            $it->getElementComponent()->addClass("end-50");
         else
-            $this->element->addClass("start-50");
-        return $this;
+            $it->getElementComponent()->addClass("start-50");
+        });
     }
 
 }

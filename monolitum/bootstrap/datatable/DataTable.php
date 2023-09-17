@@ -7,10 +7,11 @@ use Iterator;
 use monolitum\backend\params\Link;
 use monolitum\backend\params\Manager_Params;
 use monolitum\backend\params\Path;
-use monolitum\backend\res\Active_Resolve_Href;
+use monolitum\backend\res\Active_Create_HrefResolver;
 use monolitum\backend\res\HrefResolver;
 use monolitum\core\GlobalContext;
 use monolitum\core\Renderable_Node;
+use monolitum\database\Query_Result;
 use monolitum\entity\attr\Attr;
 use monolitum\entity\Model;
 use monolitum\frontend\Component;
@@ -202,7 +203,7 @@ class DataTable extends ElementComponent
                     );
                 }
 
-                $active = new Active_Resolve_Href($myLink);
+                $active = new Active_Create_HrefResolver($myLink);
                 GlobalContext::add($active);
                 $this->columnHrefResolvers[] = $active->getHrefResolver();
             }else{
@@ -216,11 +217,12 @@ class DataTable extends ElementComponent
 
             $callable = $this->rowRetriever;
 
-            /** @var Iterator $iterator */
+            /** @var Query_Result $iterator */
             $iterator = $callable($this);
 
-            foreach ($iterator as $entity){
-
+            while ($iterator->hasNext()){
+                $entity = $iterator->next();
+                
                 $row = [];
 
                 foreach($this->columns as $column){
@@ -315,12 +317,8 @@ class DataTable extends ElementComponent
                 $td = new HtmlElement("td");
                 if(is_string($cell)){
                     $td->setContent($cell);
-                }else if($cell instanceof Renderable_Node){
-                    $rendered = $cell->render();
-                    if($rendered !== null)
-                        $rendered->renderTo($td);
-                }else if($cell instanceof Rendered){
-                    $cell->renderTo($td);
+                }else {
+                    Renderable_Node::renderRenderedTo($cell, $td);
                 }
                 $tbodyrow->addChildElement($td);
 

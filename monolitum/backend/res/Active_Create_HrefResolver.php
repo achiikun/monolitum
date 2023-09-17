@@ -7,7 +7,7 @@ use monolitum\backend\params\Link;
 use monolitum\backend\params\Path;
 use monolitum\core\panic\DevPanic;
 
-class Active_Resolve_Href implements Active
+class Active_Create_HrefResolver implements Active
 {
 
     /**

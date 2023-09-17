@@ -98,13 +98,7 @@ class HTMLPage extends Component {
             if($head_component instanceof Node)
                 $this->executeChild($head_component);
 
-            $rendered = null;
-            if($head_component instanceof Renderable_Node)
-                $rendered = $head_component->render();
-            else if($head_component instanceof Renderable)
-                $rendered = $head_component;
-            if($rendered !== null)
-                $rendered->renderTo($head);
+            Renderable_Node::renderRenderedTo($head_component, $head);
 
         }
         $html->addChildElement($head);
@@ -112,15 +106,12 @@ class HTMLPage extends Component {
         $body = new HtmlElement('body');
         parent::executeComponent();
 
-        $rendered = parent::render();
-        if($rendered !== null)
-            $rendered->renderTo($body);
+        Renderable_Node::renderRenderedTo(parent::render(), $body);
 
         foreach($this->body_components as $body_component){
-            $this->executeChild($body_component);
-            $rendered = $body_component->render();
-            if($rendered !== null)
-                $rendered->renderTo($body);
+            if($body_component instanceof Node)
+                $this->executeChild($body_component);
+            Renderable_Node::renderRenderedTo($body_component, $body);
         }
         $html->addChildElement($body);
         
@@ -132,6 +123,5 @@ class HTMLPage extends Component {
     function buildPage(){
         
     }
-    
-    
+
 }

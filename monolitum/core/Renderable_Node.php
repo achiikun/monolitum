@@ -125,4 +125,26 @@ abstract class Renderable_Node extends Node implements Active {
         }
         return null;
     }
+
+    /**
+     * @param array|Renderable_Node|Renderable $rendered
+     * @param mixed $element
+     * @return void
+     */
+    public static function renderRenderedTo($rendered, $element)
+    {
+
+        if(is_array($rendered)){
+            foreach ($rendered as $rendered2) {
+                Renderable_Node::renderRenderedTo($rendered2, $element);
+            }
+        }else if($rendered instanceof Renderable_Node){
+            Renderable_Node::renderRenderedTo($rendered->render(), $element);
+        }else if($rendered instanceof Renderable) {
+            $rendered->renderTo($element);
+        }
+
+    }
+
+
 }

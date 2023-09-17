@@ -3,6 +3,7 @@ namespace monolitum\frontend;
 
 use monolitum\core\Node;
 use monolitum\core\Renderable;
+use monolitum\core\Renderable_Node;
 use monolitum\frontend\css\Style;
 use monolitum\frontend\html\HtmlElement;
 
@@ -27,7 +28,7 @@ class ElementComponent extends Component
      * @param HtmlElement $element
      * @param callable|null $builder
      */
-    public function __construct($element, $builder = null)
+    public function __construct($element , $builder = null)
     {
         parent::__construct($builder);
         $this->element = $element;
@@ -167,18 +168,7 @@ class ElementComponent extends Component
     {
 
         $rc = parent::render();
-        if($rc !== null){
-            if(is_array($rc)){
-                /** @var Renderable $renderable */
-                foreach ($rc as $renderable) {
-                    if($renderable !== null)
-                        $renderable->renderTo($this->element);
-                }
-            }else{
-                $rc->renderTo($this->element);
-            }
-        }
-
+        Renderable_Node::renderRenderedTo($rc, $this->element);
         return Rendered::of($this->element);
     }
 

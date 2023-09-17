@@ -7,7 +7,7 @@ use monolitum\bootstrap\values\ResponsiveProperty;
 use monolitum\core\GlobalContext;
 use monolitum\frontend\ElementComponent_Ext;
 
-class BSTextAlign implements ResponsiveProperty, BSBuiltIntoInterface
+class BSTextAlign extends ElementComponent_Ext implements ResponsiveProperty, BSBuiltIntoInterface
 {
 
     /**
@@ -18,8 +18,11 @@ class BSTextAlign implements ResponsiveProperty, BSBuiltIntoInterface
     /**
      * @param string $value
      */
-    private function __construct($value)
+    public function __construct($value)
     {
+        parent::__construct(null, function (ElementComponent_Ext $it) {
+            $this->buildInto($it->getElementComponent());
+        });
         $this->value = $value;
     }
 
@@ -36,12 +39,7 @@ class BSTextAlign implements ResponsiveProperty, BSBuiltIntoInterface
     }
 
     public function add(){
-        GlobalContext::add(
-            new ElementComponent_Ext(
-                function (ElementComponent_Ext $it) {
-                    $this->buildInto($it->getElementComponent());
-                })
-        );
+        GlobalContext::add($this);
     }
 
     /**

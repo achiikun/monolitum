@@ -22,6 +22,15 @@ class BSColSpan implements ResponsiveProperty
         $this->value = $value;
     }
 
+    /**
+     * @param int $value
+     * @return BSColSpan
+     */
+    public static function c($value)
+    {
+        return new BSColSpan($value);
+    }
+
     public static function c12(){
         return new BSColSpan(12);
     }

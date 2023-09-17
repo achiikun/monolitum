@@ -2,6 +2,7 @@
 
 namespace monolitum\bootstrap;
 
+use monolitum\frontend\component\Img;
 use monolitum\backend\globals\Active_NewId;
 use monolitum\backend\params\Link;
 use monolitum\backend\params\Path;
@@ -217,7 +218,7 @@ class NavBar extends ElementComponent
 
                 $id = Active_NewId::go_newId();
 
-                $button = new Button();
+                $button = new BSButton();
                 $button->addClass("navbar-toggler");
                 $button->setAttribute("data-bs-toggle", "collapse");
                 $button->setAttribute("data-bs-target", "#" . $id);

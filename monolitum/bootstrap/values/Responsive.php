@@ -10,32 +10,32 @@ abstract class Responsive
     /**
      * @var ResponsiveProperty
      */
-    private $def;
+    protected $def;
 
     /**
      * @var ResponsiveProperty
      */
-    private $sm;
+    protected $sm;
 
     /**
      * @var ResponsiveProperty
      */
-    private $md;
+    protected $md;
 
     /**
      * @var ResponsiveProperty
      */
-    private $lg;
+    protected $lg;
 
     /**
      * @var ResponsiveProperty
      */
-    private $xl;
+    protected $xl;
 
     /**
      * @var ResponsiveProperty
      */
-    private $xxl;
+    protected $xxl;
 
     /**
      * @param ResponsiveProperty $default

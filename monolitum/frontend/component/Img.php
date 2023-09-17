@@ -1,11 +1,11 @@
 <?php
 
-namespace monolitum\bootstrap;
+namespace monolitum\frontend\component;
 
-use monolitum\core\GlobalContext;
-use monolitum\backend\res\Active_Resolve_Res;
 use monolitum\backend\params\Path;
+use monolitum\backend\res\Active_Resolve_Res;
 use monolitum\backend\res\ResResolver;
+use monolitum\core\GlobalContext;
 use monolitum\frontend\ElementComponent;
 use monolitum\frontend\html\HtmlElement;
 

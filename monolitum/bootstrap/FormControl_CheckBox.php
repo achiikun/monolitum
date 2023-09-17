@@ -18,7 +18,7 @@ class FormControl_CheckBox extends FormControl
 
     public function setValue($value){
         $element = $this->getElement();
-        $element->setAttribute($value ? "checked" : null);
+        $element->setAttribute($value ? "checked" : null, "");
     }
     
     /**
