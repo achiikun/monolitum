@@ -10,6 +10,7 @@ use monolitum\entity\attr\Attr_Decimal;
 use monolitum\entity\attr\Attr_File;
 use monolitum\entity\attr\Attr_Int;
 use monolitum\entity\attr\Attr_String;
+use monolitum\entity\AttrExt_Validate;
 use monolitum\entity\Entities_Manager;
 use monolitum\entity\Model;
 use monolitum\entity\ValidatedValue;
@@ -124,8 +125,39 @@ class Manager_Params extends Manager implements Validator
     /**
      * @param Model|string $model
      * @param Attr|string $attr
+     * @param string $prefix
+     * @return ValidatedValue
      */
-    public function validate($model, $attr){
+    public function validate($model, $attr, $prefix=null){
+
+        /** @var Model $model */
+        $model = Entities_Manager::go_getModel($model);
+        $attr = $model->getAttr($attr);
+
+        $validatedValue = $this->validateOnlyFormat($model, $attr, $prefix);
+
+        if($validatedValue->isValid()){
+
+            /** @var AttrExt_Validate|null $attrExt_Validate */
+            $attrExt_Validate = $attr->findExtension(AttrExt_Validate::class);
+
+            if($attrExt_Validate !== null){
+                $validatedValue = $attrExt_Validate->validate($validatedValue);
+            }
+
+        }
+
+        return $validatedValue;
+
+    }
+
+    /**
+     * @param Model|string $model
+     * @param Attr|string $attr
+     * @param string $prefix
+     * @return ValidatedValue
+     */
+    public function validateOnlyFormat($model, $attr, $prefix=null){
         /** @var Model $model */
         $model = Entities_Manager::go_getModel($model);
         $attr = $model->getAttr($attr);
@@ -147,6 +179,8 @@ class Manager_Params extends Manager implements Validator
             }else{
                 $name = $attr->getId();
             }
+            if($prefix !== null)
+                $name = $prefix . $name;
 
             $value = array_key_exists($name, $globalArray) ? $globalArray[$name] : null;
 
@@ -162,6 +196,8 @@ class Manager_Params extends Manager implements Validator
             }else{
                 $name = $attr->getId();
             }
+            if($prefix !== null)
+                $name = $prefix . $name;
 
             $value = array_key_exists($name, $_FILES) ? $_FILES[$name] : null;
 
@@ -170,7 +206,7 @@ class Manager_Params extends Manager implements Validator
                     !isset($value['error']) ||
                     is_array($value['error'])
                 ) {
-                    return new ValidatedValue(false, null, Attr_File::ERROR_BAD_FORMAT);
+                    return new ValidatedValue(false, false, null, Attr_File::ERROR_BAD_FORMAT);
                 }
                 if($value['error'] == UPLOAD_ERR_NO_FILE)
                     $value = null;
@@ -220,9 +256,35 @@ class Manager_Params extends Manager implements Validator
         $value = array_key_exists($name, $globalArray) ? $globalArray[$name] : null;
 
         if(is_string($value) || is_numeric($value)){
-            return new ValidatedValue(true, strval($value));
+            return new ValidatedValue(true, true, strval($value));
         }else if(is_null($value)){
-            return new ValidatedValue(true, null);
+            return new ValidatedValue(true, true, null);
+        }
+
+        return new ValidatedValue(false);
+
+    }
+
+    public function validateStringPost_NameStartingWith_ReturnEnding($prefix)
+    {
+
+        $globalArray = $_POST;
+
+        foreach ($globalArray as $name => $value){
+
+            $prefixLength = strlen($prefix);
+
+            // php <8 starts_with
+            if(strncmp($name, $prefix, $prefixLength) === 0){
+                $actionLength = strlen($name) - $prefixLength;
+                if($actionLength === 0)
+                    return new ValidatedValue(true, true, null);
+
+                $action = substr( $name, $prefixLength, strlen($name) - $prefixLength);
+
+                return new ValidatedValue(true, true, strval($action));
+            }
+
         }
 
         return new ValidatedValue(false);

@@ -56,7 +56,7 @@ class Accordion extends ElementComponent
                 $button->addClass("collapsed");
             $button->setAttribute("data-bs-toggle", "collapse");
             $button->setAttribute("data-bs-target", "#" . $idItem);
-            $button->push($item->getHeader()); // Already built
+            $button->append($item->getHeader()); // Already built
 
             $h2->append($button);
             $divItem->append($h2);
@@ -75,7 +75,7 @@ class Accordion extends ElementComponent
             $divCollapse->append($divBody);
             $divItem->append($divCollapse);
 
-            $this->push($divItem);
+            $this->append($divItem);
 
         }
 

@@ -41,8 +41,8 @@ class ElementComponent extends Component
      * @param       string      $value  html element attribute value
      * @return      $this
      */
-    public function setAttribute($key, $value = null){
-        $this->element->setAttribute($key, $value);
+    public function setAttribute($key, $value = null, $filter = true){
+        $this->element->setAttribute($key, $value, $filter);
         return $this;
     }
 
@@ -54,6 +54,14 @@ class ElementComponent extends Component
     {
         $this->setAttribute('id', $id);
         return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getClasses()
+    {
+        return $this->element->getClasses();
     }
 
     /**

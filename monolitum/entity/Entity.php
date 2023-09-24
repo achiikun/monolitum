@@ -202,7 +202,7 @@ abstract class Entity
     {
         if($attr instanceof Attr)
             return $this->values[$attr->getId()];
-        return $this->values[$attr];
+        return key_exists($attr, $this->values) ? $this->values[$attr] : null;
     }
 
     /**

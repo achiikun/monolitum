@@ -6,13 +6,15 @@ class ValidatedValue
 {
 
     private $isValid;
+    private $isWellFormat;
     private $value;
 
     private $error;
 
-    public function __construct($isValid, $value = null, $error = null)
+    public function __construct($isValid=false, $wellFormat=false, $value = null, $error = null)
     {
         $this->isValid = $isValid;
+        $this->isWellFormat = $wellFormat;
         $this->value = $value;
         $this->error = $error;
     }
@@ -44,6 +46,11 @@ class ValidatedValue
     public function isNull()
     {
         return $this->value === null;
+    }
+
+    public function isWellFormat()
+    {
+        return $this->isWellFormat;
     }
 
 }

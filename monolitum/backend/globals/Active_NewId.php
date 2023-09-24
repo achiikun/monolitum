@@ -12,7 +12,20 @@ class Active_NewId implements Active
     /**
      * @var string
      */
+    private $contextIds;
+
+    /**
+     * @var string
+     */
     private $id;
+
+    /**
+     * @param string $contextIds
+     */
+    public function __construct($contextIds)
+    {
+        $this->contextIds = $contextIds;
+    }
 
     /**
      * @param string $id
@@ -30,6 +43,14 @@ class Active_NewId implements Active
         return $this->id;
     }
 
+    /**
+     * @return string
+     */
+    public function getContextIds()
+    {
+        return $this->contextIds;
+    }
+
     function onNotReceived()
     {
         throw new DevPanic();
@@ -38,8 +59,8 @@ class Active_NewId implements Active
     /**
      * @return string
      */
-    public static function go_newId(){
-        $active = new Active_NewId();
+    public static function go_newId($contextIds=null){
+        $active = new Active_NewId($contextIds);
         GlobalContext::add($active);
         return $active->getId();
     }

@@ -1,9 +1,11 @@
 <?php
-namespace monolitum\frontend\form;
+namespace monolitum\entity;
 
-use monolitum\entity\ValidatedValue;
+use http\Params;
+use monolitum\core\panic\DevPanic;
+use monolitum\frontend\form\AttrExt_Form_String;
 
-class AttrExt_Form_Int extends AttrExt_Form
+class AttrExt_Validate_Int extends AttrExt_Validate
 {
 
     private $min = null;
@@ -46,16 +48,17 @@ class AttrExt_Form_Int extends AttrExt_Form
     }
 
 
-    public function revalidate(ValidatedValue $validated)
+    /**
+     * @param ValidatedValue $validatedValue
+     * @return ValidatedValue
+     */
+    public function validate($validatedValue)
     {
-        $error = false;
+        $error = parent::validate($validatedValue);
 
-        if(!$this->isNullable() && $validated->isNull())
-            $error = true;
+        if(!$validatedValue->isNull()){
 
-        if(!$validated->isNull()){
-
-            $val = $validated->getValue();
+            $val = $validatedValue->getValue();
 
             if($this->min !== null && $val < $this->min)
                 $error = true;
@@ -66,15 +69,18 @@ class AttrExt_Form_Int extends AttrExt_Form
         }
 
         if($error){
-            return $this->makeDefault(new ValidatedValue(false, $validated->getValue()));
+            return new ValidatedValue(false, true, $validatedValue->getValue());
         }else{
-            return $validated;
+            return $validatedValue;
         }
 
     }
 
-    static function of(){
-        return new AttrExt_Form_Int();
+    /**
+     * @return AttrExt_Validate_Int
+     */
+    public static function of(){
+        return new AttrExt_Validate_Int();
     }
 
 }

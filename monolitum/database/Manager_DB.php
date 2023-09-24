@@ -14,11 +14,11 @@ use monolitum\entity\attr\Attr_Date;
 use monolitum\entity\attr\Attr_Decimal;
 use monolitum\entity\attr\Attr_Int;
 use monolitum\entity\attr\Attr_String;
-use monolitum\entity\AttrExt_Validate_String;
 use monolitum\entity\Entities_Manager;
 use monolitum\entity\Entity;
 use monolitum\entity\Interface_Entity_DB;
 use monolitum\entity\Model;
+use monolitum\frontend\form\AttrExt_Form_String;
 use PDO;
 
 class Manager_DB extends Manager implements Active, Interface_Entity_DB
@@ -195,8 +195,8 @@ class Manager_DB extends Manager implements Active, Interface_Entity_DB
                 }else if($attr instanceof Attr_Decimal){
                     $sql .= " INT";
                 }else if($attr instanceof Attr_String){
-                    /** @var AttrExt_Validate_String $validateString */
-                    $validateString = $attr->findExtension(AttrExt_Validate_String::class);
+                    /** @var AttrExt_Form_String $validateString */
+                    $validateString = $attr->findExtension(AttrExt_Form_String::class);
                     $limit = null;
                     if($validateString != null){
                         $limit = $validateString->getMaxChars();

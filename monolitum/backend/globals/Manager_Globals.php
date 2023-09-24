@@ -10,6 +10,8 @@ class Manager_Globals extends Manager
 
     private $uniqueId = 0;
 
+    private $uniqueIdByContext = [];
+
     public function __construct($builder = null)
     {
         parent::__construct($builder);
@@ -19,8 +21,24 @@ class Manager_Globals extends Manager
     {
 
         if($active instanceof Active_NewId){
-            $id = $this->uniqueId++;
-            $active->setId("uid_" . $id);
+            $context = $active->getContextIds();
+            if($context === null){
+
+                $id = $this->uniqueId++;
+                $active->setId("uid_" . $id);
+
+            }else{
+
+                if(key_exists($context, $this->uniqueIdByContext)){
+                    $id = $this->uniqueIdByContext[$context]++;
+                }else{
+                    $this->uniqueIdByContext[$context] = 1;
+                    $id = 0;
+                }
+
+                $active->setId("uid_" . $context . "_" . $id);
+
+            }
             return true;
         }
         return parent::receiveActive($active);

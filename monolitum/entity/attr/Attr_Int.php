@@ -17,12 +17,12 @@ class Attr_Int extends Attr
         if(is_string($value)){
             if(is_numeric($value)) {
                 $intValue = intval($value);
-                return new ValidatedValue(true, $intValue);
+                return new ValidatedValue(true, true, $intValue);
             } else {
                 return new ValidatedValue(false);
             }
         }else if(is_numeric($value)){
-            return new ValidatedValue(true, intval($value));
+            return new ValidatedValue(true, true, intval($value));
         }
         return new ValidatedValue(false);
     }

@@ -13,11 +13,6 @@ class AttrExt_Form extends AttrExt
     private $label;
 
     /**
-     * @var bool
-     */
-    private $nullable = false;
-
-    /**
      * @var string|null
      */
     private $nullLabel;
@@ -36,11 +31,10 @@ class AttrExt_Form extends AttrExt
     }
 
     /**
-     * @param bool $nullable
+     * @param string $nullLabel
+     * @return $this
      */
-    public function nullable($nullLabel=null)
-    {
-        $this->nullable = true;
+    function nullLabel($nullLabel) {
         $this->nullLabel = $nullLabel;
         return $this;
     }
@@ -67,28 +61,11 @@ class AttrExt_Form extends AttrExt
     }
 
     /**
-     * @return bool
-     */
-    public function isNullable()
-    {
-        return $this->nullable;
-    }
-
-    /**
      * @return string|null
      */
     public function getNullLabel()
     {
         return $this->nullLabel;
-    }
-
-    public function revalidate(ValidatedValue $validated)
-    {
-        if(!$validated->isValid())
-            return $this->makeDefault($validated);
-        if(!$this->isNullable() && $validated->isNull())
-            return new ValidatedValue(false, $validated->getValue());
-        return $validated;
     }
 
     protected function makeDefault(ValidatedValue $validated)
@@ -101,10 +78,10 @@ class AttrExt_Form extends AttrExt
 
         if($isValid){
             if($isNull)
-                return new ValidatedValue(true, $this->def);
+                return new ValidatedValue(true, true, $this->def);
         }else{
             if($this->substituteNotValid)
-                return new ValidatedValue(true, $this->def);
+                return new ValidatedValue(true, true, $this->def);
         }
         return $validated;
     }

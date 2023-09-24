@@ -3,6 +3,7 @@
 namespace monolitum\core;
 
 use monolitum\core\panic\DevPanic;
+use monolitum\frontend\Rendered;
 
 abstract class Renderable_Node extends Node implements Active {
 
@@ -55,6 +56,8 @@ abstract class Renderable_Node extends Node implements Active {
                 $this->insertIntoArray($this->buildChild($active), $idx);
             else
                 $this->insertIntoArray($active, $idx);
+        }else if(is_array($active)){
+            $this->insertIntoArray(Rendered::of($active), $idx);
         }else {
             $this->insertIntoArray($active, $idx);
         }
@@ -108,6 +111,14 @@ abstract class Renderable_Node extends Node implements Active {
      */
     public function render()
     {
+        return $this->renderChilds();
+    }
+
+    /**
+     * @return Renderable|array|null
+     */
+    public function renderChilds()
+    {
         if(is_array($this->childs)){
             $rendered = [];
             foreach ($this->childs as $child) {
@@ -124,6 +135,7 @@ abstract class Renderable_Node extends Node implements Active {
                 return $this->childs;
         }
         return null;
+
     }
 
     /**

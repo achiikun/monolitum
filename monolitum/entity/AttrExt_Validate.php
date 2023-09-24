@@ -11,7 +11,7 @@ class AttrExt_Validate extends AttrExt
      * @param bool $nullable
      * @return $this
      */
-    public function setNullable($nullable)
+    public function nullable($nullable = true)
     {
         $this->nullable = $nullable;
         return $this;
@@ -26,16 +26,16 @@ class AttrExt_Validate extends AttrExt
     }
 
     /**
-     * @param ValidatedValue $value
+     * @param ValidatedValue $validatedValue
+     * @return ValidatedValue
      */
-    public function validate($value){
-        $isStringEmpty = is_string($value) && strlen(trim($value)) == 0;
-        if(!$this->nullable && (
-            $value == null || $isStringEmpty
-        ))
-            return new ValidatedValue(false);
-        if($this->nullable && $isStringEmpty)
-            return new ValidatedValue(true, null);
+    public function validate($validatedValue){
+
+        if(!$this->isNullable() && $validatedValue->isNull())
+            return new ValidatedValue(false, true, $validatedValue->getValue());
+
+        return $validatedValue;
+
     }
 
     /**

@@ -26,7 +26,7 @@ class Badge extends AbstractText
     public static function of($content, $color)
     {
         $fc = new Badge();
-        $fc->push($content);
+        $fc->append($content);
         $fc->push(BSText::textBackgroundColor($color));
         return $fc;
     }

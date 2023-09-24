@@ -19,12 +19,12 @@ class Attr_Date extends Attr
                 if($date === false)
                     return new ValidatedValue(false);
 
-                return new ValidatedValue(true, $date);
+                return new ValidatedValue(true, true, $date);
             }else{
-                return new ValidatedValue(true, null);
+                return new ValidatedValue(true, true, null);
             }
         }else if(is_null($value)){
-            return new ValidatedValue(true, null);
+            return new ValidatedValue(true, true, null);
         }
 
         return new ValidatedValue(false);

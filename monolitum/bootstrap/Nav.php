@@ -2,6 +2,7 @@
 
 namespace monolitum\bootstrap;
 
+use monolitum\backend\res\Active_Create_HrefResolver;
 use monolitum\core\GlobalContext;
 use monolitum\frontend\ElementComponent;
 use monolitum\frontend\html\HtmlElement;
@@ -108,13 +109,15 @@ class Nav extends ElementComponent
             if($leftItem->isDisabled()){
                 $a->addClass("disabled");
             }else{
-                $a->setAttribute("href", $leftItem->getLink(), false);
+                $active = new Active_Create_HrefResolver($leftItem->getLink());
+                $this->push($active);
+                $a->setAttribute("href", $active->getHrefResolver()->resolve(), false);
             }
             $a->setContent($leftItem->getText());
 
             $li->addContent($a);
 
-            $this->push($li);
+            $this->append($li);
         }
 
         parent::executeComponent();

@@ -47,29 +47,29 @@ class Attr_File extends Attr
             $name = $value['name'];
             if(is_array($name) && count($name) > 0){
                 // Multiple is not supported
-                return new ValidatedValue(false, null, Attr_File::ERROR_MULTIPLE_NOT_SUPPORTED);
+                return new ValidatedValue(false, false, null, Attr_File::ERROR_MULTIPLE_NOT_SUPPORTED);
             }
             $type = $value['type'];
             if(is_array($type) && count($type) > 0){
                 // Multiple is not supported
-                return new ValidatedValue(false, null, Attr_File::ERROR_MULTIPLE_NOT_SUPPORTED);
+                return new ValidatedValue(false, false, null, Attr_File::ERROR_MULTIPLE_NOT_SUPPORTED);
             }
             $temp_name = $value['tmp_name'];
             if(is_array($temp_name) && count($temp_name) > 0){
                 // Multiple is not supported
-                return new ValidatedValue(false, null, Attr_File::ERROR_MULTIPLE_NOT_SUPPORTED);
+                return new ValidatedValue(false, false, null, Attr_File::ERROR_MULTIPLE_NOT_SUPPORTED);
             }
             $size = $value['size'];
             if(is_array($size) && count($size) > 0){
                 // Multiple is not supported
-                return new ValidatedValue(false, null, Attr_File::ERROR_MULTIPLE_NOT_SUPPORTED);
+                return new ValidatedValue(false, false, null, Attr_File::ERROR_MULTIPLE_NOT_SUPPORTED);
             }
 
             if ($this->maxSize !== null && $size > $this->maxSize) {
-                return new ValidatedValue(false, null, Attr_File::ERROR_MAX_SIZE);
+                return new ValidatedValue(false, false, null, Attr_File::ERROR_MAX_SIZE);
             }
 
-            return new ValidatedValue(true, new File($name, $type, $size, $temp_name));
+            return new ValidatedValue(true, true, new File($name, $type, $size, $temp_name));
 
         }
 

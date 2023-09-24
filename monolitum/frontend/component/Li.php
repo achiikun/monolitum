@@ -21,7 +21,7 @@ class Li extends AbstractText
     public static function of($content)
     {
         $fc = new Li();
-        $fc->push($content);
+        $fc->append($content);
         return $fc;
     }
 

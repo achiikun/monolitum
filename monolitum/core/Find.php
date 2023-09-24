@@ -68,11 +68,14 @@ class Find implements Active
      * @param bool $cache
      * @return Passive|null
      */
-    static function sync($class, $cache=true){
+    static function sync($class, $cache=true, $dontThrowIfNotReceived=false){
         $var = new Ref();
-        GlobalContext::add(new Find($class, function($r) use ($var) {
+        $find = new Find($class, function($r) use ($var) {
             $var->value = $r;
-        }, $cache));
+        }, $cache);
+        if($dontThrowIfNotReceived)
+            $find->dontThrowIfNotReceived();
+        GlobalContext::add($find);
         return $var->value;
     }
 
@@ -82,11 +85,14 @@ class Find implements Active
      * @param bool $cache
      * @return Passive|null
      */
-    static function syncFrom($class, $passive, $cache=true){
+    static function syncFrom($class, $passive, $cache=true, $dontThrowIfNotReceived=false){
         $var = new Ref();
-        $passive->_receive(new Find($class, function($r) use ($var) {
+        $find = new Find($class, function($r) use ($var) {
             $var->value = $r;
-        }, $cache), 0);
+        }, $cache);
+        if($dontThrowIfNotReceived)
+            $find->dontThrowIfNotReceived();
+        GlobalContext::add($find, $passive);
         return $var->value;
     }
 

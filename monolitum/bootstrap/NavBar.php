@@ -228,7 +228,7 @@ class NavBar extends ElementComponent
                     $span = new Span();
                     $span->addClass("navbar-toggler-icon");
 
-                    $button->push($span);
+                    $button->append($span);
 
                 }
                 $fluid->append($button);
@@ -327,7 +327,7 @@ class NavBar extends ElementComponent
 
             }
 
-            $this->push($fluid);
+            $this->append($fluid);
 
         }
 

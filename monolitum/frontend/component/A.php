@@ -67,7 +67,7 @@ class A extends AbstractText
     public static function of($content)
     {
         $fc = new A();
-        $fc->push($content);
+        $fc->append($content);
         return $fc;
     }
 

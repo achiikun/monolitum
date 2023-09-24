@@ -38,12 +38,12 @@ class Attr_Decimal extends Attr
             try{
                 $floatValue = floatval($value);
                 $intValue = intval($floatValue * pow(10, $this->decimals));
-                return new ValidatedValue(true, $intValue);
+                return new ValidatedValue(true, true, $intValue);
             }catch (Exception $e){
                 return new ValidatedValue(false);
             }
         }else if(is_numeric($value)){
-            return new ValidatedValue(true, intval($value * pow(10, $this->decimals)));
+            return new ValidatedValue(true, true, intval($value * pow(10, $this->decimals)));
         }
         return new ValidatedValue(false);
     }

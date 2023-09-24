@@ -6,6 +6,8 @@ use monolitum\bootstrap\style\BS_Form_InputGroup;
 use monolitum\bootstrap\style\BSDisplay;
 use monolitum\bootstrap\style\BSStyle;
 use monolitum\bootstrap\style\BSText;
+use monolitum\entity\AnonymousModel;
+use monolitum\entity\attr\Attr_Int;
 use monolitum\frontend\component\A;
 use monolitum\frontend\component\Li;
 use monolitum\backend\params\Link;
@@ -19,6 +21,7 @@ use monolitum\core\panic\DevPanic;
 use monolitum\frontend\css\CSSSize;
 use monolitum\frontend\css\Style;
 use monolitum\frontend\ElementComponent;
+use monolitum\frontend\form\AttrExt_Form_Int;
 use monolitum\frontend\form\Form;
 use monolitum\frontend\html\HtmlElement;
 
@@ -262,10 +265,10 @@ class Pagination extends ElementComponent
             ));
         }
 
-        $this->push($ul);
+        $this->append($ul);
 
         if($this->comboboxButtonText !== null)
-            $this->push($this->makeCombo());
+            $this->append($this->makeCombo());
 
         parent::afterBuildNode();
     }
@@ -318,7 +321,7 @@ class Pagination extends ElementComponent
         return new Div(function (Div $it) {
             $it->push(BSDisplay::inline_flex());
 
-            Form::add(null, function (Form $it) {
+            Form::addAnonymous(function (Form $it) {
 
                 $it->setMethodGET();
                 $it->setDefaultValue($this->param_page, $this->page);

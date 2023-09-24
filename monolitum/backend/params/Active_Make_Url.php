@@ -14,9 +14,16 @@ class Active_Make_Url implements Active
     private $link;
 
     /**
-     * @var bool
+     * if true, all params are set alone, if array, only params in array are set alone.
+     * Alone params help POST forms to add hidden data into it.
+     * @var bool|array<string>
      */
     private $setParamsAlone;
+
+    /**
+     * @var array<string, string>
+     */
+    private $paramsAlone;
 
     /**
      * @var string
@@ -24,10 +31,9 @@ class Active_Make_Url implements Active
     private $url;
 
     /**
-     * @var array<string, string>
+     * @param Link|Path $link
+     * @param bool|array<string> $isSetParamsAlone
      */
-    private $paramsAlone;
-
     public function __construct($link, $isSetParamsAlone=false)
     {
         $this->link = $link;
@@ -43,7 +49,7 @@ class Active_Make_Url implements Active
     }
 
     /**
-     * @return bool
+     * @return bool|array<string>
      */
     public function isSetParamsAlone()
     {

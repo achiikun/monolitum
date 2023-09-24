@@ -22,7 +22,7 @@ class H extends AbstractText
     public static function of($level, $content)
     {
         $fc = new H($level);
-        $fc->push($content);
+        $fc->append($content);
         return $fc;
     }
 

@@ -3,7 +3,9 @@
 namespace monolitum\frontend\form;
 
 use monolitum\core\Find;
+use monolitum\core\panic\DevPanic;
 use monolitum\entity\attr\Attr;
+use monolitum\entity\AttrExt_Validate;
 use monolitum\frontend\ElementComponent;
 use monolitum\frontend\html\HtmlElement;
 
@@ -16,7 +18,7 @@ abstract class Form_Attr extends ElementComponent
     protected $form;
 
     /**
-     * @var Attr|string
+     * @var Attr
      */
     protected $attr;
 
@@ -24,6 +26,11 @@ abstract class Form_Attr extends ElementComponent
      * @var AttrExt_Form
      */
     protected $formExt;
+
+    /**
+     * @var AttrExt_Validate
+     */
+    protected $validateExt;
 
     /**
      * @var string
@@ -54,11 +61,14 @@ abstract class Form_Attr extends ElementComponent
     protected function buildNode()
     {
         $this->form = Find::sync(Form::class);
-        if(!($this->attr instanceof Attr))
-            $this->attr = $this->form->getAttr($this->attr);
-        $this->form->_registerFormAttr($this, $this->attr);
+        $this->attr = $this->form->_getAttr($this->attr);
 
+        if(!($this->attr instanceof Attr))
+            throw new DevPanic("Form_Attr works only with real Attr");
+
+        $this->form->_registerFormAttr($this, $this->attr);
         $this->formExt = $this->attr->findExtension(AttrExt_Form::class);
+        $this->validateExt = $this->attr->findExtension(AttrExt_Validate::class);
 
         parent::buildNode();
     }
@@ -87,7 +97,7 @@ abstract class Form_Attr extends ElementComponent
      */
     protected function getName()
     {
-        return $this->form->getAttrName($this->attr);
+        return $this->form->_getAttrName($this->attr);
     }
 
     /**
@@ -104,22 +114,26 @@ abstract class Form_Attr extends ElementComponent
     }
 
     /**
+     * Returns if the value that user set is invalid.
      * @return bool|null
      */
     protected function isValid()
     {
-        $isValid = $this->form->isValid($this->attr);
+        if($this->form->isSilentValidation())
+            return null;
+        $isValid = $this->form->getValidatedValue($this->attr)->isValid();
         if($isValid === null)
             return null;
         return $isValid && !$this->userSetInvalid;
     }
 
     /**
+     * Tells if there is a value ready to be displayed to the user.
      * @return bool
      */
     public function hasValue()
     {
-        return $this->form->hasValue($this->attr);
+        return $this->form->getDisplayValue($this->attr)->isWellFormat();
     }
 
     /**
@@ -127,7 +141,7 @@ abstract class Form_Attr extends ElementComponent
      */
     public function getValue()
     {
-        return $this->form->getValidatedValue($this->attr)->getValue();
+        return $this->form->getDisplayValue($this->attr)->getValue();
     }
 
     /**
@@ -147,11 +161,25 @@ abstract class Form_Attr extends ElementComponent
     }
 
     /**
+     * @return AttrExt_Validate
+     */
+    public function getValidateExt()
+    {
+        return $this->validateExt;
+    }
+
+    /**
      * @return Form
      */
     public function getForm()
     {
         return $this->form;
     }
+
+    /**
+     * Called by the form, when it's just built and validated
+     * @return void
+     */
+    abstract public function afterBuildForm();
 
 }

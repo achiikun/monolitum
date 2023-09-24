@@ -64,20 +64,8 @@ class Manager_Path extends Manager
             $this->nextIdx++;
 
             $activeType = $active->getType();
-            switch ($activeType){
-                case Active_Param_Abstract::TYPE_STRING:
-                    $active->setValidatedValue(new ValidatedValue(true, $strValue));
-                    break;
-                case Active_Param_Abstract::TYPE_INT:
-                    // Dangerous code, it will parse anything. If it fails, a 0 is returned.
-                    // Better use https://hashids.org/php/ instead of ids
-                    $intValue = intval($strValue);
-                    $active->setValidatedValue(new ValidatedValue(true, $intValue));
-                    break;
-                default:
-                    $active->setValidatedValue(new ValidatedValue(false));
-                    break;
-            }
+            $active->setValidatedValue($this->validatedValueFromStr($activeType, $strValue));
+
         }else{
             $active->setValidatedValue(new ValidatedValue(false));
         }
@@ -98,20 +86,7 @@ class Manager_Path extends Manager
             $strValue = $this->path[$this->nextIdx-1];
 
             $activeType = $active->getType();
-            switch ($activeType){
-                case Active_Param_Abstract::TYPE_STRING:
-                    $active->setValidatedValue(new ValidatedValue(true, $strValue));
-                    break;
-                case Active_Param_Abstract::TYPE_INT:
-                    // Dangerous code, it will parse anything. If it fails, a 0 is returned.
-                    // Better use https://hashids.org/php/ instead of ids
-                    $intValue = intval($strValue);
-                    $active->setValidatedValue(new ValidatedValue(true, $intValue));
-                    break;
-                default:
-                    $active->setValidatedValue(new ValidatedValue(false));
-                    break;
-            }
+            $active->setValidatedValue($this->validatedValueFromStr($activeType, $strValue));
 
         }else{
             $active->setValidatedValue(new ValidatedValue(false));
@@ -332,6 +307,27 @@ class Manager_Path extends Manager
         $a = new Active_Path_BuildParent($parents);
         GlobalContext::add($a);
         return $a->getPath();
+    }
+
+    /**
+     * @param string $activeType
+     * @param string $strValue
+     * @return ValidatedValue
+     */
+    private function validatedValueFromStr($activeType,  $strValue)
+    {
+
+        switch ($activeType){
+            case Active_Param_Abstract::TYPE_STRING:
+                return new ValidatedValue(true, true, $strValue);
+            case Active_Param_Abstract::TYPE_INT:
+                // Dangerous code, it will parse anything. If it fails, a 0 is returned.
+                // Better use https://hashids.org/php/ instead of ids
+                $intValue = intval($strValue);
+                return new ValidatedValue(true, true, $intValue);
+            default:
+                return new ValidatedValue(false);
+        }
     }
 
 }

@@ -12,6 +12,11 @@ use monolitum\frontend\html\HtmlElement;
 
 class HTMLPage extends Component {
 
+    const HTML_VERSION_KEY = "html_version";
+    const HTML_VERSION_VALUE_4 = "html";
+    const HTML_VERSION_VALUE_5 = "html5";
+
+
     private $pageConstants = [];
 
     /**
@@ -50,8 +55,8 @@ class HTMLPage extends Component {
      * @param string $key
      * @return mixed
      */
-    public function getConstant($key){
-        return key_exists($key, $this->pageConstants) ? $this->pageConstants[$key] : null;
+    public function getConstant($key, $defaultValue=null){
+        return key_exists($key, $this->pageConstants) ? $this->pageConstants[$key] : $defaultValue;
     }
 
     /**

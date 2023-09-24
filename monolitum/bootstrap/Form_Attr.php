@@ -11,6 +11,9 @@ use monolitum\entity\attr\Attr_Decimal;
 use monolitum\entity\attr\Attr_File;
 use monolitum\entity\attr\Attr_Int;
 use monolitum\entity\attr\Attr_String;
+use monolitum\entity\AttrExt_Validate;
+use monolitum\entity\AttrExt_Validate_Int;
+use monolitum\entity\AttrExt_Validate_String;
 use monolitum\frontend\Component;
 use monolitum\frontend\component\Div;
 use monolitum\frontend\ElementComponent;
@@ -56,6 +59,7 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
     {
         parent::__construct(new HtmlElement("div"), $attrid, $builder);
         $this->formWrapper = $this;
+        $this->experimental_letBuildChildsAfterBuild = true;
     }
 
     /**
@@ -79,38 +83,6 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
     }
 
     /**
-     * @return bool
-     */
-    public function hasValue()
-    {
-        return $this->form->hasValue($this->attr);
-    }
-
-    /**
-     * @return Attr
-     */
-    public function getAttr()
-    {
-        return $this->attr;
-    }
-
-    /**
-     * @return AttrExt_Form
-     */
-    public function getFormExt()
-    {
-        return $this->formExt;
-    }
-
-    /**
-     * @return Form
-     */
-    public function getForm()
-    {
-        return $this->form;
-    }
-
-    /**
      * @param BSColSpanResponsive $isRow
      */
     public function setIsRow($isRow)
@@ -119,7 +91,7 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
         return $this;
     }
 
-    protected function afterBuildNode()
+    public function afterBuildForm()
     {
 
         $attr = $this->getAttr();
@@ -151,7 +123,7 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
 
             $this->formWrapper->addClass("form-check");
 
-            $this->formWrapper->push(
+            $this->formWrapper->append(
                 new FormControl_CheckBox(function(FormControl_CheckBox $it){
                     $it->setId($this->getName());
                     $it->setName($this->getName());
@@ -164,7 +136,7 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
                 })
             );
 
-            $this->formWrapper->push(
+            $this->formWrapper->append(
                 new FormLabel(function(FormLabel $it){
                     $it->setName($this->getName());
                     $it->setContent($this->getLabel());
@@ -172,11 +144,11 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
             );
 
             if($invalidFeedback){
-                $this->formWrapper->push($invalidFeedback);
+                $this->formWrapper->append($invalidFeedback);
             }
 
             if($formText){
-                $this->formWrapper->push($formText);
+                $this->formWrapper->append($formText);
             }
 
             $this->labelRendersAfterControl = true;
@@ -201,35 +173,35 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
 
                 $formControlWrapper = new Div();
 
-                $formControlWrapper->push($formControl);
+                $formControlWrapper->append($formControl);
                 $this->isRow->buildInto($formControlWrapper);
 
                 if($this->labelRendersAfterControl){
-                    $this->formWrapper->push($formControlWrapper);
-                    $this->formWrapper->push($formLabel);
+                    $this->formWrapper->append($formControlWrapper);
+                    $this->formWrapper->append($formLabel);
                 }else{
-                    $this->formWrapper->push($formLabel);
-                    $this->formWrapper->push($formControlWrapper);
+                    $this->formWrapper->append($formLabel);
+                    $this->formWrapper->append($formControlWrapper);
                 }
 
             }else{
 
                 if($this->labelRendersAfterControl){
-                    $this->formWrapper->push($formControl);
-                    $this->formWrapper->push($formLabel);
+                    $this->formWrapper->append($formControl);
+                    $this->formWrapper->append($formLabel);
                 }else{
-                    $this->formWrapper->push($formLabel);
-                    $this->formWrapper->push($formControl);
+                    $this->formWrapper->append($formLabel);
+                    $this->formWrapper->append($formControl);
                 }
 
             }
 
             if($invalidFeedback){
-                $this->formWrapper->push($invalidFeedback);
+                $this->formWrapper->append($invalidFeedback);
             }
 
             if($formText){
-                $this->formWrapper->push($formText);
+                $this->formWrapper->append($formText);
             }
 
         }
@@ -250,16 +222,17 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
     {
 
         $attr = $this->getAttr();
-        $ext = $this->getFormExt();
+        $formExt = $this->getFormExt();
+        $validateExt = $this->getValidateExt();
         $isValid = $this->isValid();
 
         $formControl = null;
 
         if($attr instanceof Attr_String){
 
-            if($ext instanceof AttrExt_Form_String && $ext->hasEnum()){
+            if($validateExt instanceof AttrExt_Validate_String && $validateExt->hasEnum()){
 
-                $formControl = new FormControl_Select(function (FormControl_Select $it) use ($ext) {
+                $formControl = new FormControl_Select(function (FormControl_Select $it) use ($formExt, $validateExt) {
                     $it->setId($this->getName());
                     $it->setName($this->getName());
 
@@ -270,13 +243,14 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
                     if($this->disabled !== null ? $this->disabled : $this->form->isDisabled())
                         $it->setDisabled(true);
 
-                    if($ext->isNullable()){
+                    if($validateExt->isNullable()){
 
-                        $nullLabel = $ext->getNullLabel();
+                        $nullLabel = null;
+                        if($formExt instanceof AttrExt_Form_String){
+                            $nullLabel = $formExt->getNullLabel();
+                        }
 
                         FormControl_Select_Option::add(function (FormControl_Select_Option $it) use ($selected, $nullLabel) {
-
-
 
                             if($nullLabel !== null){
                                 $it->setContent($nullLabel);
@@ -293,7 +267,7 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
 
                     }
 
-                    foreach ($ext->getEnums() as $itemKey => $itemValue) {
+                    foreach ($validateExt->getEnums() as $itemKey => $itemValue) {
 
                         FormControl_Select_Option::add(function (FormControl_Select_Option $it) use ($selected, $itemKey, $itemValue) {
 
@@ -323,7 +297,7 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
 
                 });
 
-            }else if($ext instanceof AttrExt_Form_String && $ext->isHtml()){
+            }else if($formExt instanceof AttrExt_Form_String && $formExt->isHtml()){
 
 //                $formControl = new EditorJS(function (EditorJS $it) use ($ext) {
 //                    $it->setId($this->getName());
@@ -336,7 +310,7 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
 //
 //                });
 
-                $formControl = new FormControl_TextArea_Html(function (FormControl_TextArea_Html $it) use ($ext) {
+                $formControl = new FormControl_TextArea_Html(function (FormControl_TextArea_Html $it) use ($formExt) {
                     $it->setId($this->getName());
                     $it->setName($this->getName());
 
@@ -345,7 +319,7 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
 
                 });
 
-            }else if($ext instanceof AttrExt_Form_String && $ext->isPassword()){
+            }else if($formExt instanceof AttrExt_Form_String && $formExt->isPassword()){
 
                 $formControl = new FormControl_Password(function(FormControl_Password $it) use ($isValid) {
                     $it->setId($this->getName());
@@ -380,16 +354,16 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
 
         }else if($attr instanceof Attr_Int){
 
-            $formControl = new FormControl_Number(function(FormControl_Number $it) use ($ext, $isValid) {
+            $formControl = new FormControl_Number(function(FormControl_Number $it) use ($validateExt, $isValid) {
                 $it->setId($this->getName());
                 $it->setName($this->getName());
                 if($this->hasValue()){
                     $it->setValue($this->getValue());
                 }
 
-                if($ext instanceof AttrExt_Form_Int){
-                    $it->min($ext->getMin());
-                    $it->max($ext->getMax());
+                if($validateExt instanceof AttrExt_Validate_Int){
+                    $it->min($validateExt->getMin());
+                    $it->max($validateExt->getMax());
                 }
 
                 if($isValid !== null)
@@ -439,7 +413,7 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
 
         }else if($attr instanceof Attr_File){
 
-            $formControl = new FormControl_File(function(FormControl_File $it) use ($ext, $isValid) {
+            $formControl = new FormControl_File(function(FormControl_File $it) use ($isValid) {
                 $it->setId($this->getName());
                 $it->setName($this->getName());
 

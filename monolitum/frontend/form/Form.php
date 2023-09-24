@@ -2,6 +2,8 @@
 
 namespace monolitum\frontend\form;
 
+use monolitum\backend\globals\Active_NewId;
+use monolitum\backend\params\AttrExt_Param;
 use monolitum\backend\params\Link;
 use monolitum\backend\params\Manager_Params;
 use monolitum\backend\params\Validator;
@@ -9,47 +11,43 @@ use monolitum\backend\res\Active_Create_HrefResolver;
 use monolitum\backend\res\HrefResolver;
 use monolitum\core\Find;
 use monolitum\core\GlobalContext;
+use monolitum\core\Monolitum;
 use monolitum\core\panic\DevPanic;
+use monolitum\core\Renderable_Node;
+use monolitum\entity\AnonymousModel;
 use monolitum\entity\attr\Attr;
 use monolitum\entity\Entities_Manager;
 use monolitum\entity\Entity;
 use monolitum\entity\Model;
 use monolitum\entity\ValidatedValue;
-use monolitum\frontend\ElementComponent;
+use monolitum\frontend\Component;
+use monolitum\frontend\component\A;
 use monolitum\frontend\html\HtmlElement;
+use monolitum\frontend\Rendered;
 
-class Form extends ElementComponent
+class Form extends Component
 {
 
     /**
-     * @var Validator
+     * @var Form_Validator
      */
     private $validator;
+
+    /**
+     * If flag is true, submission button has not form info, so it cannot be identified later.
+     * @var bool
+     */
+    private $anonymousSubmission = false;
+
+    /**
+     * @var array<string, mixed>
+     */
+    private $defaultValues = [];
 
     /**
      * @var string
      */
     private $formId;
-
-    /**
-     * @var Entity
-     */
-    private $currentEntity;
-
-    /**
-     * @var Model|class-string
-     */
-    private $entityModel;
-
-    /**
-     * @var bool
-     */
-    private $validate_attrs_all = true;
-
-    /**
-     * @var array<string|Attr>
-     */
-    private $validate_attrs = [];
 
     /**
      * @var callable
@@ -75,32 +73,6 @@ class Form extends ElementComponent
     private $silentValidation;
 
     /**
-     * The POST had a correct formid value.
-     * So execute there are values available and the validation can be executed.
-     * @var bool
-     */
-    private $build_isValidating = false;
-
-    /**
-     * @var array<Attr, ValidatedValue>
-     */
-    private $build_validatedValues = [];
-    /**
-     * @var bool
-     */
-    private $build_allValid = false;
-
-    /**
-     * @var array<string, mixed>
-     */
-    private $defaultValues = [];
-
-    /**
-     * @var HtmlElement
-     */
-    private $field_id;
-
-    /**
      * @var bool
      */
     private $methodGET = false;
@@ -116,30 +88,84 @@ class Form extends ElementComponent
     private $linkResolver;
 
     /**
-     * @var array<Attr>
+     * @var array<string, Form_Attr>
      */
     private $formAttrs = [];
 
     /**
-     * @param class-string|Model $entityClass
-     * @param callable|null $builder
+     * @var array<Form_Submit>
      */
-    public function __construct($entityClass, $element=null, $builder = null)
-    {
-        parent::__construct($element != null ? $element : new HtmlElement("form"), $builder);
-        $this->setAttribute("enctype", "multipart/form-data");
-        $this->entityModel = $entityClass;
-    }
+    private $formSubmit = [];
+
+    ///
+    /// HIDDEN VALUES
+    ///
 
     /**
-     * @param string $attrString
-     * @param mixed $value
-     * @return $this
+     * @var bool|string[]
      */
-    public function setDefaultValue($attrString, $value)
+    private $copyParams = false;
+
+    /**
+     * @var string[]
+     */
+    private $removeParams = [];
+
+    /**
+     * @var array<string, string>
+     */
+    private $addParams = [];
+
+    ///
+    /// INTERNAL FIELDS
+    ///
+
+    /**
+     * @var Form|null
+     */
+    private $rootForm = null;
+
+    /**
+     * @var HtmlElement
+     */
+    private $formElement;
+
+    /**
+     * @var bool
+     */
+    private $hasNestedForms = false;
+
+    /**
+     * @var array<Form>
+     */
+    private $nestedForms = [];
+
+    /**
+     * The POST had a correct formid value.
+     * So execute there are values available and the validation can be executed.
+     * @var bool
+     */
+    private $build_isValidating = false;
+
+    private $build_overrideSubmitLinks = false;
+
+    /**
+     * @var array<string, ValidatedValue>
+     */
+    protected $build_displayValidatedValues = [];
+    /**
+     * @param Form_Validator|null $validator
+     * @param string $formId
+     * @param callable|null $builder
+     */
+    public function __construct($validator, $formId, $builder = null)
     {
-        $this->defaultValues[$attrString] = $value;
-        return $this;
+        parent::__construct($builder);
+        $this->validator = $validator;
+        $this->formId = $formId;
+        if($this->validator !== null)
+            $this->validator->_setForm($this);
+
     }
 
     /**
@@ -158,60 +184,54 @@ class Form extends ElementComponent
     }
 
     /**
-     * this id will be used to retrieve form values back
-     * @param string $formId
+     * @param string $attrString
+     * @param mixed $value
+     * @return $this
      */
-    public function setFormId($formId)
+    public function setDefaultValue($attrString, $value)
     {
-        $this->formId = $formId;
+        $this->defaultValues[$attrString] = $value;
+        return $this;
     }
 
     /**
-     * @param Entity $currentEntity
-     */
-    public function setCurrentEntity($currentEntity)
-    {
-        $this->currentEntity = $currentEntity;
-    }
-
-    /**
-     * @param array<string|Attr> ...$attrs
-     * @return void
+     * @param array<string> ...$attrs
+     * @return $this
      */
     public function validate_all_except(...$attrs){
-        $this->validate_attrs_all = true;
-        $this->validate_attrs = $attrs;
 
-        for($i = 0; $i < count($this->validate_attrs); $i++){
-            if(is_string($this->validate_attrs[$i]))
-                $this->validate_attrs[$i] = $this->getAttr($this->validate_attrs[$i]);
+        if($this->validator !== null){
+            $this->validator->validate_all_except(...$attrs);
+            return $this;
+        }else{
+            throw new DevPanic("Setting attributes to validate is not supported without validator");
         }
 
     }
 
     /**
-     * @param array<string|Attr> ...$attrs
-     * @return void
+     * @param array<string> ...$attrs
+     * @return $this
      */
     public function validate_only(...$attrs){
-        $this->validate_attrs_all = false;
-        $this->validate_attrs = $attrs;
 
-        for($i = 0; $i < count($this->validate_attrs); $i++){
-            if(is_string($this->validate_attrs[$i]))
-                $this->validate_attrs[$i] = $this->getAttr($this->validate_attrs[$i]);
+        if($this->validator !== null){
+            $this->validator->validate_only(...$attrs);
+            return $this;
+        }else{
+            throw new DevPanic("Setting attributes to validate is not supported without validator");
         }
 
     }
 
     /**
-     * Validator is the class that provides ValidatedValue's for tuples Model-Attr.
-     * By default, closest Manager_Params is used.
-     * @param Validator $validator
+     * @param $anonymousSubmission
+     * @return $this
      */
-    public function setValidator($validator)
+    public function setAnonymousSubmission($anonymousSubmission=true)
     {
-        $this->validator = $validator;
+        $this->anonymousSubmission = $anonymousSubmission;
+        return $this;
     }
 
     /**
@@ -222,7 +242,7 @@ class Form extends ElementComponent
         $this->onValidated = $onValidated;
     }
 
-    public function validateSilenty($silentValidation=true)
+    public function validateSilently($silentValidation=true)
     {
         $this->silentValidation = $silentValidation;
     }
@@ -265,22 +285,85 @@ class Form extends ElementComponent
     }
 
     /**
-     * @param string $attrId
-     * @return Attr
+     * @param string|Attr $attrId
+     * @return string|Attr
      */
-    public function getAttr($attrId)
+    function _getAttr($attrId)
     {
-        return $this->entityModel->getAttr($attrId);
+        if($this->validator !== null)
+            return $this->validator->getAttr($attrId);
+        return $attrId;
     }
 
     /**
      * Retrieves the name of the form control (the one on the POST return)
-     * @param Attr $attr
+     * @param string|Attr $attr
      * @return string
      */
-    public function getAttrName($attr)
+    function _getAttrName($attr)
     {
-        return $attr->getId();
+        // Append the form Id if it is necessary to be appended
+
+        if($attr instanceof Attr){
+
+            /** @var AttrExt_Param|null $attrExt_Param */
+            $attrExt_Param = $attr->findExtension(AttrExt_Param::class);
+
+            if($attrExt_Param != null){
+                $attrId = $attrExt_Param->getName();
+            }else{
+                $attrId = $attr->getId();
+            }
+
+        }else {
+            $attrId = $attr;
+        }
+
+        if($this->hasNestedForms || $this->rootForm !== null)
+            $attrId = $this->formId . "__" . $attrId;
+
+        return $attrId;
+    }
+
+    /**
+     * Returns the prefix for the attribute "name" of the input submit element.
+     * It must contain the formid.
+     * @return string
+     */
+    function _getSubmitPrefix(){
+        if($this->anonymousSubmission)
+            return null;
+        return $this->formId . "_submit__";
+    }
+
+    /**
+     * @return string|null
+     */
+    function _getSubmitMethod()
+    {
+        if($this->hasNestedForms || $this->rootForm !== null)
+            return $this->methodGET ? "get" : "post";
+        return null;
+    }
+
+    /**
+     * @return string|null
+     */
+    function _getSubmitLink()
+    {
+        if(($this->rootForm !== null || $this->build_overrideSubmitLinks) && $this->linkResolver !== null)
+            return $this->linkResolver->resolve();
+        return null;
+    }
+
+    /**
+     * @return string
+     */
+    public function _getValidatePrefix()
+    {
+        if($this->hasNestedForms || $this->rootForm !== null)
+            return $this->formId . "__";
+        return null;
     }
 
     /**
@@ -291,50 +374,129 @@ class Form extends ElementComponent
         return $this->build_isValidating;
     }
 
+
+//    /**
+//     * @param Attr|string $attr
+//     * @return bool|null
+//     */
+//    public function isValid($attr)
+//    {
+//        if($this->build_isValidating){
+//            if($this->validator === null)
+//                return null;
+//            $validatedValue = $this->createValidatedValue($attr);
+//            return $validatedValue->isValid();
+//        }
+//        return null;
+//    }
+//
+//    /**
+//     * @param Attr $attr
+//     * @return bool
+//     */
+//    public function hasValue($attr)
+//    {
+//        if($this->build_isValidating){
+//            if($this->entityModel->hasAttr($attr)){
+//                $validatedValue = $this->createValidatedValue($attr);
+//                //$validatedValue = $this->build_validatedValues[$attr->getId()];
+//                return !$validatedValue->isNull();
+//            }
+//        }else if($this->currentEntity != null){
+//            if($this->entityModel->hasAttr($attr)){
+//                return $this->currentEntity->hasValue($attr->getId());
+//            }
+//        }else{
+//            return key_exists($attr->getId(), $this->defaultValues);
+//        }
+//
+//        return false;
+//    }
+
+
     /**
-     * @return bool
+     * @param Attr|string $attr
+     * @return ValidatedValue
      */
-    public function isAllValid()
+    public function getValidatedValue($attr)
     {
-        return $this->build_allValid;
+
+        if($this->validator === null){
+            return new ValidatedValue(false);
+        }else{
+            return $this->validator->getValidatedValue($attr);
+        }
+
     }
 
     /**
-     * @param Attr $attr
-     * @return bool|null
+     * @param Attr|string $attr
+     * @return ValidatedValue
      */
-    public function isValid($attr)
-    {
-        if($this->build_isValidating && !$this->silentValidation){
-            if($this->entityModel->hasAttr($attr)){
-                $validatedValue = $this->createValidatedValue($attr);
-                return $validatedValue->isValid();
+    public function getDisplayValue($attr) {
+
+        if($this->validator === null){
+            if(key_exists($attr->getId(), $this->defaultValues)){
+                return new ValidatedValue(true, true, $this->defaultValues[$attr->getId()]);
+            }else{
+                return new ValidatedValue(false);
             }
+        }else{
+
+            $validatedValue = $this->validator->getValidatedValue($attr);
+
+            if($validatedValue->isValid() || $validatedValue->isWellFormat())
+                return $validatedValue;
+
+            if(key_exists($attr->getId(), $this->defaultValues)){
+                $validatedValue = new ValidatedValue(true, true, $this->defaultValues[$attr->getId()]);
+            }else{
+                $validatedValue = $this->validator->getDefaultValue($attr);
+            }
+
+            return $validatedValue;
+        }
+
+    }
+
+    /**
+     * @param Form $form
+     * @param string $key
+     * @param string $value
+     * @return HtmlElement
+     */
+    public function createHiddenInput($form, $key, $value)
+    {
+        $exists = false;
+        foreach ($form->formAttrs as $attr => $formAttr) {
+            if ($key === $attr) {
+                $exists = true;
+                break;
+            }
+        }
+        if (!$exists) {
+            $elem = new HtmlElement("input");
+            $elem->setAttribute("type", "hidden");
+            if ($form->formId !== null) {
+                $elem->setAttribute("name", $form->formId . "__" . $key);
+            } else {
+                $elem->setAttribute("name", $key);
+            }
+            $elem->setAttribute("value", $value);
+            return $elem;
         }
         return null;
     }
 
     /**
-     * @param Attr $attr
-     * @return bool
+     * Called from nested Forms, in order this root Form to manage all ids.
+     * @param Form $form
+     * @return void
      */
-    public function hasValue($attr)
-    {
-        if($this->build_isValidating){
-            if($this->entityModel->hasAttr($attr)){
-                $validatedValue = $this->createValidatedValue($attr);
-                //$validatedValue = $this->build_validatedValues[$attr->getId()];
-                return !$validatedValue->isNull();
-            }
-        }else if($this->currentEntity != null){
-            if($this->entityModel->hasAttr($attr)){
-                return $this->currentEntity->hasValue($attr->getId());
-            }
-        }else{
-            return key_exists($attr->getId(), $this->defaultValues);
-        }
-
-        return false;
+    function _registerNestedForm($form){
+        assert($this->rootForm === null);
+        $this->hasNestedForms = true;
+        $this->nestedForms[] = $form;
     }
 
     /**
@@ -344,80 +506,163 @@ class Form extends ElementComponent
      * @return void
      */
     function _registerFormAttr($formAttr, $attr){
-        $this->formAttrs[] = $attr;
+        $this->formAttrs[$attr->getId()] = $formAttr;
     }
 
-    private function createValidatedValue(Attr $attr)
-    {
-        if(key_exists($attr->getId(), $this->build_validatedValues)){
-            return $this->build_validatedValues[$attr->getId()];
-        }
-
-        $ext = $attr->findExtension(AttrExt_Form::class);
-        if(!$ext)
-            return new ValidatedValue(true, null);
-
-        $validatedValue = $this->validator->validate($this->entityModel, $attr);
-
-        if(!$validatedValue->isValid() && $this->currentEntity != null){
-            $validatedValue = new ValidatedValue(true, $this->currentEntity->getValue($attr));
-        }
-
-        $this->build_validatedValues[$attr->getId()] = $validatedValue;
-
-        return $validatedValue;
+    /**
+     * Called from form fields telling that the attribute it handles is present.
+     * @param Form_Submit $formSubmit
+     * @return void
+     */
+    function _registerFormSubmit($formSubmit){
+        $this->formSubmit[] = $formSubmit;
     }
 
-    public function writeValidValuesOn(Entity $entity)
+
+//    /**
+//     * @param Attr|string $attr
+//     * @return ValidatedValue
+//     */
+//    private function createValidatedValue($attr)
+//    {
+//        assert($this->validator !== null);
+//
+//        if($attr instanceof Attr){
+//
+//            if(key_exists($attr->getId(), $this->build_validatedValues)){
+//                return $this->build_validatedValues[$attr->getId()];
+//            }
+//
+//            $validatedValue = $this->validator->getValidatedValue($attr);
+//
+//            if(!$validatedValue->isValid() && $this->currentEntity != null){
+//                $validatedValue = new ValidatedValue(true, true, $this->currentEntity->getValue($attr));
+//            }
+//
+//            $this->build_validatedValues[$attr->getId()] = $validatedValue;
+//
+//            return $validatedValue;
+//
+//        }else{
+//
+//            if(key_exists($attr, $this->build_validatedValues)){
+//                return $this->build_validatedValues[$attr];
+//            }
+//
+//            $validatedValue = $this->validator->getValidatedValue($attr);
+//
+//            if(!$validatedValue->isValid() && $this->currentEntity != null){
+//                $validatedValue = new ValidatedValue(true, true, $this->currentEntity->getValue($attr));
+//            }
+//
+//            $this->build_validatedValues[$attr->getId()] = $validatedValue;
+//
+//            return $validatedValue;
+//
+//        }
+//    }
+
+    /**
+     * @param Entity $entity
+     * @return void
+     */
+    public function writeValidValuesOn($entity)
     {
 
-        foreach($this->entityModel->getAttrs() as $attr){
-            $inArray = in_array($attr, $this->validate_attrs);
-            if(!($this->validate_attrs_all ^ $inArray))
-                continue;
-            $validatedValue = $this->build_validatedValues[$attr->getId()];
-            if($validatedValue->isValid())
-                $entity->setValue($attr, $validatedValue->getValue());
+        if($this->validator !== null){
+            $this->validator->writeValidValuesOn($entity);
+        }else{
+            throw new DevPanic("Writing values to an entity is not supported without validator");
         }
 
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAllValid()
+    {
+        if($this->validator !== null){
+            return $this->validator->isAllValid();
+        }else{
+            throw new DevPanic("Writing values to an entity is not supported without validator");
+        }
     }
 
     protected function buildNode()
     {
-        if($this->entityModel !== null && !($this->entityModel instanceof Model)){
-            // Throws if not found
-            /** @var Entities_Manager $entities_Manager */
-            $entities_Manager = Find::sync(Entities_Manager::class);
-            $this->entityModel = $entities_Manager->getModel($this->entityModel);
+        // Generate an ID to identify the submission of this form if not exist
+
+        if($this->formId === null)
+            $this->formId = Active_NewId::go_newId("form");
+
+        // Find root form before all
+        // If there are nested forms, they will find me and the real root form
+
+        /** @var Form $parentForm */
+        $parentForm = Find::syncFrom(Form::class, $this->getParent(), true, true);
+        if($parentForm !== null){
+            $this->rootForm = $parentForm->rootForm;
+            if($this->rootForm == null)
+                $this->rootForm = $parentForm;
+            $this->rootForm->_registerNestedForm($this);
         }
 
-        if($this->entityModel !== null && $this->formId == null)
-            $this->formId = $this->entityModel->getId();
+        parent::buildNode(); // TODO: Change the autogenerated stub
+    }
 
-        if($this->validator == null){
-            /** @var Manager_Params $manager */
-            $this->validator = Find::sync(Manager_Params::class);
-            $this->validator = new Form_Validator($this->validator);
-        }
+    protected function afterBuildNode()
+    {
 
-        $validatedValue = $this->validator->validateStringPost("\$formid");
+        if($this->validator !== null){
 
-        $this->build_isValidating = false;
-        if ($validatedValue->isValid() && $this->formId != null) {
+            $validatedValueAction = $this->validator->validateSubmissionAction($this->formId . "_submit__");
 
-            $value = $validatedValue->getValue();
-            if ($value === $this->formId) {
+            if($validatedValueAction->isValid() && !$this->notValidate){
                 $this->build_isValidating = true;
+
+                $this->validator->_validateAll();
+
+                $action = $validatedValueAction->getValue();
+                if(is_string($action) && !empty($action)){
+
+                    // Find submit button that triggered this action
+                    foreach ($this->formSubmit as $submit){
+                        $submitAction = $submit->getAction();
+                        if($submitAction === $action){
+                            // Found
+                            $onValidated = $submit->getOnValidated();
+                            if($onValidated !== null){
+                                $onValidated($this, $action);
+                            }
+
+                        }
+                    }
+
+                    // Execute validation callback
+                    if($this->onValidated != null){
+
+                        $callback = $this->onValidated;
+                        $callback($this, $action);
+
+                    }
+
+                }else{
+
+                    // Execute validation callback
+                    if($this->onValidated != null){
+
+                        $callback = $this->onValidated;
+                        $callback($this);
+
+                    }
+
+                }
+
             }
 
+
         }
-
-
-        // Let build continue (attrs will locate this Form to get results)
-        parent::buildNode();
-
-        if($this->notValidate)
-            $this->build_isValidating = false;
 
         if($this->link !== null){
             $active = new Active_Create_HrefResolver($this->link);
@@ -426,135 +671,168 @@ class Form extends ElementComponent
             $this->linkResolver = $active->getHrefResolver();
         }
 
-        if(!$this->methodGET){
+        if($this->rootForm === null){
+            // Create form
+            $this->formElement = new HtmlElement("form");
+            $this->formElement->setAttribute("enctype", "multipart/form-data");
 
-            $this->field_id = new HtmlElement("input");
-            $this->field_id->setAttribute("type", "hidden");
-            $this->field_id->setAttribute("name", "\$formid");
+            if(!$this->hasNestedForms){
+                // All submit have the same method
 
-            if($this->formId == null)
-                throw new DevPanic("Form must define an id", $this);
+                if($this->methodGET)
+                    $this->formElement->setAttribute("method", "get");
+                else
+                    $this->formElement->setAttribute("method", "post");
 
-            $this->field_id->setAttribute("value", $this->formId, false);
+            }else{
 
-            $this->push($this->field_id);
-
-        }
-
-        if($this->build_isValidating){
-
-            $this->build_allValid = true;
-
-            if($this->entityModel !== null){
-                foreach($this->entityModel->getAttrs() as $attr){
-
-                    if(key_exists($attr->getId(), $this->build_validatedValues)){
-                        $validatedValue = $this->build_validatedValues[$attr->getId()];
-                    }else{
-
-                        $inArray = in_array($attr, $this->validate_attrs);
-                        if(!($this->validate_attrs_all ^ $inArray))
-                            continue;
-                        $ext = $attr->findExtension(AttrExt_Form::class);
-                        if(!$ext)
-                            continue;
-                        $validatedValue = $this->validator->validate($this->entityModel, $attr);
-
+                if($this->linkResolver !== null){
+                    // Very likely will be different
+                    $this->build_overrideSubmitLinks = true;
+                }else{
+                    foreach ($this->nestedForms as $form) {
+                        $otherLinkResolver = $form->linkResolver;
+                        if ($otherLinkResolver !== null) {
+                            $this->build_overrideSubmitLinks = true;
+                            break;
+                        }
                     }
+                }
 
-                    if(!$validatedValue->isValid()){
-                        $this->build_allValid = false;
-                    }
-                    $this->build_validatedValues[$attr->getId()] = $validatedValue;
+            }
+
+
+            if($this->linkResolver !== null){
+
+                $this->formElement->setAttribute("action", $this->linkResolver->resolve());
+
+                foreach($this->linkResolver->getParamsAlone() as $key => $value){
+                    $input = $this->createHiddenInput($this, $key, $value);
+                    if($input !== null)
+                        $this->append($input, 0);
                 }
             }
 
+            foreach ($this->nestedForms as $form){
+                $otherLinkResolver = $form->linkResolver;
+                if($otherLinkResolver !== null){
+                    foreach($otherLinkResolver->getParamsAlone() as $key => $value){
+                        $input = $this->createHiddenInput($form, $key, $value);
+                        if($input !== null)
+                            $this->append($input, 0);
+                    }
+
+                }
+            }
+
+
         }
 
-        // Execute validation callback
-        if($this->build_isValidating && $this->onValidated != null){
-
-            $callback = $this->onValidated;
-            $callback();
+        foreach ($this->formAttrs as $value){
+            $value->afterBuildForm();
         }
+
+        foreach ($this->formSubmit as $value){
+            $value->afterBuildForm();
+        }
+
 
     }
 
     protected function executeComponent()
     {
 
-        $form = $this->getElement();
-        if($this->methodGET)
-            $form->setAttribute("method", "get");
-        else
-            $form->setAttribute("method", "post");
-
-        if($this->linkResolver !== null){
-
-            $form->setAttribute("action", $this->linkResolver->resolve());
-
-            foreach($this->linkResolver->getParamsAlone() as $key => $value){
-                $exists = false;
-                foreach ($this->formAttrs as $attr) {
-                    if(is_string($attr) && $key === $attr || $attr->getId() === $key){
-                        $exists = true;
-                        break;
-                    }
-                }
-                if(!$exists){
-                    $elem = new HtmlElement("input");
-                    $elem->setAttribute("type", "hidden");
-                    $elem->setAttribute("name", $key);
-                    $elem->setAttribute("value", $value);
-                    $this->push($elem, 0);
-                }
-            }
-        }
-
         parent::executeComponent(); // TODO: Change the autogenerated stub
     }
 
-    /**
-     * @param Attr|string $attr
-     * @return ValidatedValue
-     */
-    public function getValidatedValue($attr) {
-        if($this->build_isValidating){
-            if($attr instanceof Attr)
-                return $this->createValidatedValue($attr);
-//                return $this->build_validatedValues[$attr->getId()];
-            else
-                return $this->createValidatedValue($this->getAttr($attr));
-//                return $this->build_validatedValues[$attr];
-        }else if($this->currentEntity !== null){
-            return new ValidatedValue(true, $this->currentEntity->getValue($attr));
-        }else if(key_exists($attr->getId(), $this->defaultValues)){
-            return new ValidatedValue(true, $this->defaultValues[$attr->getId()]);
+    public function render()
+    {
+        $parentRender = parent::render();
+        if($this->formElement !== null){
+            Renderable_Node::renderRenderedTo($parentRender, $this->formElement);
+            return Rendered::of($this->formElement);
+        }else{
+            return $parentRender; // TODO: Change the autogenerated stub
         }
-        return new ValidatedValue(false);
     }
 
     /**
-     * @param class-string|Model $entity
-     * @param HtmlElement $a
+     * Creates a Form using Manager_Params as provider and a Model as model.
+     * @param class-string|Model $model
      * @param callable $builder
      * @return Form
      */
-    public static function ofElement($entity, $a, $builder=null)
+    public static function addFromModel($model, $builder)
     {
-        $fc = new Form(null, $a, $builder);
-
-    }
-
-    /**
-     * @param class-string|Model $entity
-     * @param callable $builder
-     * @return Form
-     */
-    public static function add($entity, $builder)
-    {
-        $fc = new Form($entity, null, $builder);
+        /** @var Manager_Params $manager_params */
+        $manager_params = Find::sync(Manager_Params::class);
+        $fc = new Form(new Form_Validator_Entity(
+            $manager_params,
+            $model
+        ), null, $builder);
         GlobalContext::add($fc);
+        return $fc;
+    }
+
+    /**
+     * Creates a Form using Manager_Params as provider and a Model as model.
+     * @param class-string|Model $model
+     * @param callable $builder
+     * @return Form
+     */
+    public static function addFromModelAndEntity($model, $entity, $builder)
+    {
+        /** @var Manager_Params $manager_params */
+        $manager_params = Find::sync(Manager_Params::class);
+        $fc = new Form((new Form_Validator_Entity(
+            $manager_params,
+            $model
+        ))->setCurrentEntity($entity), null, $builder);
+        GlobalContext::add($fc);
+        return $fc;
+    }
+
+    /**
+     * Creates a Form using Manager_Params as provider and a Model as model.
+     * @param class-string|Model $model
+     * @param string $formId
+     * @param callable $builder
+     * @return Form
+     */
+    public static function addFromModelAndId($model, $formId, $builder)
+    {
+        /** @var Manager_Params $manager_params */
+        $manager_params = Find::sync(Manager_Params::class);
+        $fc = new Form(new Form_Validator_Entity(
+            $manager_params,
+            $model
+        ), $formId, $builder);
+        GlobalContext::add($fc);
+        return $fc;
+    }
+
+    /**
+     * Creates a Form without validator.
+     * @param callable $builder
+     * @return Form
+     */
+    public static function addAnonymous($builder)
+    {
+        $fc = new Form(null, null, $builder);
+        $fc->setAnonymousSubmission();
+        GlobalContext::add($fc);
+        return $fc;
+    }
+
+    /**
+     * Creates a Form without validator.
+     * @param callable $builder
+     * @return Form
+     */
+    public static function anonymous($builder)
+    {
+        $fc = new Form(null, null, $builder);
+        $fc->setAnonymousSubmission();
         return $fc;
     }
 

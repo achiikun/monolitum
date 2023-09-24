@@ -57,7 +57,7 @@ class HrefResolver_Impl implements HrefResolver
     }
 
     /**
-     * @param string[] $paramsAlone
+     * @param array<string, string> $paramsAlone
      */
     public function setParamsAlone($paramsAlone)
     {

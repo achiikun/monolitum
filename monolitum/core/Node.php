@@ -48,6 +48,8 @@ abstract class Node implements Passive {
      */
     private $passiveCacheByClassName = [];
 
+    public $experimental_letBuildChildsAfterBuild = false;
+
     /**
      * @param callable|null $builder
      */
@@ -204,7 +206,7 @@ abstract class Node implements Passive {
      * @return Node
      */
     public function buildChild($child){
-        if($this->built)
+        if(!$this->experimental_letBuildChildsAfterBuild && $this->built)
             throw new DevPanic("No adding childs after build");
         if($child instanceof Node)
             $child->_build($this->ctx, $this);

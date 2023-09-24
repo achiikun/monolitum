@@ -66,7 +66,7 @@ class Entities_Manager extends Manager implements Active
     public function instance($entityModel, $forInsert = false)
     {
         $model = $this->getModel($entityModel);
-        $class = $model->getInstancableClass();
+        $class = $model->getInstanceableClass();
         /** @var Entity $inst */
         $inst = new $class();
         $inst->_setModel($model);
