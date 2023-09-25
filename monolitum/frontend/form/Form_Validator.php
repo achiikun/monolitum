@@ -41,7 +41,7 @@ abstract class Form_Validator
     protected $form;
 
     /**
-     * @param array<string> ...$attrs
+     * @param string ...$attrs
      * @return void
      */
     public function validate_all_except(...$attrs){
@@ -90,6 +90,7 @@ abstract class Form_Validator
      */
     public function isAllValid()
     {
+        $this->_validateAll();
         return $this->build_allValid;
     }
 

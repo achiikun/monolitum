@@ -171,7 +171,7 @@ abstract class Node implements Passive {
     
     final function _execute(){
 
-        assert($this->built);
+        assert($this->built || $this->panicked);
 
         $this->ctx->pushPassive($this);
 

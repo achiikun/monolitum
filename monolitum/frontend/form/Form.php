@@ -453,13 +453,19 @@ class Form extends Component
             }
         }else{
 
-            $validatedValue = $this->validator->getValidatedValue($attr);
+            if($this->build_isValidating){
 
-            if($validatedValue->isValid() || $validatedValue->isWellFormat())
-                return $validatedValue;
+                $validatedValue = $this->validator->getValidatedValue($attr);
 
-            if(key_exists($attr->getId(), $this->defaultValues)){
-                $validatedValue = new ValidatedValue(true, true, $this->defaultValues[$attr->getId()]);
+                if($validatedValue->isValid() || $validatedValue->isWellFormat())
+                    return $validatedValue;
+
+                if(key_exists($attr->getId(), $this->defaultValues)){
+                    $validatedValue = new ValidatedValue(true, true, $this->defaultValues[$attr->getId()]);
+                }else{
+                    $validatedValue = $this->validator->getDefaultValue($attr);
+                }
+
             }else{
                 $validatedValue = $this->validator->getDefaultValue($attr);
             }
@@ -467,6 +473,14 @@ class Form extends Component
             return $validatedValue;
         }
 
+    }
+
+    /**
+     * @return Form_Validator|null
+     */
+    public function getValidator()
+    {
+        return $this->validator;
     }
 
     /**
@@ -595,7 +609,7 @@ class Form extends Component
         if($this->validator !== null){
             return $this->validator->isAllValid();
         }else{
-            throw new DevPanic("Writing values to an entity is not supported without validator");
+            throw new DevPanic("Asing if all is valid is not supported without validator");
         }
     }
 
@@ -660,7 +674,7 @@ class Form extends Component
                 }else{
 
                     // Execute validation callback
-                    if($this->onValidated != null){
+                    if($this->onValidated !== null){
 
                         $callback = $this->onValidated;
                         $callback($this);

@@ -63,10 +63,10 @@ class Form_Validator_Entity extends Form_Validator
 
             $validatedValue = $this->getValidatedValue($attr);
 
-            if(!$validatedValue->isValid()){
+            if($validatedValue !== null && !$validatedValue->isValid()){
                 $this->build_allValid = false;
             }
-            $this->build_validatedValues[$attr->getId()] = $validatedValue;
+
         }
 
     }
@@ -87,16 +87,16 @@ class Form_Validator_Entity extends Form_Validator
             $validatedValue = $this->build_validatedValues[$attr->getId()];
         }else{
 
-            $inArray = in_array($attr, $this->validate_attrs);
+            $inArray = in_array($attr->getId(), $this->validate_attrs);
             if(!($this->validate_attrs_all ^ $inArray)){
-                $validatedValue = new ValidatedValue(false);
+                $validatedValue = null;
             } else {
                 $validatedValue = $this->validator->validate($this->model, $attr, $this->form->_getValidatePrefix());
             }
 
-        }
+            $this->build_validatedValues[$attr->getId()] = $validatedValue;
 
-        $this->build_validatedValues[$attr->getId()] = $validatedValue;
+        }
 
         return $validatedValue;
     }
@@ -136,8 +136,8 @@ class Form_Validator_Entity extends Form_Validator
             $inArray = in_array($attr->getId(), $this->validate_attrs);
             if(!($this->validate_attrs_all ^ $inArray))
                 continue;
-            $validatedValue = $this->build_validatedValues[$attr];
-            if($validatedValue->isValid())
+            $validatedValue = $this->build_validatedValues[$attr->getId()];
+            if($validatedValue !== null && $validatedValue->isValid())
                 $entity->setValue($attr, $validatedValue->getValue());
         }
 

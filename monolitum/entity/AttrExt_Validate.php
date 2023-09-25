@@ -5,10 +5,20 @@ namespace monolitum\entity;
 class AttrExt_Validate extends AttrExt
 {
 
-    private $nullable = false;
+    private $nullable = true;
 
     /**
-     * @param bool $nullable
+     * @param bool $nonNullable
+     * @return $this
+     */
+    public function nonNullable($nonNullable = true)
+    {
+        $this->nullable = !$nonNullable;
+        return $this;
+    }
+
+    /**
+     * @param bool $nonNullable
      * @return $this
      */
     public function nullable($nullable = true)
