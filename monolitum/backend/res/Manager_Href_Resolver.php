@@ -24,16 +24,16 @@ class Manager_Href_Resolver extends Manager
     public function makeHref($param)
     {
 
-        $active = new Active_Make_Url($param->getLink(), $param->isSetParamsAlone());
+        $active = new Active_Make_Url($param->getLink());//, $param->isSetParamsAlone());
         GlobalContext::add($active);
-        $param->setParamsAlone($active->getParamsAlone());
+//        $param->setParamsAlone($active->getParamsAlone());
         return $active->getUrl();
     }
 
     protected function receiveActive($active)
     {
         if($active instanceof Active_Create_HrefResolver){
-            $active->setHrefResolver(new HrefResolver_Impl($this, $active->getLink(), $active->isSetParamsAlone()));
+            $active->setHrefResolver(new HrefResolver_Impl($this, $active->getLink()));//, $active->isSetParamsAlone()));
             return true;
         }
 

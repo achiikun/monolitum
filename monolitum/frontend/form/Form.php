@@ -116,6 +116,12 @@ class Form extends Component
      */
     private $addParams = [];
 
+    /**
+     * TODO Compute
+     * @var null
+     */
+    private $computedParamsAlone = null;
+
     ///
     /// INTERNAL FIELDS
     ///
@@ -153,6 +159,7 @@ class Form extends Component
      * @var array<string, ValidatedValue>
      */
     protected $build_displayValidatedValues = [];
+
     /**
      * @param Form_Validator|null $validator
      * @param string $formId
@@ -421,6 +428,9 @@ class Form extends Component
     public function getValidatedValue($attr)
     {
 
+        if(!$this->build_isValidating)
+            return null;
+
         if($this->validator === null){
             return new ValidatedValue(false);
         }else{
@@ -666,7 +676,7 @@ class Form extends Component
 
         if($this->link !== null){
             $active = new Active_Create_HrefResolver($this->link);
-            $active->setParamsAlone();
+//            $active->setParamsAlone();
             GlobalContext::add($active);
             $this->linkResolver = $active->getHrefResolver();
         }
@@ -706,17 +716,19 @@ class Form extends Component
 
                 $this->formElement->setAttribute("action", $this->linkResolver->resolve());
 
-                foreach($this->linkResolver->getParamsAlone() as $key => $value){
-                    $input = $this->createHiddenInput($this, $key, $value);
-                    if($input !== null)
-                        $this->append($input, 0);
+                if($this->computedParamsAlone !== null) {
+                    foreach ($this->computedParamsAlone as $key => $value) {
+                        $input = $this->createHiddenInput($this, $key, $value);
+                        if ($input !== null)
+                            $this->append($input, 0);
+                    }
                 }
             }
 
             foreach ($this->nestedForms as $form){
-                $otherLinkResolver = $form->linkResolver;
-                if($otherLinkResolver !== null){
-                    foreach($otherLinkResolver->getParamsAlone() as $key => $value){
+                $computedParamsAlone = $form->computedParamsAlone;
+                if($computedParamsAlone !== null){
+                    foreach($computedParamsAlone as $key => $value){
                         $input = $this->createHiddenInput($form, $key, $value);
                         if($input !== null)
                             $this->append($input, 0);

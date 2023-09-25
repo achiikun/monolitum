@@ -18,12 +18,12 @@ class Active_Make_Url implements Active
      * Alone params help POST forms to add hidden data into it.
      * @var bool|array<string>
      */
-    private $setParamsAlone;
-
-    /**
-     * @var array<string, string>
-     */
-    private $paramsAlone;
+//    private $setParamsAlone;
+//
+//    /**
+//     * @var array<string, string>
+//     */
+//    private $paramsAlone;
 
     /**
      * @var string
@@ -34,10 +34,10 @@ class Active_Make_Url implements Active
      * @param Link|Path $link
      * @param bool|array<string> $isSetParamsAlone
      */
-    public function __construct($link, $isSetParamsAlone=false)
+    public function __construct($link)//, $isSetParamsAlone=false)
     {
         $this->link = $link;
-        $this->setParamsAlone = $isSetParamsAlone;
+//        $this->setParamsAlone = $isSetParamsAlone;
     }
 
     /**
@@ -48,13 +48,13 @@ class Active_Make_Url implements Active
         return $this->link;
     }
 
-    /**
-     * @return bool|array<string>
-     */
-    public function isSetParamsAlone()
-    {
-        return $this->setParamsAlone;
-    }
+//    /**
+//     * @return bool|array<string>
+//     */
+//    public function isSetParamsAlone()
+//    {
+//        return $this->setParamsAlone;
+//    }
 
     /**
      * @param string $url
@@ -64,13 +64,13 @@ class Active_Make_Url implements Active
         $this->url = $url;
     }
 
-    /**
-     * @param array<string, string> $paramsAlone
-     */
-    public function setParamsAlone($paramsAlone)
-    {
-        $this->paramsAlone = $paramsAlone;
-    }
+//    /**
+//     * @param array<string, string> $paramsAlone
+//     */
+//    public function setParamsAlone($paramsAlone)
+//    {
+//        $this->paramsAlone = $paramsAlone;
+//    }
 
     /**
      * @return string
@@ -80,13 +80,13 @@ class Active_Make_Url implements Active
         return $this->url;
     }
 
-    /**
-     * @return array<string, string>
-     */
-    public function getParamsAlone()
-    {
-        return $this->paramsAlone;
-    }
+//    /**
+//     * @return array<string, string>
+//     */
+//    public function getParamsAlone()
+//    {
+//        return $this->paramsAlone;
+//    }
 
     function onNotReceived()
     {

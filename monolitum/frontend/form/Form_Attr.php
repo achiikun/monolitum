@@ -121,10 +121,10 @@ abstract class Form_Attr extends ElementComponent
     {
         if($this->form->isSilentValidation())
             return null;
-        $isValid = $this->form->getValidatedValue($this->attr)->isValid();
+        $isValid = $this->form->getValidatedValue($this->attr);
         if($isValid === null)
             return null;
-        return $isValid && !$this->userSetInvalid;
+        return $isValid->isValid() && !$this->userSetInvalid;
     }
 
     /**

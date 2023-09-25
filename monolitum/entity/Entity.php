@@ -201,7 +201,7 @@ abstract class Entity
     public function getValue($attr)
     {
         if($attr instanceof Attr)
-            return $this->values[$attr->getId()];
+            $attr = $attr->getId();
         return key_exists($attr, $this->values) ? $this->values[$attr] : null;
     }
 

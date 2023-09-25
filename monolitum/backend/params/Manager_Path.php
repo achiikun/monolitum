@@ -124,9 +124,9 @@ class Manager_Path extends Manager
 
             /** @var Link|Path $link */
             $link = $active->getLink();
-            $setParamsAlone = $active->isSetParamsAlone();
+//            $setParamsAlone = $active->isSetParamsAlone();
 
-            $paramsAlone = [];
+//            $paramsAlone = [];
 
             if($link instanceof Path){
                 $path = $link;
@@ -141,13 +141,13 @@ class Manager_Path extends Manager
             $stringPath = $this->writePath($path);
             if($stringPath != null){
                 if($this->writeAsParam){
-                    if($setParamsAlone){
-                        $url .= GlobalContext::getLocalAddress();
-                        $paramsAlone[$this->writeAsParam] = $stringPath;
-                    }else{
+//                    if($setParamsAlone){
+//                        $url .= GlobalContext::getLocalAddress();
+//                        $paramsAlone[$this->writeAsParam] = $stringPath;
+//                    }else{
                         $url .= GlobalContext::getLocalAddress() . "?" . $this->writeAsParam . "=" . urlencode($stringPath);
                         $querySign = true;
-                    }
+//                    }
                 }else{
                     $url .= GlobalContext::getLocalAddress() . $stringPath;
                 }
@@ -178,9 +178,9 @@ class Manager_Path extends Manager
                     $currentParams[$key] = $value;
                 }
 
-                if($setParamsAlone){
-                    $paramsAlone = $currentParams;
-                }else{
+//                if($setParamsAlone){
+//                    $paramsAlone = $currentParams;
+//                }else{
 
                     foreach ($currentParams as $key => $value){
                         if($key === $this->writeAsParam)
@@ -195,14 +195,14 @@ class Manager_Path extends Manager
                         $url .= urlencode($value);
                     }
 
-                }
+//                }
 
             }
 
             // TODO unique changing key?
 
             $active->setUrl($url);
-            $active->setParamsAlone($paramsAlone);
+//            $active->setParamsAlone($paramsAlone);
 
             return true;
         }else if($active instanceof Active_Path2UrlPath) {

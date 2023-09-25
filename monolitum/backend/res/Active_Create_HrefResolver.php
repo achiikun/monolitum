@@ -19,10 +19,10 @@ class Active_Create_HrefResolver implements Active
      * @var HrefResolver
      */
     private $hrefResolver;
-    /**
-     * @var bool|array<string, string>
-     */
-    private $setParamsAlone = false;
+//    /**
+//     * @var bool|array<string, string>
+//     */
+//    private $setParamsAlone = false;
 
     /**
      * @param Link|Path $link
@@ -40,13 +40,13 @@ class Active_Create_HrefResolver implements Active
         return $this->link;
     }
 
-    /**
-     * @return bool|array<string, string>
-     */
-    public function isSetParamsAlone()
-    {
-        return $this->setParamsAlone;
-    }
+//    /**
+//     * @return bool|array<string, string>
+//     */
+//    public function isSetParamsAlone()
+//    {
+//        return $this->setParamsAlone;
+//    }
 
     /**
      * @param HrefResolver $hrefResolver
@@ -69,14 +69,14 @@ class Active_Create_HrefResolver implements Active
         throw new DevPanic("No HrefProvider found");
     }
 
-    /**
-     * TODO Comment out support for this. (All parameters in links are GET)
-     * TODO Forms must query POST if they want and set apropriate hidden fields.
-     * @param bool|array<string, string> $setParamsAlone
-     * @return void
-     */
-    public function setParamsAlone($setParamsAlone=true)
-    {
-        $this->setParamsAlone = $setParamsAlone;
-    }
+//    /**
+//     * TODO Comment out support for this. (All parameters in links are GET)
+//     * TODO Forms must query POST if they want and set apropriate hidden fields.
+//     * @param bool|array<string, string> $setParamsAlone
+//     * @return void
+//     */
+//    public function setParamsAlone($setParamsAlone=true)
+//    {
+//        $this->setParamsAlone = $setParamsAlone;
+//    }
 }

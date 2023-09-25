@@ -10,9 +10,9 @@ interface HrefResolver
      */
     function resolve();
 
-    /**
-     * @return array<string, string>
-     */
-    function getParamsAlone();
+//    /**
+//     * @return array<string, string>
+//     */
+//    function getParamsAlone();
 
 }
