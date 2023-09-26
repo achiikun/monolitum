@@ -56,7 +56,7 @@ abstract class Form_Validator
     }
 
     /**
-     * @param array<string> ...$attrs
+     * @param string ...$attrs
      * @return void
      */
     public function validate_only(...$attrs){

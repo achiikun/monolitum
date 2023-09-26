@@ -71,7 +71,7 @@ class Active_Create_HrefResolver implements Active
 
 //    /**
 //     * TODO Comment out support for this. (All parameters in links are GET)
-//     * TODO Forms must query POST if they want and set apropriate hidden fields.
+//     * TODO Forms must query POST if they want and set appropriate hidden fields.
 //     * @param bool|array<string, string> $setParamsAlone
 //     * @return void
 //     */

@@ -202,7 +202,7 @@ class Form extends Component
     }
 
     /**
-     * @param array<string> ...$attrs
+     * @param string ...$attrs
      * @return $this
      */
     public function validate_all_except(...$attrs){
@@ -217,7 +217,7 @@ class Form extends Component
     }
 
     /**
-     * @param array<string> ...$attrs
+     * @param string ...$attrs
      * @return $this
      */
     public function validate_only(...$attrs){
