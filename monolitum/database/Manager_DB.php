@@ -10,6 +10,7 @@ use monolitum\core\GlobalContext;
 use monolitum\core\panic\DevPanic;
 use monolitum\entity\attr\Attr;
 use monolitum\entity\attr\Attr_Bool;
+use monolitum\entity\attr\Attr_Color;
 use monolitum\entity\attr\Attr_Date;
 use monolitum\entity\attr\Attr_Decimal;
 use monolitum\entity\attr\Attr_Int;
@@ -19,6 +20,7 @@ use monolitum\entity\Entities_Manager;
 use monolitum\entity\Entity;
 use monolitum\entity\Interface_Entity_DB;
 use monolitum\entity\Model;
+use monolitum\entity\values\Color;
 use PDO;
 
 class Manager_DB extends Manager implements Active, Interface_Entity_DB
@@ -216,6 +218,8 @@ class Manager_DB extends Manager implements Active, Interface_Entity_DB
 
                 }else if($attr instanceof Attr_Date){
                     $sql .= " DATE";
+                }else if($attr instanceof Attr_Color){
+                        $sql .= " CHAR(10)";
                 }else {
                     throw new DevPanic("Not recognized type");
                 }
@@ -246,7 +250,7 @@ class Manager_DB extends Manager implements Active, Interface_Entity_DB
 
             $sql .= ") CHARSET " . $default_charset
                 . " COLLATE " . $default_collation
-                . " ENGINE MyISAM;\n";
+                . " ENGINE MyISAM;\n\n";
 
         }
 
@@ -357,7 +361,11 @@ class Manager_DB extends Manager implements Active, Interface_Entity_DB
             if($count > 0)
                 $sql .= ",";
             $sql .= "`" . $attrName . "`";
-            $values[] = $value;
+            if($value instanceof Color){
+                $values[] = $value->getHexValue();
+            }else{
+                $values[] = $value;
+            }
             $count++;
         }
 
@@ -390,7 +398,11 @@ class Manager_DB extends Manager implements Active, Interface_Entity_DB
             if($count > 0)
                 $sql .= ",";
             $sql .= "`" . $attrName . "` = ?";
-            $values[] = $value;
+            if($value instanceof Color){
+                $values[] = $value->getHexValue();
+            }else{
+                $values[] = $value;
+            }
             $count++;
         }
 
@@ -633,16 +645,28 @@ class Manager_DB extends Manager implements Active, Interface_Entity_DB
             if(is_string($filter)){
                 if(!($attr instanceof Attr_String))
                     throw new DevPanic("Illegal string value type");
+                $sql .= " = ?";
+                $values[] = $filter;
             }else if(is_int($filter)){
                 if(!($attr instanceof Attr_Int) && !($attr instanceof Attr_Decimal))
                     throw new DevPanic("Illegal int value type");
+                $sql .= " = ?";
+                $values[] = $filter;
             }else if(is_bool($filter)){
                 if(!($attr instanceof Attr_Bool))
                     throw new DevPanic("Illegal bool value type");
+                $sql .= " = ?";
+                $values[] = $filter;
+            }else if($filter instanceof Color){
+                if(!($attr instanceof Attr_Color))
+                    throw new DevPanic("Illegal color value type");
+                $sql .= " = ?";
+                $values[] = $filter->getHexValue();
+            }else{
+                $sql .= " = ?";
+                $values[] = $filter;
             }
 
-            $sql .= " = ?";
-            $values[] = $filter;
         }
 
         return $sql;

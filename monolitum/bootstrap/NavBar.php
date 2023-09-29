@@ -2,6 +2,8 @@
 
 namespace monolitum\bootstrap;
 
+use monolitum\core\Find;
+use monolitum\frontend\component\CSSLink;
 use monolitum\frontend\component\Img;
 use monolitum\backend\globals\Active_NewId;
 use monolitum\backend\params\Link;
@@ -14,12 +16,14 @@ use monolitum\frontend\Component;
 use monolitum\frontend\component\A;
 use monolitum\frontend\component\Div;
 use monolitum\frontend\component\Hr;
+use monolitum\frontend\component\JSScript;
 use monolitum\frontend\component\Li;
 use monolitum\frontend\component\Span;
 use monolitum\frontend\component\Ul;
 use monolitum\frontend\css\CSSSize;
 use monolitum\frontend\ElementComponent;
 use monolitum\frontend\html\HtmlElement;
+use monolitum\wangeditor\WangEditor;
 
 class NavBar extends ElementComponent
 {
@@ -124,13 +128,102 @@ class NavBar extends ElementComponent
     }
 
     /**
-     * @param Renderable_Node|string $rightItem
+     * @param Renderable_Node|string|Nav_Item $rightItem
      * @return $this
      */
     public function addRight($rightItem)
     {
-        $this->rightComponent = $rightItem;
+        if($this->rightComponent === null){
+            $this->rightComponent = $rightItem;
+        }else if(is_array($this->rightComponent)) {
+            $this->rightComponent[] = $rightItem;
+        }else {
+            $c = $this->rightComponent;
+            $this->rightComponent = [$c, $rightItem];
+        }
         return $this;
+    }
+
+    /**
+     * @param Nav_Item|mixed $leftItem
+     * @return Li
+     */
+    public function createMenuItemLi($leftItem, $submenu=false, $right=false)
+    {
+        if($leftItem == null){
+            // Divider
+            $li2 = new Li();
+
+            $a2 = new Hr();
+            $a2->addClass("dropdown-divider");
+
+            return $li2;
+        }
+
+        //<li class="nav-item">
+        $li = new Li();
+
+        if(!$submenu){
+            $li->addClass("nav-item");
+        } else{
+            $this->assureSubmenuCodeAdded();
+            $a->addClass("dropdown-item");
+        }
+
+
+        if(!($leftItem instanceof Nav_Item)){
+            $li->append($leftItem);
+            return $li;
+        }
+
+        if ($leftItem instanceof Nav_Item_Dropdown){
+            $li->addClass("dropdown");
+
+            if($submenu){
+
+                if($right)
+                    $li->addClass("dropleft");
+                else
+                    $li->addClass("dropright");
+
+                $li->addClass("dropdown-submenu");
+            }
+
+        }
+
+        //<a class="nav-link active" aria-current="page" href="#">Home</a>
+        $a = new A();
+        if(!$submenu){
+            $a->addClass("nav-link");
+        }
+
+        if ($leftItem instanceof Nav_Item_Dropdown) {
+            $a->addClass("dropdown-toggle");
+            $a->setAttribute("data-bs-toggle", "dropdown");
+        }
+
+        $this->setupItem($leftItem, $a);
+
+        $li->append($a);
+
+        if ($leftItem instanceof Nav_Item_Dropdown) {
+
+            $ul2 = new Ul();
+            $ul2->addClass("dropdown-menu");
+            if(!$submenu){
+                if($right)
+                    $ul2->addClass("dropdown-menu-right");
+            }
+
+            foreach ($leftItem->getItems() as $dropdownItem) {
+                $li2 = $this->createMenuItemLi($dropdownItem, true, $right);
+                $ul2->append($li2);
+            }
+
+            $li->append($ul2);
+
+        }
+        return $li;
     }
 
     /**
@@ -247,57 +340,8 @@ class NavBar extends ElementComponent
                         //$ul->marginBottom(5);
                         //$ul->marginBottom(5, $this->expandBreakpoint);
                         {
-                            foreach ($this->leftItems as $leftItem) {
-
-                                //<li class="nav-item">
-                                $li = new Li();
-                                $li->addClass("nav-item");
-
-                                if($leftItem instanceof Nav_Item_Dropdown)
-                                    $li->addClass("dropdown");
-
-                                //<a class="nav-link active" aria-current="page" href="#">Home</a>
-                                $a = new A();
-                                $a->addClass("nav-link");
-
-                                if($leftItem instanceof Nav_Item_Dropdown){
-                                    $a->addClass("dropdown-toggle");
-                                    $a->setAttribute("data-bs-toggle", "dropdown");
-                                }
-
-                                $this->setupItem($leftItem, $a);
-
-                                $li->append($a);
-
-                                if($leftItem instanceof Nav_Item_Dropdown) {
-
-                                    $ul2 = new Ul();
-                                    $ul2->addClass("dropdown-menu");
-
-                                    foreach ($leftItem->getItems() as $dropdownItem){
-
-                                        $li2 = new Li();
-
-                                        if($dropdownItem instanceof Nav_Item){
-                                            $a2 = new A();
-                                            $a2->addClass("dropdown-item");
-
-                                            $this->setupItem($dropdownItem, $a2);
-
-                                        }else{
-                                            $a2 = new Hr();
-                                            $a2->addClass("dropdown-divider");
-                                        }
-
-                                        $li2->append($a2);
-
-                                        $ul2->append($li2);
-
-                                    }
-
-                                    $li->append($ul2);
-
-                                }
+                            foreach ($this->leftItems as $item) {
+                                $li = $this->createMenuItemLi($item, false, false);
 
                                 $ul->append($li);
                             }
@@ -308,10 +352,27 @@ class NavBar extends ElementComponent
                     }
 
                     if($this->rightComponent !== null){
+                        if(is_array($this->rightComponent)) {
+                            if(!empty($this->rightComponent)){
 
-                        if(is_string($this->rightComponent)){
+                                //<ul class="navbar-nav me-auto mb-5 mb-lg-0">
+                                $ul = new Ul();
+                                $ul->addClass("navbar-nav", "ms-auto");
+                                {
+                                    foreach ($this->rightComponent as $item) {
+                                        $li = $this->createMenuItemLi($item, false, true);
+
+                                        $ul->append($li);
+                                    }
+
+                                }
+                                $divCollapse->append($ul);
+
+                            }
+                        } else if(is_string($this->rightComponent)){
                             //<span class="navbar-text">
                             $span = new Span();
+                            $ul->addClass("navbar-text");
                             $span->setContent($this->rightComponent);
                             $divCollapse->append($span);
 
@@ -343,6 +404,20 @@ class NavBar extends ElementComponent
         $fc = new NavBar($builder);
         GlobalContext::add($fc);
         return $fc;
+    }
+
+    private function assureSubmenuCodeAdded()
+    {
+
+        // TODO generalize more this constant handler, not necessarly in BSPage
+        /** @var BSPage $page */
+        $page = Find::sync(BSPage::class);
+        if(!$page->getConstant("dropdown-menu-submenu-js-css")){
+            CSSLink::addLocal(Path::ofRelativeToClass(BS::class,"css", "bootstrap-submenu.css"));
+            JSScript::addLocal(Path::ofRelativeToClass(BS::class,"js", "bootstrap-submenu.js"));
+            $page->setConstant("dropdown-menu-submenu-js-css");
+        }
+
     }
 
 }
