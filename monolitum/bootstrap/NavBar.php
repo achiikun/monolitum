@@ -25,7 +25,7 @@ use monolitum\frontend\ElementComponent;
 use monolitum\frontend\html\HtmlElement;
 use monolitum\wangeditor\WangEditor;
 
-class NavBar extends ElementComponent
+class NavBar extends ElementComponent implements Menu_Item_Holder
 {
 
     /**
@@ -62,6 +62,9 @@ class NavBar extends ElementComponent
      * @var string|ElementComponent
      */
     private $rightComponent;
+
+    private $leftItemsUl;
+    private $rightItemsUl;
 
     public function __construct($builder)
     {
@@ -246,10 +249,28 @@ class NavBar extends ElementComponent
 //        $a->setContent($leftItem->getText());
 //    }
 
+    public function openToLeft()
+    {
+        if($this->rightItemsUl !== null){
+            // Setting up right items
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public function isSubmenu()
+    {
+        return false;
+    }
+
+    public function isNav()
+    {
+        return true;
+    }
+
     protected function afterBuildNode()
     {
-
-        $this->assureSubmenuCodeAdded();
 
         $this->addClass("navbar-expand-" . $this->expandBreakpoint);
 
@@ -332,78 +353,79 @@ class NavBar extends ElementComponent
                 $divCollapse = new Div();
                 $divCollapse->addClass("collapse navbar-collapse");
                 $divCollapse->setId($id);
-                {
-                    if(!empty($this->leftItems)){
 
-                        //<ul class="navbar-nav me-auto mb-5 mb-lg-0">
-                        $leftItemsUl = new Ul();
-                        $leftItemsUl->addClass("navbar-nav");
-                        //$ul->marginLeft("auto");
-                        //$ul->marginBottom(5);
-                        //$ul->marginBottom(5, $this->expandBreakpoint);
-                        {
-                            foreach ($this->leftItems as $item) {
-                                //$li = $this->createMenuItemLi($item, false, false);
-                                if(is_string($item)){
-                                    //<span class="navbar-text">
-                                    $span = new Span();
-                                    $span->addClass("navbar-text");
-                                    $span->setContent($this->rightComponent);
-                                    $leftItemsUl->append($span);
+                if(!empty($this->leftItems)){
 
-                                }else{
-                                    $leftItemsUl->append($item);
-                                }
+                    //<ul class="navbar-nav me-auto mb-5 mb-lg-0">
+                    $this->leftItemsUl = new Ul();
+                    $this->leftItemsUl->addClass("navbar-nav");
+                    //$ul->marginLeft("auto");
+                    //$ul->marginBottom(5);
+                    //$ul->marginBottom(5, $this->expandBreakpoint);
 
-                            }
+                    foreach ($this->leftItems as $item) {
+                        //$li = $this->createMenuItemLi($item, false, false);
+                        if(is_string($item)){
+                            //<span class="navbar-text">
+                            $span = new Span();
+                            $span->addClass("navbar-text");
+                            $span->setContent($this->rightComponent);
+                            $this->leftItemsUl->append($span);
 
+                        }else{
+
+                            $li = new Li();
+                            $li->addClass("nav-item");
+                            $li->append($item);
+                            $this->leftItemsUl->append($item);
                         }
-                        $divCollapse->append($leftItemsUl);
 
                     }
 
-//                    if($this->rightComponent !== null){
-//                        if(is_array($this->rightComponent)) {
-//                            if(!empty($this->rightComponent)){
-//
-//                                //<ul class="navbar-nav me-auto mb-5 mb-lg-0">
-//                                $rightItemsUl = new Ul();
-//                                $rightItemsUl->addClass("navbar-nav", "ms-auto");
-//                                {
-//                                    foreach ($this->rightComponent as $item) {
-//                                        //$li = $this->createMenuItemLi($item, false, true);
-//                                        if(is_string($item)){
-//                                            //<span class="navbar-text">
-//                                            $span = new Span();
-//                                            $span->addClass("navbar-text");
-//                                            $span->setContent($this->rightComponent);
-//                                            $rightItemsUl->append($span);
-//
-//                                        }else{
-//                                            $rightItemsUl->append($item);
-//                                        }
-//
-//                                    }
-//
-//                                }
-//                                $divCollapse->append($rightItemsUl);
-//
-//                            }
-//                        } else if(is_string($this->rightComponent)){
-//                            //<span class="navbar-text">
-//                            $span = new Span();
-//                            $span->addClass("navbar-text");
-//                            $span->setContent($this->rightComponent);
-//                            $divCollapse->append($span);
-//
-//                        }else{
-//                            $this->rightComponent->push(BSStyle::marginLeft("auto"));
-//                            $divCollapse->append($this->rightComponent);
-//                        }
-//
-//                    }
+                    $divCollapse->append($this->leftItemsUl);
 
                 }
+
+                if($this->rightComponent !== null) {
+                    if (is_array($this->rightComponent)) {
+                        if (!empty($this->rightComponent)) {
+
+                            //<ul class="navbar-nav me-auto mb-5 mb-lg-0">
+                            $this->rightItemsUl = new Ul();
+                            $this->rightItemsUl->addClass("navbar-nav", "ms-auto");
+                            {
+                                foreach ($this->rightComponent as $item) {
+                                    //$li = $this->createMenuItemLi($item, false, true);
+                                    if (is_string($item)) {
+                                        //<span class="navbar-text">
+                                        $span = new Span();
+                                        $span->addClass("navbar-text");
+                                        $span->setContent($this->rightComponent);
+                                        $this->rightItemsUl->append($span);
+
+                                    } else {
+                                        $this->rightItemsUl->append($item);
+                                    }
+
+                                }
+
+                            }
+                            $divCollapse->append($this->rightItemsUl);
+
+                        }
+                    } else if (is_string($this->rightComponent)) {
+                        //<span class="navbar-text">
+                        $span = new Span();
+                        $span->addClass("navbar-text");
+                        $span->setContent($this->rightComponent);
+                        $divCollapse->append($span);
+
+                    } else {
+                        $this->rightComponent->push(BSStyle::marginLeft("auto"));
+                        $divCollapse->append($this->rightComponent);
+                    }
+                }
+
                 $fluid->append($divCollapse);
 
             }
@@ -424,20 +446,6 @@ class NavBar extends ElementComponent
         $fc = new NavBar($builder);
         GlobalContext::add($fc);
         return $fc;
-    }
-
-    private function assureSubmenuCodeAdded()
-    {
-
-        // TODO generalize more this constant handler, not necessarly in BSPage
-        /** @var BSPage $page */
-        $page = Find::sync(BSPage::class);
-        if(!$page->getConstant("dropdown-menu-submenu-js-css")){
-            CSSLink::addLocal(Path::ofRelativeToClass(BS::class,"css", "bootstrap-submenu.css"));
-            JSScript::addLocal(Path::ofRelativeToClass(BS::class,"js", "bootstrap-submenu.js"));
-            $page->setConstant("dropdown-menu-submenu-js-css");
-        }
-
     }
 
 }

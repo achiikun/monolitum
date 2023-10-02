@@ -5,12 +5,15 @@ namespace monolitum\bootstrap;
 use monolitum\backend\params\Link;
 use monolitum\backend\params\Path;
 use monolitum\backend\res\Active_Create_HrefResolver;
+use monolitum\core\Find;
 use monolitum\frontend\Component;
 use monolitum\frontend\component\A;
+use monolitum\frontend\component\Li;
 use monolitum\frontend\ElementComponent;
 use monolitum\frontend\html\HtmlElement;
+use monolitum\frontend\Rendered;
 
-class Menu_Item extends ElementComponent
+class Menu_Item extends Li
 {
 
     /**
@@ -40,7 +43,7 @@ class Menu_Item extends ElementComponent
 
     public function __construct($builder = null)
     {
-        parent::__construct(new HtmlElement("li"), $builder);
+        parent::__construct($builder);
     }
 
     /**
@@ -117,20 +120,19 @@ class Menu_Item extends ElementComponent
 
     protected function afterBuildNode()
     {
-
-        if($this->getParent() instanceof Nav || $this->getParent() instanceof NavBar){
+        /** @var Menu_Item_Holder $menuItemHolder */
+        $menuItemHolder = Find::sync(Menu_Item_Holder::class);
+        if(!$menuItemHolder->isNav()){
             $this->addClass("nav-item");
         }
 
-        $this->a = A::add(function (A $it){
+        $this->a = A::add(function (A $it) use ($menuItemHolder) {
             // TODO this can be wrong if there is portals or references
-            if($this->getParent() instanceof Nav || $this->getParent() instanceof NavBar){
-
+            if($menuItemHolder->isNav()){
                 $it->addClass("nav-link");
-            }else{
+            }else {
                 // In a dropdown
                 $it->addClass("dropdown-item");
-
             }
 
             if($this->active){
@@ -144,21 +146,16 @@ class Menu_Item extends ElementComponent
             $it->setContent($this->text);
 
         });
-        parent::afterBuildNode();
-    }
-
-    public function render()
-    {
 
     }
 
     /**
-     * @param $text
+     * @param $content
      * @return Menu_Item
      */
-    public static function of($text){
+    public static function of($content){
         $item = new Menu_Item();
-        $item->text($text);
+        $item->text($content);
         return $item;
     }
 

@@ -34,4 +34,14 @@ class Ul extends ElementComponent
         return $fc;
     }
 
+    /**
+     * @param callable $builder
+     * @return Ul
+     */
+    public static function of($builder = null)
+    {
+        $fc = new Ul($builder);
+        return $fc;
+    }
+
 }

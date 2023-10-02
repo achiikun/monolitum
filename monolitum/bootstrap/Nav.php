@@ -7,7 +7,7 @@ use monolitum\core\GlobalContext;
 use monolitum\frontend\ElementComponent;
 use monolitum\frontend\html\HtmlElement;
 
-class Nav extends ElementComponent
+class Nav extends ElementComponent implements Menu_Item_Holder
 {
 
     /**
