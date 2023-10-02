@@ -2,7 +2,7 @@
 
 namespace monolitum\bootstrap;
 
-class Nav_Separator
+class Menu_Separator
 {
 
 }

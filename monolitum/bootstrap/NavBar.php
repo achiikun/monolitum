@@ -54,7 +54,7 @@ class NavBar extends ElementComponent
     private $themeDark = false;
 
     /**
-     * @var array<Nav_Item>
+     * @var array
      */
     private $leftItems = [];
 
@@ -104,7 +104,7 @@ class NavBar extends ElementComponent
      */
     public function brandTitle($brandTitle)
     {
-        $this->brandTitle = $brandTitle;
+        $this->brandTitle = $this->buildChild($brandTitle);
         return $this;
     }
 
@@ -113,12 +113,12 @@ class NavBar extends ElementComponent
      */
     public function brandIcon($brandIcon)
     {
-        $this->brandIcon = $brandIcon;
+        $this->brandIcon = $this->buildChild($brandIcon);
         return $this;
     }
 
     /**
-     * @param Nav_Item $leftItem
+     * @param Menu_Item|Menu_Item_Dropdown $leftItem
      * @return $this
      */
     public function addLeft($leftItem)
@@ -128,7 +128,7 @@ class NavBar extends ElementComponent
     }
 
     /**
-     * @param Renderable_Node|string|Nav_Item $rightItem
+     * @param Renderable_Node|string|Menu_Item|Menu_Item_Dropdown $rightItem
      * @return $this
      */
     public function addRight($rightItem)
@@ -144,110 +144,112 @@ class NavBar extends ElementComponent
         return $this;
     }
 
-    /**
-     * @param Nav_Item|mixed $leftItem
-     * @return Li
-     */
-    public function createMenuItemLi($leftItem, $submenu=false, $right=false)
-    {
-        if($leftItem == null){
-            // Divider
-            $li2 = new Li();
-
-            $a2 = new Hr();
-            $a2->addClass("dropdown-divider");
-
-            return $li2;
-        }
-
-        //<li class="nav-item">
-        $li = new Li();
-
-        if(!$submenu){
-            $li->addClass("nav-item");
-        } else{
-            $this->assureSubmenuCodeAdded();
-            $a->addClass("dropdown-item");
-        }
-
-
-        if(!($leftItem instanceof Nav_Item)){
-            $li->append($leftItem);
-            return $li;
-        }
-
-        if ($leftItem instanceof Nav_Item_Dropdown){
-            $li->addClass("dropdown");
-
-            if($submenu){
-
-                if($right)
-                    $li->addClass("dropleft");
-                else
-                    $li->addClass("dropright");
-
-                $li->addClass("dropdown-submenu");
-            }
-
-        }
-
-        //<a class="nav-link active" aria-current="page" href="#">Home</a>
-        $a = new A();
-        if(!$submenu){
-            $a->addClass("nav-link");
-        }
-
-        if ($leftItem instanceof Nav_Item_Dropdown) {
-            $a->addClass("dropdown-toggle");
-            $a->setAttribute("data-bs-toggle", "dropdown");
-        }
-
-        $this->setupItem($leftItem, $a);
-
-        $li->append($a);
-
-        if ($leftItem instanceof Nav_Item_Dropdown) {
-
-            $ul2 = new Ul();
-            $ul2->addClass("dropdown-menu");
-            if(!$submenu){
-                if($right)
-                    $ul2->addClass("dropdown-menu-right");
-            }
-
-            foreach ($leftItem->getItems() as $dropdownItem) {
-                $li2 = $this->createMenuItemLi($dropdownItem, true, $right);
-                $ul2->append($li2);
-            }
-
-            $li->append($ul2);
-
-        }
-        return $li;
-    }
-
-    /**
-     * @param Nav_Item $leftItem
-     * @param A $a
-     * @return void
-     */
-    public function setupItem($leftItem, ElementComponent $a)
-    {
-        if ($leftItem->isActive()) {
-            $a->addClass("active");
-            $a->setAttribute("aria-current", "page");
-        }
-        if ($leftItem->isDisabled()) {
-            $a->addClass("disabled");
-        } else {
-            $link = $leftItem->getLink();
-            $a->setHref($link);
-        }
-        $a->setContent($leftItem->getText());
-    }
+//    /**
+//     * @param Nav_Item|mixed $leftItem
+//     * @return Li
+//     */
+//    public function createMenuItemLi($leftItem, $submenu=false, $right=false)
+//    {
+//        if($leftItem == null){
+//            // Divider
+//            $li2 = new Li();
+//
+//            $a2 = new Hr();
+//            $a2->addClass("dropdown-divider");
+//
+//            return $li2;
+//        }
+//
+//        //<li class="nav-item">
+//        $li = new Li();
+//
+//        if(!$submenu){
+//            $li->addClass("nav-item");
+//        } else{
+//            $this->assureSubmenuCodeAdded();
+//            $a->addClass("dropdown-item");
+//        }
+//
+//
+//        if(!($leftItem instanceof Nav_Item)){
+//            $li->append($leftItem);
+//            return $li;
+//        }
+//
+//        if ($leftItem instanceof Nav_Item_Dropdown){
+//            $li->addClass("dropdown");
+//
+//            if($submenu){
+//
+//                if($right)
+//                    $li->addClass("dropleft");
+//                else
+//                    $li->addClass("dropright");
+//
+//                $li->addClass("dropdown-submenu");
+//            }
+//
+//        }
+//
+//        //<a class="nav-link active" aria-current="page" href="#">Home</a>
+//        $a = new A();
+//        if(!$submenu){
+//            $a->addClass("nav-link");
+//        }
+//
+//        if ($leftItem instanceof Nav_Item_Dropdown) {
+//            $a->addClass("dropdown-toggle");
+//            $a->setAttribute("data-bs-toggle", "dropdown");
+//        }
+//
+//        $this->setupItem($leftItem, $a);
+//
+//        $li->append($a);
+//
+//        if ($leftItem instanceof Nav_Item_Dropdown) {
+//
+//            $ul2 = new Ul();
+//            $ul2->addClass("dropdown-menu");
+//            if(!$submenu){
+//                if($right)
+//                    $ul2->addClass("dropdown-menu-right");
+//            }
+//
+//            foreach ($leftItem->getItems() as $dropdownItem) {
+//                $li2 = $this->createMenuItemLi($dropdownItem, true, $right);
+//                $ul2->append($li2);
+//            }
+//
+//            $li->append($ul2);
+//
+//        }
+//        return $li;
+//    }
+//
+//    /**
+//     * @param Nav_Item $leftItem
+//     * @param A $a
+//     * @return void
+//     */
+//    public function setupItem($leftItem, ElementComponent $a)
+//    {
+//        if ($leftItem->isActive()) {
+//            $a->addClass("active");
+//            $a->setAttribute("aria-current", "page");
+//        }
+//        if ($leftItem->isDisabled()) {
+//            $a->addClass("disabled");
+//        } else {
+//            $link = $leftItem->getLink();
+//            $a->setHref($link);
+//        }
+//        $a->setContent($leftItem->getText());
+//    }
 
     protected function afterBuildNode()
     {
+
+        $this->assureSubmenuCodeAdded();
 
         $this->addClass("navbar-expand-" . $this->expandBreakpoint);
 
@@ -334,54 +336,72 @@ class NavBar extends ElementComponent
                     if(!empty($this->leftItems)){
 
                         //<ul class="navbar-nav me-auto mb-5 mb-lg-0">
-                        $ul = new Ul();
-                        $ul->addClass("navbar-nav");
+                        $leftItemsUl = new Ul();
+                        $leftItemsUl->addClass("navbar-nav");
                         //$ul->marginLeft("auto");
                         //$ul->marginBottom(5);
                         //$ul->marginBottom(5, $this->expandBreakpoint);
                         {
                             foreach ($this->leftItems as $item) {
-                                $li = $this->createMenuItemLi($item, false, false);
+                                //$li = $this->createMenuItemLi($item, false, false);
+                                if(is_string($item)){
+                                    //<span class="navbar-text">
+                                    $span = new Span();
+                                    $span->addClass("navbar-text");
+                                    $span->setContent($this->rightComponent);
+                                    $leftItemsUl->append($span);
 
-                                $ul->append($li);
-                            }
-
-                        }
-                        $divCollapse->append($ul);
-
-                    }
-
-                    if($this->rightComponent !== null){
-                        if(is_array($this->rightComponent)) {
-                            if(!empty($this->rightComponent)){
-
-                                //<ul class="navbar-nav me-auto mb-5 mb-lg-0">
-                                $ul = new Ul();
-                                $ul->addClass("navbar-nav", "ms-auto");
-                                {
-                                    foreach ($this->rightComponent as $item) {
-                                        $li = $this->createMenuItemLi($item, false, true);
-
-                                        $ul->append($li);
-                                    }
-
+                                }else{
+                                    $leftItemsUl->append($item);
                                 }
-                                $divCollapse->append($ul);
 
                             }
-                        } else if(is_string($this->rightComponent)){
-                            //<span class="navbar-text">
-                            $span = new Span();
-                            $ul->addClass("navbar-text");
-                            $span->setContent($this->rightComponent);
-                            $divCollapse->append($span);
 
-                        }else{
-                            $this->rightComponent->push(BSStyle::marginLeft("auto"));
-                            $divCollapse->append($this->rightComponent);
                         }
+                        $divCollapse->append($leftItemsUl);
 
                     }
+
+//                    if($this->rightComponent !== null){
+//                        if(is_array($this->rightComponent)) {
+//                            if(!empty($this->rightComponent)){
+//
+//                                //<ul class="navbar-nav me-auto mb-5 mb-lg-0">
+//                                $rightItemsUl = new Ul();
+//                                $rightItemsUl->addClass("navbar-nav", "ms-auto");
+//                                {
+//                                    foreach ($this->rightComponent as $item) {
+//                                        //$li = $this->createMenuItemLi($item, false, true);
+//                                        if(is_string($item)){
+//                                            //<span class="navbar-text">
+//                                            $span = new Span();
+//                                            $span->addClass("navbar-text");
+//                                            $span->setContent($this->rightComponent);
+//                                            $rightItemsUl->append($span);
+//
+//                                        }else{
+//                                            $rightItemsUl->append($item);
+//                                        }
+//
+//                                    }
+//
+//                                }
+//                                $divCollapse->append($rightItemsUl);
+//
+//                            }
+//                        } else if(is_string($this->rightComponent)){
+//                            //<span class="navbar-text">
+//                            $span = new Span();
+//                            $span->addClass("navbar-text");
+//                            $span->setContent($this->rightComponent);
+//                            $divCollapse->append($span);
+//
+//                        }else{
+//                            $this->rightComponent->push(BSStyle::marginLeft("auto"));
+//                            $divCollapse->append($this->rightComponent);
+//                        }
+//
+//                    }
 
                 }
                 $fluid->append($divCollapse);

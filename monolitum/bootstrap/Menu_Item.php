@@ -4,14 +4,19 @@ namespace monolitum\bootstrap;
 
 use monolitum\backend\params\Link;
 use monolitum\backend\params\Path;
+use monolitum\backend\res\Active_Create_HrefResolver;
+use monolitum\frontend\Component;
+use monolitum\frontend\component\A;
+use monolitum\frontend\ElementComponent;
+use monolitum\frontend\html\HtmlElement;
 
-class Nav_Item
+class Menu_Item extends ElementComponent
 {
 
     /**
      * @var string
      */
-    private $text;
+    protected $text;
 
     /**
      * @var Link|Path
@@ -21,12 +26,22 @@ class Nav_Item
     /**
      * @var bool
      */
-    private $active = false;
+    protected $active = false;
 
     /**
      * @var bool
      */
-    private $disabled = false;
+    protected $disabled = false;
+
+    /**
+     * @var A
+     */
+    private $a;
+
+    public function __construct($builder = null)
+    {
+        parent::__construct(new HtmlElement("li"), $builder);
+    }
 
     /**
      * @return string
@@ -100,12 +115,49 @@ class Nav_Item
         return $this;
     }
 
+    protected function afterBuildNode()
+    {
+
+        if($this->getParent() instanceof Nav || $this->getParent() instanceof NavBar){
+            $this->addClass("nav-item");
+        }
+
+        $this->a = A::add(function (A $it){
+            // TODO this can be wrong if there is portals or references
+            if($this->getParent() instanceof Nav || $this->getParent() instanceof NavBar){
+
+                $it->addClass("nav-link");
+            }else{
+                // In a dropdown
+                $it->addClass("dropdown-item");
+
+            }
+
+            if($this->active){
+                $it->addClass("active");
+            }
+            if($this->disabled){
+                $it->addClass("disabled");
+            }else{
+                $it->setHref($this->link);
+            }
+            $it->setContent($this->text);
+
+        });
+        parent::afterBuildNode();
+    }
+
+    public function render()
+    {
+
+    }
+
     /**
      * @param $text
-     * @return Nav_Item
+     * @return Menu_Item
      */
     public static function of($text){
-        $item = new Nav_Item();
+        $item = new Menu_Item();
         $item->text($text);
         return $item;
     }

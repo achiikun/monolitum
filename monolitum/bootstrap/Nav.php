@@ -11,11 +11,6 @@ class Nav extends ElementComponent
 {
 
     /**
-     * @var array<Nav_Item>
-     */
-    private $items = [];
-
-    /**
      * @var string
      */
     private $type = null;
@@ -34,16 +29,6 @@ class Nav extends ElementComponent
     {
         parent::__construct(new HtmlElement("ul"), $builder);
         $this->addClass("nav");
-    }
-
-    /**
-     * @param Nav_Item $leftItem
-     * @return $this
-     */
-    public function addItem($leftItem)
-    {
-        $this->items[] = $leftItem;
-        return $this;
     }
 
     /**
@@ -82,7 +67,7 @@ class Nav extends ElementComponent
         return $this;
     }
 
-    protected function executeComponent()
+    protected function afterBuildNode()
     {
 
         if($this->type)
@@ -94,33 +79,7 @@ class Nav extends ElementComponent
         if($this->fill)
             $this->addClass("nav-fill");
 
-        foreach ($this->items as $leftItem) {
-
-            //<li class="nav-item">
-            $li = new HtmlElement('li');
-            $li->addClass("nav-item");
-
-            //<a class="nav-link active" aria-current="page" href="#">Home</a>
-            $a = new HtmlElement('a');
-            $a->addClass("nav-link");
-            if($leftItem->isActive()){
-                $a->addClass("active");
-            }
-            if($leftItem->isDisabled()){
-                $a->addClass("disabled");
-            }else{
-                $active = new Active_Create_HrefResolver($leftItem->getLink());
-                $this->push($active);
-                $a->setAttribute("href", $active->getHrefResolver()->resolve(), false);
-            }
-            $a->setContent($leftItem->getText());
-
-            $li->addContent($a);
-
-            $this->append($li);
-        }
-
-        parent::executeComponent();
+        parent::afterBuildNode();
     }
 
     /**
