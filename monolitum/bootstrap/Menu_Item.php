@@ -150,7 +150,7 @@ class Menu_Item extends Li
     }
 
     /**
-     * @param $content
+     * @param string $content
      * @return Menu_Item
      */
     public static function of($content){

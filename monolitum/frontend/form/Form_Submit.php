@@ -3,10 +3,10 @@
 namespace monolitum\frontend\form;
 
 use monolitum\backend\params\Link;
-use monolitum\backend\res\Active_Create_HrefResolver;
+use monolitum\backend\params\Path;
 use monolitum\backend\res\HrefResolver;
+use monolitum\backend\res\HrefResolver_Impl;
 use monolitum\core\Find;
-use monolitum\core\GlobalContext;
 use monolitum\entity\attr\Attr;
 use monolitum\frontend\ElementComponent;
 use monolitum\frontend\html\HtmlElement;
@@ -25,9 +25,21 @@ abstract class Form_Submit extends ElementComponent
     protected $action;
 
     /**
-     * @var string
+     * @var Link|Path
      */
-    protected $method = null;
+    protected $link;
+
+    /**
+     * @var HrefResolver
+     */
+    protected $linkResolver;
+
+
+    // Method is defined in the form
+//    /**
+//     * @var string
+//     */
+//    protected $method = null;
 
     /**
      * @var callable
@@ -44,22 +56,60 @@ abstract class Form_Submit extends ElementComponent
         parent::__construct($element, $builder);
     }
 
-    public function setMethodGET()
-    {
-        $this->method = "get";
-    }
-
-    public function setMethodPOST()
-    {
-        $this->method = "post";
-    }
+//    public function setMethodGET()
+//    {
+//        $this->method = "get";
+//    }
+//
+//    public function setMethodPOST()
+//    {
+//        $this->method = "post";
+//    }
+//
+//    /**
+//     * @return string|null
+//     */
+//    public function getMethod()
+//    {
+//        return $this->method;
+//    }
 
     /**
      * @return string|null
      */
-    public function getMethod()
+    public function getFinalCustomFormMethod()
     {
-        return $this->method;
+        return $this->form->_getSubmitMethod($this);
+    }
+
+    /**
+     * @return HrefResolver
+     */
+    public function getFinalCustomLinkResolver()
+    {
+        if($this->linkResolver !== null)
+            return $this->linkResolver;
+        return $this->form->_getSubmitLinkResolver($this);
+    }
+
+    /**
+     * @return string
+     */
+    public function getFinalName()
+    {
+
+        $prefix = $this->form->_getSubmitPrefix($this);
+        $action = $this->getAction();
+
+        return ($prefix !== null ? $prefix : "") .  ($action !== null ? $action : "");
+    }
+
+    /**
+     * @param Link|Path $link
+     */
+    public function setLink($link)
+    {
+        $this->link = $link;
     }
 
     /**

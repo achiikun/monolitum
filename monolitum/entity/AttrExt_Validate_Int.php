@@ -54,7 +54,12 @@ class AttrExt_Validate_Int extends AttrExt_Validate
      */
     public function validate($validatedValue)
     {
-        $error = parent::validate($validatedValue);
+        $validatedValue = parent::validate($validatedValue);
+
+        if(!$validatedValue->isValid())
+            return $validatedValue;
+
+        $error = false;
 
         if(!$validatedValue->isNull()){
 

@@ -10,6 +10,8 @@ class Active_Param_Abstract implements Active, Param
     const TYPE_STRING = "str";
     const TYPE_INT = "int";
 
+    //const TYPE_CODED_INT = "int";
+
     /**
      * @var string
      */

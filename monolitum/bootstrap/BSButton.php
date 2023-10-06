@@ -2,17 +2,16 @@
 
 namespace monolitum\bootstrap;
 
-use monolitum\bootstrap\values\BSColor;
-use monolitum\core\GlobalContext;
 use monolitum\backend\params\Link;
 use monolitum\backend\params\Path;
-use monolitum\core\panic\DevPanic;
-use monolitum\core\Renderable_Node;
 use monolitum\backend\res\Active_Create_HrefResolver;
 use monolitum\backend\res\HrefResolver;
+use monolitum\bootstrap\values\BSColor;
+use monolitum\core\GlobalContext;
+use monolitum\core\panic\DevPanic;
+use monolitum\core\Renderable_Node;
 use monolitum\frontend\component\AbstractText;
 use monolitum\frontend\form\Form;
-use monolitum\frontend\form\Form_Submit;
 use monolitum\frontend\html\HtmlElement;
 use monolitum\frontend\Rendered;
 
@@ -44,7 +43,7 @@ class BSButton extends AbstractText
      */
     private $form;
     /**
-     * @var FormSubmit
+     * @var BS_Form_Submit
      */
     private $formSubmit;
 
@@ -109,7 +108,7 @@ class BSButton extends AbstractText
 
                     $it->setLink($this->href);
 
-                    $this->formSubmit = FormSubmit::add(function (FormSubmit $it) {
+                    $this->formSubmit = BS_Form_Submit::add(function (BS_Form_Submit $it) {
 
                         $it->setId($this->getId());
                         $it->addClass(...$this->getClasses());

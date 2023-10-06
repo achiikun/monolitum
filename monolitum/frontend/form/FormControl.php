@@ -1,5 +1,5 @@
 <?php
-namespace monolitum\bootstrap;
+namespace monolitum\frontend\form;
 
 use monolitum\frontend\ElementComponent;
 
@@ -48,6 +48,12 @@ class FormControl extends ElementComponent
     {
         $element = $this->getElement();
         $element->setAttribute("disabled", $value ? "disabled" : null);
+    }
+
+    public function convertToHidden()
+    {
+        $element = $this->getElement();
+        $element->setAttribute("type", "hidden");
     }
 
     protected function buildNode()

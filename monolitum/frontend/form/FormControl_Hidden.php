@@ -1,10 +1,10 @@
 <?php
-namespace monolitum\bootstrap;
+namespace monolitum\frontend\form;
 
 use monolitum\core\GlobalContext;
 use monolitum\frontend\html\HtmlElement;
 
-class FormControl_Date extends FormControl
+class FormControl_Hidden extends FormControl
 {
 
     /**
@@ -13,16 +13,16 @@ class FormControl_Date extends FormControl
     public function __construct(callable $builder = null)
     {
         parent::__construct(new HtmlElement("input"), $builder);
-        $this->getElement()->setAttribute("type", "date");
+        $this->getElement()->setAttribute("type", "hidden");
     }
 
     /**
      * @param callable $builder
-     * @return FormControl_Date
+     * @return FormControl_Hidden
      */
     public static function add($builder)
     {
-        $fc = new FormControl_Date($builder);
+        $fc = new FormControl_Hidden($builder);
         GlobalContext::add($fc);
         return $fc;
     }

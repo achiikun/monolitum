@@ -329,6 +329,16 @@ class HtmlElement implements Renderable
         return $this;
     }
 
+    public function getContentAsString(){
+        if(count($this->childElementCollection) !== 1)
+            return null;
+        /** @var HtmlElement|HtmlElementContent $elem */
+        $elem = $this->childElementCollection[0];
+        if($elem instanceof HtmlElementContent)
+            return $elem->getContent();
+        return (new HtmlBuilder())->render($elem);
+    }
+
     /**
      * add html element content
      *

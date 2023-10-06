@@ -11,19 +11,24 @@ use monolitum\entity\attr\Attr_Decimal;
 use monolitum\entity\attr\Attr_File;
 use monolitum\entity\attr\Attr_Int;
 use monolitum\entity\attr\Attr_String;
-use monolitum\entity\AttrExt_Validate;
 use monolitum\entity\AttrExt_Validate_Int;
 use monolitum\entity\AttrExt_Validate_String;
 use monolitum\frontend\Component;
 use monolitum\frontend\component\Div;
 use monolitum\frontend\ElementComponent;
-use monolitum\frontend\form\AttrExt_Form;
-use monolitum\frontend\form\AttrExt_Form_Int;
 use monolitum\frontend\form\AttrExt_Form_String;
-use monolitum\frontend\form\Form;
+use monolitum\frontend\form\Form_Attr_ElementComponent;
+use monolitum\frontend\form\FormControl_CheckBox;
+use monolitum\frontend\form\FormControl_Date;
+use monolitum\frontend\form\FormControl_File;
+use monolitum\frontend\form\FormControl_Number;
+use monolitum\frontend\form\FormControl_Password;
+use monolitum\frontend\form\FormControl_Select;
+use monolitum\frontend\form\FormControl_Select_Option;
+use monolitum\frontend\form\FormControl_Text;
 use monolitum\frontend\html\HtmlElement;
 
-class Form_Attr extends \monolitum\frontend\form\Form_Attr
+class BS_Form_Attr extends Form_Attr_ElementComponent
 {
 
     /**
@@ -35,11 +40,6 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
      * @var string|ElementComponent
      */
     private $formText = null;
-
-    /**
-     * @var bool
-     */
-    protected $disabled = null;
 
     /**
      * @var bool|null
@@ -63,16 +63,6 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
     }
 
     /**
-     * @param bool $disabled
-     * @return $this
-     */
-    public function disabled($disabled=true)
-    {
-        $this->disabled = $disabled;
-        return $this;
-    }
-
-    /**
      * @param ElementComponent|string|null $formText
      * @return $this
      */
@@ -93,7 +83,6 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
 
     public function afterBuildForm()
     {
-
         $attr = $this->getAttr();
 //        $ext = $this->getFormExt();
 
@@ -125,8 +114,8 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
 
             $this->formWrapper->append(
                 new FormControl_CheckBox(function(FormControl_CheckBox $it){
-                    $it->setId($this->getName());
-                    $it->setName($this->getName());
+                    $it->setId($this->getFullFieldName());
+                    $it->setName($this->getFullFieldName());
                     if($this->hasValue())
                         $it->setValue($this->getValue());
 
@@ -138,7 +127,7 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
 
             $this->formWrapper->append(
                 new FormLabel(function(FormLabel $it){
-                    $it->setName($this->getName());
+                    $it->setName($this->getFullFieldName());
                     $it->setContent($this->getLabel());
                 }, "form-check-label")
             );
@@ -158,7 +147,7 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
             $this->formWrapper->addClass("form-group");
 
             $formLabel = new FormLabel(function(FormLabel $it){
-                $it->setName($this->getName());
+                $it->setName($this->getFullFieldName());
                 $it->setContent($this->getLabel());
             }, $this->isRow != null ? "col-form-label" : "form-label");
 
@@ -233,8 +222,8 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
             if($validateExt instanceof AttrExt_Validate_String && $validateExt->hasEnum()){
 
                 $formControl = new FormControl_Select(function (FormControl_Select $it) use ($formExt, $validateExt) {
-                    $it->setId($this->getName());
-                    $it->setName($this->getName());
+                    $it->setId($this->getFullFieldName());
+                    $it->setName($this->getFullFieldName());
 
                     $selected = null;
                     if($this->hasValue())
@@ -311,8 +300,8 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
 //                });
 
                 $formControl = new FormControl_TextArea_Html(function (FormControl_TextArea_Html $it) use ($formExt) {
-                    $it->setId($this->getName());
-                    $it->setName($this->getName());
+                    $it->setId($this->getFullFieldName());
+                    $it->setName($this->getFullFieldName());
 
                     if($this->hasValue())
                         $it->setValue($this->getValue());
@@ -322,8 +311,8 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
             }else if($formExt instanceof AttrExt_Form_String && $formExt->isPassword()){
 
                 $formControl = new FormControl_Password(function(FormControl_Password $it) use ($isValid) {
-                    $it->setId($this->getName());
-                    $it->setName($this->getName());
+                    $it->setId($this->getFullFieldName());
+                    $it->setName($this->getFullFieldName());
                     if($this->hasValue())
                         $it->setValue($this->getValue());
                     if($isValid !== null)
@@ -338,8 +327,8 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
             }else{
 
                 $formControl = new FormControl_Text(function(FormControl_Text $it) use ($isValid) {
-                    $it->setId($this->getName());
-                    $it->setName($this->getName());
+                    $it->setId($this->getFullFieldName());
+                    $it->setName($this->getFullFieldName());
                     if($this->hasValue())
                         $it->setValue($this->getValue());
                     if($isValid !== null)
@@ -355,8 +344,8 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
         }else if($attr instanceof Attr_Int){
 
             $formControl = new FormControl_Number(function(FormControl_Number $it) use ($validateExt, $isValid) {
-                $it->setId($this->getName());
-                $it->setName($this->getName());
+                $it->setId($this->getFullFieldName());
+                $it->setName($this->getFullFieldName());
                 if($this->hasValue()){
                     $it->setValue($this->getValue());
                 }
@@ -377,8 +366,8 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
         }else if($attr instanceof Attr_Decimal){
 
             $formControl = new FormControl_Number(function(FormControl_Number $it) use ($attr, $isValid) {
-                $it->setId($this->getName());
-                $it->setName($this->getName());
+                $it->setId($this->getFullFieldName());
+                $it->setName($this->getFullFieldName());
                 $decimals = $attr->getDecimals();
 
                 $it->step(1 / pow(10, $decimals));
@@ -397,8 +386,8 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
         }else if($attr instanceof Attr_Date){
 
             $formControl = new FormControl_Date(function(FormControl_Date $it) use ($isValid) {
-                $it->setId($this->getName());
-                $it->setName($this->getName());
+                $it->setId($this->getFullFieldName());
+                $it->setName($this->getFullFieldName());
                 if($this->hasValue()){
                     $datetime = $this->getValue();
                     $it->setValue(date_format($datetime, "Y-m-d"));
@@ -414,8 +403,8 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
         }else if($attr instanceof Attr_File){
 
             $formControl = new FormControl_File(function(FormControl_File $it) use ($isValid) {
-                $it->setId($this->getName());
-                $it->setName($this->getName());
+                $it->setId($this->getFullFieldName());
+                $it->setName($this->getFullFieldName());
 
                 if($isValid !== null)
                     $it->addClass($isValid ? "is-valid" : "is-invalid");
@@ -432,13 +421,26 @@ class Form_Attr extends \monolitum\frontend\form\Form_Attr
     }
 
     /**
-     * @param string $attrid
+     * @param string $attrId
      * @param callable|null $builder
-     * @return Form_Attr
+     * @return BS_Form_Attr
      */
-    public static function add($attrid, $builder = null)
+    public static function add($attrId, $builder = null)
     {
-        $fc = new Form_Attr($attrid, $builder);
+        $fc = new BS_Form_Attr($attrId, $builder);
+        GlobalContext::add($fc);
+        return $fc;
+    }
+
+    /**
+     * @param string $attrId
+     * @param callable|null $builder
+     * @return BS_Form_Attr
+     */
+    public static function addHidden($attrId, $builder = null)
+    {
+        $fc = new BS_Form_Attr($attrId, $builder);
+        $fc->hidden();
         GlobalContext::add($fc);
         return $fc;
     }

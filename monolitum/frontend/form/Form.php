@@ -88,7 +88,7 @@ class Form extends Component
     private $linkResolver;
 
     /**
-     * @var array<string, Form_Attr>
+     * @var array<string, Interface_Form_Attr>
      */
     private $formAttrs = [];
 
@@ -307,7 +307,7 @@ class Form extends Component
      * @param string|Attr $attr
      * @return string
      */
-    function _getAttrName($attr)
+    function _getFullFieldName($attr)
     {
         // Append the form Id if it is necessary to be appended
 
@@ -337,7 +337,7 @@ class Form extends Component
      * It must contain the formid.
      * @return string
      */
-    function _getSubmitPrefix(){
+    function _getSubmitPrefix($form_submit){
         if($this->anonymousSubmission)
             return null;
         return $this->formId . "_submit__";
@@ -346,20 +346,21 @@ class Form extends Component
     /**
      * @return string|null
      */
-    function _getSubmitMethod()
+    function _getSubmitMethod($form_submit)
     {
-        if($this->hasNestedForms || $this->rootForm !== null)
-            return $this->methodGET ? "get" : "post";
+//        if($this->hasNestedForms || $this->rootForm !== null)
+//            return $this->methodGET ? "get" : "post";
+        // Method is defined in the root form
         return null;
     }
 
     /**
-     * @return string|null
+     * @return HrefResolver|null
      */
-    function _getSubmitLink()
+    function _getSubmitLinkResolver($form_submit)
     {
         if(($this->rootForm !== null || $this->build_overrideSubmitLinks) && $this->linkResolver !== null)
-            return $this->linkResolver->resolve();
+            return $this->linkResolver;
         return null;
     }
 
@@ -525,7 +526,7 @@ class Form extends Component
 
     /**
      * Called from form fields telling that the attribute it handles is present.
-     * @param Form_Attr $formAttr
+     * @param Interface_Form_Attr $formAttr
      * @param Attr $attr
      * @return void
      */

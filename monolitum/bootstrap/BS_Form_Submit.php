@@ -5,7 +5,7 @@ use monolitum\core\GlobalContext;
 use monolitum\frontend\form\Form_Submit;
 use monolitum\frontend\html\HtmlElement;
 
-class FormSubmit extends Form_Submit
+class BS_Form_Submit extends Form_Submit
 {
 
     public function __construct(callable $builder)
@@ -30,21 +30,18 @@ class FormSubmit extends Form_Submit
     public function afterBuildForm()
     {
 
-        $prefix = $this->form->_getSubmitPrefix();
-        $action = $this->getAction();
-
-        $name = ($prefix !== null ? $prefix : "") .  ($action !== null ? $action : "");
+        $name = $this->getFinalName();
         if(!empty($name)){
             $this->setAttribute("name", $name);
         }
 
-        $method = $this->form->_getSubmitMethod();
+        $method = $this->getFinalCustomFormMethod();
         if($method !== null){
             $this->setAttribute("formmethod", $method);
         }
 
 
-        $linkResolver = $this->form->_getSubmitLink();
+        $linkResolver = $this->getFinalCustomLinkResolver();
         if($linkResolver !== null){
             $this->setAttribute("formaction", $linkResolver, false);
         }
@@ -53,11 +50,11 @@ class FormSubmit extends Form_Submit
 
     /**
      * @param callable $builder
-     * @return FormSubmit
+     * @return BS_Form_Submit
      */
     public static function add($builder)
     {
-        $fc = new FormSubmit($builder);
+        $fc = new BS_Form_Submit($builder);
         GlobalContext::add($fc);
         return $fc;
     }

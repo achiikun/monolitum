@@ -2,24 +2,21 @@
 
 namespace monolitum\bootstrap\datatable;
 
+use monolitum\backend\params\Link;
+use monolitum\backend\params\Path;
+use monolitum\bootstrap\BS_Form_Submit;
+use monolitum\bootstrap\FormControl_Select;
+use monolitum\bootstrap\FormControl_Select_Option;
 use monolitum\bootstrap\style\BS_Form_InputGroup;
 use monolitum\bootstrap\style\BSDisplay;
 use monolitum\bootstrap\style\BSStyle;
 use monolitum\bootstrap\style\BSText;
-use monolitum\entity\AnonymousModel;
-use monolitum\entity\attr\Attr_Int;
-use monolitum\frontend\component\A;
-use monolitum\frontend\component\Li;
-use monolitum\backend\params\Link;
-use monolitum\backend\params\Path;
-use monolitum\frontend\component\Div;
-use monolitum\bootstrap\FormControl_Select;
-use monolitum\bootstrap\FormControl_Select_Option;
-use monolitum\bootstrap\FormSubmit;
 use monolitum\core\GlobalContext;
 use monolitum\core\panic\DevPanic;
+use monolitum\frontend\component\A;
+use monolitum\frontend\component\Div;
+use monolitum\frontend\component\Li;
 use monolitum\frontend\css\CSSSize;
-use monolitum\frontend\css\Style;
 use monolitum\frontend\ElementComponent;
 use monolitum\frontend\form\AttrExt_Form_Int;
 use monolitum\frontend\form\Form;
@@ -353,7 +350,7 @@ class Pagination extends ElementComponent
 
                     });
 
-                    FormSubmit::add(function (FormSubmit $it) {
+                    BS_Form_Submit::add(function (BS_Form_Submit $it) {
                         $it->setContent($this->comboboxButtonText);
                     });
 

@@ -47,6 +47,10 @@ class DataTable_Col implements Active
         return $this;
     }
 
+    /**
+     * @param string $id
+     * @return $this
+     */
     public function sortable($id)
     {
         $this->sortable = true;

@@ -1,8 +1,10 @@
 <?php
-namespace monolitum\bootstrap;
+namespace monolitum\frontend\form;
 
 use monolitum\core\GlobalContext;
+use monolitum\core\Renderable_Node;
 use monolitum\frontend\html\HtmlElement;
+use monolitum\frontend\Rendered;
 
 class FormControl_Select extends FormControl
 {
@@ -13,6 +15,17 @@ class FormControl_Select extends FormControl
     public function __construct(callable $builder = null)
     {
         parent::__construct(new HtmlElement("select"), $builder, "form-select");
+    }
+
+    public function render()
+    {
+
+        $rc = parent::render();
+        // No childs are rendered if it is hidden
+        if($this->getElement()->getAttribute("type") !== "hidden"){
+            Renderable_Node::renderRenderedTo($rc, $this->getElement());
+        }
+        return Rendered::of($this->getElement());
     }
 
     /**

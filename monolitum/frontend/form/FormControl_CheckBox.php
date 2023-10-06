@@ -1,5 +1,5 @@
 <?php
-namespace monolitum\bootstrap;
+namespace monolitum\frontend\form;
 
 use monolitum\core\GlobalContext;
 use monolitum\frontend\html\HtmlElement;

@@ -31,6 +31,21 @@ class Nav extends ElementComponent implements Menu_Item_Holder
         $this->addClass("nav");
     }
 
+    public function isNav()
+    {
+        return true;
+    }
+
+    public function openToLeft()
+    {
+        return false;
+    }
+
+    public function isSubmenu()
+    {
+        return false;
+    }
+
     /**
      * @return $this;
      */

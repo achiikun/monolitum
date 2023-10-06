@@ -6,10 +6,11 @@ use monolitum\core\Find;
 use monolitum\core\panic\DevPanic;
 use monolitum\entity\attr\Attr;
 use monolitum\entity\AttrExt_Validate;
+use monolitum\frontend\Component;
 use monolitum\frontend\ElementComponent;
 use monolitum\frontend\html\HtmlElement;
 
-abstract class Form_Attr extends ElementComponent
+abstract class Form_Attr_Component extends Component implements Interface_Form_Attr
 {
 
     /**
@@ -40,6 +41,16 @@ abstract class Form_Attr extends ElementComponent
     /**
      * @var bool
      */
+    protected $disabled = null;
+
+    /**
+     * @var bool
+     */
+    protected $hidden = null;
+
+    /**
+     * @var bool
+     */
     private $userSetInvalid = false;
 
     /**
@@ -52,10 +63,30 @@ abstract class Form_Attr extends ElementComponent
      * @param Attr|string $attrid
      * @param callable|null $builder
      */
-    public function __construct($element, $attrid, $builder = null)
+    public function __construct($attrid, $builder = null)
     {
-        parent::__construct($element, $builder);
+        parent::__construct($builder);
         $this->attr = $attrid;
+    }
+
+    /**
+     * @param bool $disabled
+     * @return $this
+     */
+    public function disabled($disabled=true)
+    {
+        $this->disabled = $disabled;
+        return $this;
+    }
+
+    /**
+     * @param bool|null $hidden
+     * @return $this
+     */
+    public function hidden($hidden=true)
+    {
+        $this->hidden = $hidden;
+        return $this;
     }
 
     protected function buildNode()
@@ -64,7 +95,7 @@ abstract class Form_Attr extends ElementComponent
         $this->attr = $this->form->_getAttr($this->attr);
 
         if(!($this->attr instanceof Attr))
-            throw new DevPanic("Form_Attr works only with real Attr");
+            throw new DevPanic("Form_Attr_ElementComponent works only with real Attr");
 
         $this->form->_registerFormAttr($this, $this->attr);
         $this->formExt = $this->attr->findExtension(AttrExt_Form::class);
@@ -95,9 +126,9 @@ abstract class Form_Attr extends ElementComponent
     /**
      * @return string
      */
-    protected function getName()
+    protected function getFullFieldName()
     {
-        return $this->form->_getAttrName($this->attr);
+        return $this->form->_getFullFieldName($this->attr);
     }
 
     /**
@@ -175,11 +206,5 @@ abstract class Form_Attr extends ElementComponent
     {
         return $this->form;
     }
-
-    /**
-     * Called by the form, when it's just built and validated
-     * @return void
-     */
-    abstract public function afterBuildForm();
 
 }

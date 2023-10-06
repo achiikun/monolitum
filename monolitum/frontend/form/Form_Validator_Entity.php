@@ -87,14 +87,12 @@ class Form_Validator_Entity extends Form_Validator
             $validatedValue = $this->build_validatedValues[$attr->getId()];
         }else{
 
-            $inArray = in_array($attr->getId(), $this->validate_attrs);
-            if(!($this->validate_attrs_all ^ $inArray)){
-                $validatedValue = null;
-            } else {
-                $validatedValue = $this->validator->validate($this->model, $attr, $this->form->_getValidatePrefix());
-            }
+            $validatedValue = $this->validator->validate($this->model, $attr, $this->form->_getValidatePrefix());
 
-            $this->build_validatedValues[$attr->getId()] = $validatedValue;
+            $inArray = in_array($attr->getId(), $this->validate_attrs);
+            if($this->validate_attrs_all ^ $inArray){
+                $this->build_validatedValues[$attr->getId()] = $validatedValue;
+            }
 
         }
 
