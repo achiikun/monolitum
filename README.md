@@ -7,7 +7,7 @@ The purpose of this framework is to bring the philosophy of frameworks that uses
 Its values:
 
 - To have the **least dependencies** possible: by embedding 3rd party libraries into it.
-- Making it executable on the **cheapest lowest-cost Apache-PHP-MySQL server** stack out there.
+- Making it executable on the **cheapest lowest-cost** _Apache-PHP-MySQL_ server stack out there.
   - The minimum PHP version is **5.6**, forward-compatible with the last released version.
  
 ## Documentation
