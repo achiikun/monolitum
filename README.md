@@ -1,19 +1,28 @@
 # monolitum
-The non-reactive PHP framework.
 
-The purpose of this framework is to bring Facebook's React application building philosophy to PHP, as well as having the least dependencies possible and being executable on the cheapest low-cost Apache-PHP-MySQL stack server out there.
+**The non-reactive PHP framework.**
 
-Minimum PHP version: **5.6**
+The purpose of this framework is to bring the philosophy of frameworks that uses a tree of components (like React, or Flutter) yo PHP.
+
+Its values:
+
+- To have the **least dependencies** possible: by embedding 3rd party libraries into it.
+- Making it executable on the **cheapest lowest-cost Apache-PHP-MySQL server** stack out there.
+  - The minimum PHP version is **5.6**, forward-compatible with the last released version.
+ 
+## Documentation
 
 No documentation is written by now. The framework is in development.
+
+## Demos
 
 Demo projects will be available soon. PHP language has never been so pretty.
 
 ## Modules
 
-The main module of the framework is called <code>monolitum</code>. The code is inside submodules (nested packages).
+The main module of the framework is called <code>monolitum</code>. The code is inside submodules (one level of nested packages).
 
-The file [notes.md](notes.md) contains the dependencies between themselves.
+An application that only uses a few submodules may ommit including the rest. The file [notes.md](notes.md) contains the description of all of them and the dependency tree.
 
 ## External licences
 
@@ -41,7 +50,7 @@ https://github.com/FortAwesome/Font-Awesome
 
 Code of WangEditor is copied into this repository. License is in this repo:
 
-https://github.com/wangeditor-team/wangEditor/tree/master
+https://github.com/wangeditor-team/wangEditor
 
 ### Naucon/HtmlBuilder
 
