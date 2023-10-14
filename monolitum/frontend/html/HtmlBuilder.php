@@ -9,6 +9,8 @@
  */
 namespace monolitum\frontend\html;
 
+use monolitum\core\util\ServerLogger;
+
 /**
  * Html Builder Class
  *
@@ -74,14 +76,18 @@ class HtmlBuilder
      * @param       HtmlElement        $htmlElement
      * @return      string                  html output
      */
-    public function render(HtmlElement $htmlElement)
+    public function render(HtmlElement $htmlElement, $depth = 0)
     {
+        if($depth > 1000){
+            ServerLogger::log("Infinite loop detected.");
+        }
+
         $output = '<' . $htmlElement->getTag();
         $output.= $this->renderAttributes($htmlElement);
 
         if ($htmlElement->hasChildElements()) {
             $output .= '>';
-            $output.= $this->renderContent($htmlElement);
+            $output.= $this->renderContent($htmlElement, $depth+1);
             $output.= '</' . $htmlElement->getTag() . '>';
         } elseif (in_array($htmlElement->getTag(), $this->_elementsRequireEndTag) || $htmlElement->requireEndTag()) {
             $output.= '>';
@@ -96,7 +102,7 @@ class HtmlBuilder
      * @param       HtmlElement        $htmlElement
      * @return      string                  html output
      */
-    public function renderContent(HtmlElement $htmlElement)
+    public function renderContent(HtmlElement $htmlElement, $depth)
     {
         $output = '';
         if ($htmlElement->hasChildElements()) {
@@ -108,7 +114,7 @@ class HtmlBuilder
                         $output.= filter_var($childElement->getContent(), FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_ENCODE_AMP);
                     }
                 } else {
-                    $output.= $this->render($childElement);
+                    $output.= $this->render($childElement, $depth);
                 }
             }
         }

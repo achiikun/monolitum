@@ -145,14 +145,14 @@ class Manager_Path extends Manager
 //                        $url .= GlobalContext::getLocalAddress();
 //                        $paramsAlone[$this->writeAsParam] = $stringPath;
 //                    }else{
-                        $url .= GlobalContext::getLocalAddress() . "?" . $this->writeAsParam . "=" . urlencode($stringPath);
+                        $url .= GlobalContext::getLocalAddress() . '/?' . $this->writeAsParam . "=" . urlencode($stringPath);
                         $querySign = true;
 //                    }
                 }else{
-                    $url .= GlobalContext::getLocalAddress() . $stringPath;
+                    $url .= GlobalContext::getLocalAddress() . '/' . $stringPath;
                 }
             }else{
-                $url .= GlobalContext::getLocalAddress();
+                $url .= GlobalContext::getLocalAddress() . '/';
             }
 
             if($link instanceof Link){
@@ -187,9 +187,9 @@ class Manager_Path extends Manager
                             continue;
 
                         if(!$querySign)
-                            $url .= "?";
+                            $url .= '/?';
                         else
-                            $url .= "&";
+                            $url .= '&';
                         $url .= urlencode($key);
                         $url .= "=";
                         $url .= urlencode($value);

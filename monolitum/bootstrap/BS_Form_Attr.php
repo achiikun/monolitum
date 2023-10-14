@@ -86,111 +86,106 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
         $attr = $this->getAttr();
 //        $ext = $this->getFormExt();
 
-        $invalidFeedback = null;
-        if($this->isValid() === false && $this->invalidText){
-            $invalidFeedback = new Div(function (Div $it){
-                $it->addClass("invalid-feedback");
-                $it->push($this->invalidText);
-            });
-        }
+        if($this->hidden === true){
+            $this->formWrapper->append($this->createFormControl());
+        }else{
 
-        $formText = null;
-        if($this->formText !== null){
-            if($this->formText instanceof ElementComponent){
-                $formText = $this->formText;
-                $formText->addClass("form-text");
-            }else{
-                $formText = new Div(function (Div $it){
-                    $it->addClass("form-text");
-                    $it->push($this->formText);
+            $invalidFeedback = null;
+            if($this->isValid() === false && $this->invalidText){
+                $invalidFeedback = new Div(function (Div $it){
+                    $it->addClass("invalid-feedback");
+                    $it->push($this->invalidText);
                 });
             }
 
-        }
-
-        if($attr instanceof Attr_Bool){
-
-            $this->formWrapper->addClass("form-check");
-
-            $this->formWrapper->append(
-                new FormControl_CheckBox(function(FormControl_CheckBox $it){
-                    $it->setId($this->getFullFieldName());
-                    $it->setName($this->getFullFieldName());
-                    if($this->hasValue())
-                        $it->setValue($this->getValue());
-
-                    if($this->disabled !== null ? $this->disabled : $this->form->isDisabled())
-                        $it->setDisabled(true);
-
-                })
-            );
-
-            $this->formWrapper->append(
-                new FormLabel(function(FormLabel $it){
-                    $it->setName($this->getFullFieldName());
-                    $it->setContent($this->getLabel());
-                }, "form-check-label")
-            );
-
-            if($invalidFeedback){
-                $this->formWrapper->append($invalidFeedback);
-            }
-
-            if($formText){
-                $this->formWrapper->append($formText);
-            }
-
-            $this->labelRendersAfterControl = true;
-
-        }else{
-
-            $this->formWrapper->addClass("form-group");
-
-            $formLabel = new FormLabel(function(FormLabel $it){
-                $it->setName($this->getFullFieldName());
-                $it->setContent($this->getLabel());
-            }, $this->isRow != null ? "col-form-label" : "form-label");
-
-            if($this->isRow){
-                $this->formWrapper->addClass("row");
-            }
-
-            $formControl = $this->createFormControl();
-
-            if($this->isRow != null){
-                $this->isRow->buildInto($formLabel, true);
-
-                $formControlWrapper = new Div();
-
-                $formControlWrapper->append($formControl);
-                $this->isRow->buildInto($formControlWrapper);
-
-                if($this->labelRendersAfterControl){
-                    $this->formWrapper->append($formControlWrapper);
-                    $this->formWrapper->append($formLabel);
+            $formText = null;
+            if($this->formText !== null){
+                if($this->formText instanceof ElementComponent){
+                    $formText = $this->formText;
+                    $formText->addClass("form-text");
                 }else{
-                    $this->formWrapper->append($formLabel);
-                    $this->formWrapper->append($formControlWrapper);
+                    $formText = new Div(function (Div $it){
+                        $it->addClass("form-text");
+                        $it->push($this->formText);
+                    });
                 }
+
+            }
+
+            if($attr instanceof Attr_Bool){
+
+                $this->formWrapper->addClass("form-check");
+
+                $this->formWrapper->append($this->createFormControl());
+
+                $this->formWrapper->append(
+                    new FormLabel(function(FormLabel $it){
+                        $it->setName($this->getFullFieldName());
+                        $it->setContent($this->getLabel());
+                    }, "form-check-label")
+                );
+
+                if($invalidFeedback){
+                    $this->formWrapper->append($invalidFeedback);
+                }
+
+                if($formText){
+                    $this->formWrapper->append($formText);
+                }
+
+                $this->labelRendersAfterControl = true;
 
             }else{
 
-                if($this->labelRendersAfterControl){
-                    $this->formWrapper->append($formControl);
-                    $this->formWrapper->append($formLabel);
-                }else{
-                    $this->formWrapper->append($formLabel);
-                    $this->formWrapper->append($formControl);
+                $this->formWrapper->addClass("form-group");
+
+                $formLabel = new FormLabel(function(FormLabel $it){
+                    $it->setName($this->getFullFieldName());
+                    $it->setContent($this->getLabel());
+                }, $this->isRow != null ? "col-form-label" : "form-label");
+
+                if($this->isRow){
+                    $this->formWrapper->addClass("row");
                 }
 
-            }
+                $formControl = $this->createFormControl();
 
-            if($invalidFeedback){
-                $this->formWrapper->append($invalidFeedback);
-            }
+                if($this->isRow != null){
+                    $this->isRow->buildInto($formLabel, true);
 
-            if($formText){
-                $this->formWrapper->append($formText);
+                    $formControlWrapper = new Div();
+
+                    $formControlWrapper->append($formControl);
+                    $this->isRow->buildInto($formControlWrapper);
+
+                    if($this->labelRendersAfterControl){
+                        $this->formWrapper->append($formControlWrapper);
+                        $this->formWrapper->append($formLabel);
+                    }else{
+                        $this->formWrapper->append($formLabel);
+                        $this->formWrapper->append($formControlWrapper);
+                    }
+
+                }else{
+
+                    if($this->labelRendersAfterControl){
+                        $this->formWrapper->append($formControl);
+                        $this->formWrapper->append($formLabel);
+                    }else{
+                        $this->formWrapper->append($formLabel);
+                        $this->formWrapper->append($formControl);
+                    }
+
+                }
+
+                if($invalidFeedback){
+                    $this->formWrapper->append($invalidFeedback);
+                }
+
+                if($formText){
+                    $this->formWrapper->append($formText);
+                }
+
             }
 
         }
@@ -217,7 +212,23 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
 
         $formControl = null;
 
-        if($attr instanceof Attr_String){
+        if($attr instanceof Attr_Bool){
+
+            $formControl = new FormControl_CheckBox(function(FormControl_CheckBox $it){
+                $it->setId($this->getFullFieldName());
+                $it->setName($this->getFullFieldName());
+                if($this->hasValue())
+                    $it->setValue($this->getValue());
+
+                if($this->hidden === true)
+                    $it->convertToHidden();
+
+                if($this->disabled !== null ? $this->disabled : $this->form->isDisabled())
+                    $it->setDisabled(true);
+
+            });
+
+        } if($attr instanceof Attr_String){
 
             if($validateExt instanceof AttrExt_Validate_String && $validateExt->hasEnum()){
 
@@ -228,9 +239,13 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
                     $selected = null;
                     if($this->hasValue())
                         $selected = $this->getValue();
+                    $it->setValue($selected);
 
                     if($this->disabled !== null ? $this->disabled : $this->form->isDisabled())
                         $it->setDisabled(true);
+
+                    if($this->hidden === true)
+                        $it->convertToHidden();
 
                     if($validateExt->isNullable()){
 
@@ -302,6 +317,10 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
                 $formControl = new FormControl_TextArea_Html(function (FormControl_TextArea_Html $it) use ($formExt) {
                     $it->setId($this->getFullFieldName());
                     $it->setName($this->getFullFieldName());
+                    $it->autocomplete(false);
+
+                    if($this->hidden === true)
+                        $it->convertToHidden();
 
                     if($this->hasValue())
                         $it->setValue($this->getValue());
@@ -313,10 +332,14 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
                 $formControl = new FormControl_Password(function(FormControl_Password $it) use ($isValid) {
                     $it->setId($this->getFullFieldName());
                     $it->setName($this->getFullFieldName());
+                    $it->autocomplete(false);
                     if($this->hasValue())
                         $it->setValue($this->getValue());
                     if($isValid !== null)
                         $it->addClass($isValid ? "is-valid" : "is-invalid");
+
+                    if($this->hidden === true)
+                        $it->convertToHidden();
 
                     if($this->disabled !== null ? $this->disabled : $this->form->isDisabled())
                         $it->setDisabled(true);
@@ -329,10 +352,14 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
                 $formControl = new FormControl_Text(function(FormControl_Text $it) use ($isValid) {
                     $it->setId($this->getFullFieldName());
                     $it->setName($this->getFullFieldName());
+                    $it->autocomplete(false);
                     if($this->hasValue())
                         $it->setValue($this->getValue());
                     if($isValid !== null)
                         $it->addClass($isValid ? "is-valid" : "is-invalid");
+
+                    if($this->hidden === true)
+                        $it->convertToHidden();
 
                     if($this->disabled !== null ? $this->disabled : $this->form->isDisabled())
                         $it->setDisabled(true);
@@ -355,6 +382,9 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
                     $it->max($validateExt->getMax());
                 }
 
+                if($this->hidden === true)
+                    $it->convertToHidden();
+
                 if($isValid !== null)
                     $it->addClass($isValid ? "is-valid" : "is-invalid");
 
@@ -371,6 +401,9 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
                 $decimals = $attr->getDecimals();
 
                 $it->step(1 / pow(10, $decimals));
+
+                if($this->hidden === true)
+                    $it->convertToHidden();
 
                 if($this->hasValue()){
                     $it->setValue($this->getValue() / pow(10, $decimals));
@@ -395,6 +428,9 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
                 if($isValid !== null)
                     $it->addClass($isValid ? "is-valid" : "is-invalid");
 
+                if($this->hidden === true)
+                    $it->convertToHidden();
+
                 if($this->disabled !== null ? $this->disabled : $this->form->isDisabled())
                     $it->setDisabled(true);
 
@@ -405,6 +441,9 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
             $formControl = new FormControl_File(function(FormControl_File $it) use ($isValid) {
                 $it->setId($this->getFullFieldName());
                 $it->setName($this->getFullFieldName());
+
+                if($this->hidden === true)
+                    $it->convertToHidden();
 
                 if($isValid !== null)
                     $it->addClass($isValid ? "is-valid" : "is-invalid");
@@ -418,6 +457,15 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
 
         return $formControl;
 
+    }
+
+    public function render()
+    {
+        if($this->hidden === true){
+            return parent::renderChilds();
+        }else{
+            return parent::render();
+        }
     }
 
     /**

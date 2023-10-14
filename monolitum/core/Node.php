@@ -5,6 +5,7 @@ namespace monolitum\core;
 use monolitum\backend\router\Router_Panic;
 use monolitum\core\panic\DevPanic;
 use monolitum\core\panic\Panic;
+use monolitum\core\util\ServerLogger;
 
 abstract class Node implements Passive {
 

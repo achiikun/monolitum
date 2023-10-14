@@ -29,7 +29,7 @@ class Form_Validator_Entity extends Form_Validator
 
     /**
      * @param Validator $validator
-     * @param $model class-string|AnonymousModel|Model
+     * @param class-string|AnonymousModel|Model $model
      */
     public function __construct($validator, $model)
     {
@@ -61,10 +61,15 @@ class Form_Validator_Entity extends Form_Validator
             if($ext === null)
                 continue;
 
-            $validatedValue = $this->getValidatedValue($attr);
+            $inArray = in_array($attr->getId(), $this->validate_attrs);
+            if($this->validate_attrs_all ^ $inArray){
 
-            if($validatedValue !== null && !$validatedValue->isValid()){
-                $this->build_allValid = false;
+                $validatedValue = $this->getValidatedValue($attr);
+
+                if($validatedValue !== null && !$validatedValue->isValid()){
+                    $this->build_allValid = false;
+                }
+
             }
 
         }

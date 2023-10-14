@@ -24,10 +24,10 @@ class HTMLPage extends Component {
      */
     private $head_components = [];
 
-    /**
-     * @var array<Body>
-     */
-    private $body_components = [];
+//    /**
+//     * @var array<Body>
+//     */
+//    private $body_components = [];
 
     /**
      * @param callable|null $builder
@@ -48,7 +48,7 @@ class HTMLPage extends Component {
      * @param Renderable_Node $body_component
      */
     public function addBodyElement($body_component){
-        $this->body_components[] = $this->buildChild($body_component);
+        $this->append($body_component);
     }
 
     /**
@@ -113,11 +113,11 @@ class HTMLPage extends Component {
 
         Renderable_Node::renderRenderedTo(parent::render(), $body);
 
-        foreach($this->body_components as $body_component){
-            if($body_component instanceof Node)
-                $this->executeChild($body_component);
-            Renderable_Node::renderRenderedTo($body_component, $body);
-        }
+//        foreach($this->body_components as $body_component){
+//            if($body_component instanceof Node)
+//                $this->executeChild($body_component);
+//            Renderable_Node::renderRenderedTo($body_component, $body);
+//        }
         $html->addChildElement($body);
         
         $htmlBuilder = new HtmlBuilder();

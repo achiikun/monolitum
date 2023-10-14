@@ -18,6 +18,16 @@ class FormControl extends ElementComponent
     }
 
     /**
+     * @param $hint true: "on", false: "off", string: "hint"
+     * @return void
+     */
+    public function autocomplete($hint=true)
+    {
+        $element = $this->getElement();
+        $element->setAttribute("autocomplete", $hint === true ? "on" : ($hint === false ? "off" : $hint));
+    }
+
+    /**
      * @param string $name
      * @return void
      */
@@ -53,6 +63,7 @@ class FormControl extends ElementComponent
     public function convertToHidden()
     {
         $element = $this->getElement();
+        $element->setTag("input");
         $element->setAttribute("type", "hidden");
     }
 

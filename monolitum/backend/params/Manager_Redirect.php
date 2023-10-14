@@ -46,6 +46,7 @@ class Manager_Redirect extends Manager
 
             $url = $active->getUrl();
 
+            header("HTTP/1.1 303 See Other");
             header("Location: " . $url);
 
             // NOTE: Execution is finished here

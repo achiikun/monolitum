@@ -3,7 +3,6 @@
 namespace monolitum\bootstrap\datatable;
 
 use DateTime;
-use monolitum\bootstrap\FormControl_CheckBox;
 use monolitum\core\panic\DevPanic;
 use monolitum\entity\attr\Attr_Bool;
 use monolitum\entity\attr\Attr_Date;
@@ -12,6 +11,7 @@ use monolitum\entity\attr\Attr_Int;
 use monolitum\entity\attr\Attr_String;
 use monolitum\frontend\component\Reference;
 use monolitum\frontend\component\Text;
+use monolitum\frontend\form\FormControl_CheckBox;
 use monolitum\legacy_moment\Moment;
 
 class CellRenderer_Attr implements CellRenderer

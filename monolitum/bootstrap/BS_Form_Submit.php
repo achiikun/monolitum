@@ -37,13 +37,13 @@ class BS_Form_Submit extends Form_Submit
 
         $method = $this->getFinalCustomFormMethod();
         if($method !== null){
-            $this->setAttribute("formmethod", $method);
+            //$this->setAttribute("formmethod", $method);
         }
 
 
         $linkResolver = $this->getFinalCustomLinkResolver();
         if($linkResolver !== null){
-            $this->setAttribute("formaction", $linkResolver, false);
+            $this->setAttribute("formaction", $linkResolver->resolve(), false);
         }
 
     }

@@ -19,11 +19,9 @@ class FormControl_Select extends FormControl
 
     public function render()
     {
-
-        $rc = parent::render();
         // No childs are rendered if it is hidden
         if($this->getElement()->getAttribute("type") !== "hidden"){
-            Renderable_Node::renderRenderedTo($rc, $this->getElement());
+            Renderable_Node::renderRenderedTo($this->renderChilds(), $this->getElement());
         }
         return Rendered::of($this->getElement());
     }
