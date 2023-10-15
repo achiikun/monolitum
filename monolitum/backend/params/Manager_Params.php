@@ -182,9 +182,11 @@ class Manager_Params extends Manager implements Validator
             if($prefix !== null)
                 $name = $prefix . $name;
 
-            $value = array_key_exists($name, $globalArray) ? $globalArray[$name] : null;
-
-            return $attr->validate($value);
+            if(array_key_exists($name, $globalArray)){
+                return $attr->validate($globalArray[$name]);
+            }else{
+                return new ValidatedValue(false, true, null, "Undefined");
+            }
 
         } else if($attr instanceof Attr_File){
 

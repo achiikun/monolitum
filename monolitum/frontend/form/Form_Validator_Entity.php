@@ -94,6 +94,9 @@ class Form_Validator_Entity extends Form_Validator
 
             $validatedValue = $this->validator->validate($this->model, $attr, $this->form->_getValidatePrefix());
 
+            if(!$validatedValue->isValid() && $this->currentEntity !== null)
+                $validatedValue = new ValidatedValue(true, true, $this->currentEntity->getValue($attr));
+
             $inArray = in_array($attr->getId(), $this->validate_attrs);
             if($this->validate_attrs_all ^ $inArray){
                 $this->build_validatedValues[$attr->getId()] = $validatedValue;
