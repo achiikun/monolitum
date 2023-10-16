@@ -9,7 +9,9 @@ Its values:
 - To have the **least dependencies** possible: by embedding 3rd party libraries into it.
 - Making it executable on the **cheapest lowest-cost** _Apache-PHP-MySQL_ server stack out there.
   - The minimum PHP version is **5.6**, forward-compatible with the last released version.
- 
+
+The file [todo.md](todo.md) contains a list of what will be developed soon.
+
 ## Documentation
 
 No documentation is written by now. The framework is in development.
@@ -23,8 +25,6 @@ Demo projects will be available soon. PHP language has never been so pretty.
 The main module of the framework is called <code>monolitum</code>. The code is inside submodules (one level of nested packages).
 
 An application that only uses a few submodules may omit including the rest. The file [modules.md](modules.md) contains the description of all of them and the dependency tree.
-
-The file [todo.md](todo.md) contains a list of what will be developed soon. 
 
 ## External licences
 
