@@ -22,7 +22,9 @@ Demo projects will be available soon. PHP language has never been so pretty.
 
 The main module of the framework is called <code>monolitum</code>. The code is inside submodules (one level of nested packages).
 
-An application that only uses a few submodules may ommit including the rest. The file [notes.md](notes.md) contains the description of all of them and the dependency tree.
+An application that only uses a few submodules may omit including the rest. The file [modules.md](modules.md) contains the description of all of them and the dependency tree.
+
+The file [todo.md](todo.md) contains a list of what will be developed soon. 
 
 ## External licences
 

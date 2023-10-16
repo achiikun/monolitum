@@ -130,7 +130,7 @@ class Manager_Res_Provider extends Manager
                 GlobalContext::add($active);
                 $resolvedUrl = $active->getUrl();
 
-                $this->fileName = GlobalContext::getResourcesAddress() . $resolvedUrl;
+                $this->fileName = GlobalContext::getResourcesAddressResolver()->resolve($resolvedUrl);
 
                 try{
 

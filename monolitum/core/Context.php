@@ -5,6 +5,7 @@ namespace monolitum\core;
 
 use monolitum\core\panic\DevPanic;
 use monolitum\core\panic\Panic;
+use monolitum\core\util\ResourceAddressResolver;
 
 class Context{
 
@@ -36,7 +37,7 @@ class Context{
     /**
      * @var string|null
      */
-    private $resourcesAddress = null;
+    private $resourcesAddressResolver = null;
 
     /**
      * @var boolean
@@ -58,19 +59,21 @@ class Context{
     }
 
     /**
-     * @param string|null $resourcesAddress
+     * @param ResourceAddressResolver $resourcesAddressResolver
      */
-    public function setResourcesAddress($resourcesAddress)
+    public function setResourcesAddressResolver($resourcesAddressResolver)
     {
-        $this->resourcesAddress = $resourcesAddress;
+        $this->resourcesAddressResolver = $resourcesAddressResolver;
     }
 
     /**
-     * @return string|null
+     * @return ResourceAddressResolver
      */
-    public function getResourcesAddress()
+    public function getResourcesAddressResolver()
     {
-        return $this->resourcesAddress;
+        if($this->resourcesAddressResolver === null)
+            $this->resourcesAddressResolver = ResourceAddressResolver::idle();
+        return $this->resourcesAddressResolver;
     }
 
     /**

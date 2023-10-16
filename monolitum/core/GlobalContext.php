@@ -4,6 +4,7 @@ namespace monolitum\core;
 
 
 use monolitum\core\panic\Panic;
+use monolitum\core\util\ResourceAddressResolver;
 
 class GlobalContext{
 
@@ -34,10 +35,10 @@ class GlobalContext{
     }
 
     /**
-     * @return string
+     * @return ResourceAddressResolver
      */
-    public static function getResourcesAddress(){
-        return self::$globalContext->getResourcesAddress();
+    public static function getResourcesAddressResolver(){
+        return self::$globalContext->getResourcesAddressResolver();
     }
 
     /**

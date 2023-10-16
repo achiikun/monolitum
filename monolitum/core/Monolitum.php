@@ -7,19 +7,20 @@ namespace monolitum\core;
 // });
 
 use monolitum\core\panic\BreakExecution;
+use monolitum\core\util\ResourceAddressResolver;
 
 class Monolitum{
 
     /**
      * @param string $localAddress
-     * @param string $resourcesAddress
+     * @param ResourceAddressResolver $resourcesAddressResolver
      * @param Node $router
      */
-    public static function execute($localAddress, $resourcesAddress, $router){
+    public static function execute($localAddress, $resourcesAddressResolver, $router){
 
         $ctx = new Context();
         $ctx->setLocalAddress($localAddress);
-        $ctx->setResourcesAddress($resourcesAddress);
+        $ctx->setResourcesAddressResolver($resourcesAddressResolver);
         
         GlobalContext::setGlobalContext($ctx);
 
