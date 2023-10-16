@@ -2,7 +2,7 @@
 
 **The non-reactive PHP framework.**
 
-The purpose of this framework is to bring the philosophy of frameworks that uses a tree of components (like React, or Flutter) yo PHP.
+The purpose of this framework is to bring the philosophy of frameworks that uses a tree of components (like React, or Flutter) to PHP.
 
 Its values:
 
