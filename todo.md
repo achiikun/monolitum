@@ -10,3 +10,4 @@
 - [ ] Security: encrypt resource urls
 - [ ] Security: CRSF tokens in forms
 - [ ] Security: Hiding ids
+- [ ] Integrate https://github.com/quilljs/quill and https://github.com/nadar/quill-delta-parser
