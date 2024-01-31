@@ -19,6 +19,9 @@ class Attr_Date extends Attr
                 if($date === false)
                     return new ValidatedValue(false);
 
+                // Force to be a date, not a datetime
+                $date = date_time_set($date, 0, 0);
+
                 return new ValidatedValue(true, true, $date);
             }else{
                 return new ValidatedValue(true, true, null);
