@@ -21,6 +21,9 @@ class FA_Icon extends ElementComponent
      */
     private $icon;
 
+    /**
+     * @param callable $builder
+     */
     public function __construct($builder = null)
     {
         parent::__construct(new HtmlElement('i'), $builder);
@@ -51,10 +54,11 @@ class FA_Icon extends ElementComponent
 
     /**
      * @param string $icon
+     * @param callable $builder
      * @return FA_Icon
      */
-    public static function ofIcon($icon){
-        $i = new FA_Icon();
+    public static function ofIcon($icon, $builder = null){
+        $i = new FA_Icon($builder);
         $i->setIcon($icon);
         return $i;
     }
@@ -62,10 +66,11 @@ class FA_Icon extends ElementComponent
     /**
      * @param string $collection
      * @param string $icon
+     * @param callable $builder
      * @return FA_Icon
      */
-    public static function ofCollectionIcon($collection, $icon){
-        $i = new FA_Icon();
+    public static function ofCollectionIcon($collection, $icon, $builder = null){
+        $i = new FA_Icon($builder);
         $i->setCollectionIcon($collection, $icon);
         return $i;
     }
