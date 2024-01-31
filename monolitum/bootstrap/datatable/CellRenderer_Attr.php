@@ -12,6 +12,7 @@ use monolitum\entity\attr\Attr_String;
 use monolitum\frontend\component\Reference;
 use monolitum\frontend\component\Text;
 use monolitum\frontend\form\FormControl_CheckBox;
+use monolitum\legacy_moment\CustomFormats\MomentJs;
 use monolitum\legacy_moment\Moment;
 
 class CellRenderer_Attr implements CellRenderer
@@ -67,7 +68,8 @@ class CellRenderer_Attr implements CellRenderer
 
                 //if(PHP_MAJOR_VERSION == 8 && PHP_MINOR_VERSION > 1 || PHP_MAJOR_VERSION > 8){
                     return Text::of($val !== null ? Moment::fromDateTime($val)->format(
-                        ($this->format !== null ? $this->format : "%Y-%m-%d")
+                        ($this->format !== null ? $this->format : null),//"%Y-%m-%d")
+                        new MomentJs()
                     ) : "");
                 /*}else{
                     return Text::of($val !== null ? strftime(
