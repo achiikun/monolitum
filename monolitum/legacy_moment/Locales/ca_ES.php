@@ -62,4 +62,16 @@ return array(
         "dow" => 1, // Monday is the first day of the week.
         "doy" => 4  // The week that contains Jan 4th is the first week of the year.
     ),
+    "customFormats" => array(
+        "LT" => "G:i",               // 22:00
+        "LTS" => "G:i:s",            // 22:00:00
+        "L" => "d/m/Y",              // 12/06/2010
+        "l" => "j/n/Y",              // 12/6/2010
+        "LL" => "j [de] F [del] Y",  // 12 de Juny del 2010
+        "ll" => "j M Y",             // 12 Jun 2010
+        "LLL" => "j [de] F [del] Y [a les] G:i",        // 12 de Juny del 2010 a les 22:00
+        "lll" => "j M Y G:i",        // 12 Jun 2010 22:00
+        "LLLL" => "l, j [de] F [del] Y [a las] G:i",  // Dissabte, 12 de Juny del 2010 a les 22:00
+        "llll" => "D, j M Y G:i",    // Sab, 12 Jun 2010 22:00
+    ),
 );
