@@ -212,9 +212,9 @@ class BSStyle extends ElementComponent_Ext
      * @param BSAxis $axis
      * @return BSStyle
      */
-    public static function marginAuto($axis) {
+    public static function marginAuto($axis = null) {
         return new BSStyle(function (BSStyle $it) use ($axis) {
-            $it->getElementComponent()->addClass("m" . $axis->getValue() . "-auto");
+            $it->getElementComponent()->addClass("m" . ($axis != null ? $axis->getValue() : "") . "-auto");
         });
     }
 
@@ -260,21 +260,22 @@ class BSStyle extends ElementComponent_Ext
      * @param $float BSFloat|BSFloatResponsive
      * @return $this
      */
-    public function float($float)
+    public static function float($float)
     {
-        $float->buildInto($this->element);
-        return $this;
+        return new BSStyle(function (BSStyle $it) use ($float) {
+            $float->buildInto($it->getElementComponent());
+        });
     }
 
     public function float_start()
     {
-        $this->element->addClass("float-start");
-        return $this;
+        $this->getElementComponent()->addClass("float-start");
+        return BSStyle::float(BSFloat::start());
     }
 
     public function float_end()
     {
-        $this->element->addClass("float-end");
+        $this->getElementComponent()->addClass("float-end");
         return $this;
     }
 

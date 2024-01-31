@@ -17,9 +17,17 @@ class BSFloat implements ResponsiveProperty
     /**
      * @param string $value
      */
-    private function __construct($value)
+    public function __construct($value)
     {
         $this->value = $value;
+    }
+
+    public static function start(){
+        return new BSFloat("start");
+    }
+
+    public static function end(){
+        return new BSFloat("end");
     }
 
     public static function right(){

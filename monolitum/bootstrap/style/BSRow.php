@@ -37,6 +37,13 @@ class BSRow extends ElementComponent_Ext
     /**
      * @return BSRow
      */
+    public static function of(){
+        return new BSRow();
+    }
+
+    /**
+     * @return BSRow
+     */
     public static function add(){
         /** @var BSRow $active */
         $active = GlobalContext::add(new BSRow());
