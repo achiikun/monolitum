@@ -330,7 +330,7 @@ class Manager_DB extends Manager implements Active, Interface_Entity_DB
             }else if(is_int($value)){
                 $stmt->bindValue($idx+1, $value, PDO::PARAM_INT);
             }else if($value instanceof DateTime){
-                $stmt->bindValue($idx+1, date_format($value, DateTime::ATOM), PDO::PARAM_STR);
+                $stmt->bindValue($idx+1, date_format($value, 'Y-m-d\TH:i:s'), PDO::PARAM_STR);
             }else{
                 $stmt->bindValue($idx+1, $value);
             }
