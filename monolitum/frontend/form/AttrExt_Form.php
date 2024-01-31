@@ -68,23 +68,47 @@ class AttrExt_Form extends AttrExt
         return $this->nullLabel;
     }
 
-    protected function makeDefault(ValidatedValue $validated)
+    /**
+     * @return bool
+     */
+    public function isDefaultSet()
     {
-        if(!$this->isDefaultSet)
-            return $validated;
-
-        $isValid = $validated->isValid();
-        $isNull = $validated->isNull();
-
-        if($isValid){
-            if($isNull)
-                return new ValidatedValue(true, true, $this->def);
-        }else{
-            if($this->substituteNotValid)
-                return new ValidatedValue(true, true, $this->def);
-        }
-        return $validated;
+        return $this->isDefaultSet;
     }
+
+    /**
+     * @return null
+     */
+    public function getDef()
+    {
+        return $this->def;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSubstituteNotValid()
+    {
+        return $this->substituteNotValid;
+    }
+
+//    public function makeDefault(ValidatedValue $validated)
+//    {
+//        if(!$this->isDefaultSet)
+//            return $validated;
+//
+//        $isValid = $validated->isValid();
+//        $isNull = $validated->isNull();
+//
+//        if($isValid){
+//            if($isNull)
+//                return new ValidatedValue(true, true, $this->def);
+//        }else{
+//            if($this->substituteNotValid)
+//                return new ValidatedValue(true, true, $this->def);
+//        }
+//        return $validated;
+//    }
 
     public static function of(){
         return new AttrExt_Form();
