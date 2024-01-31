@@ -94,7 +94,7 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
             if($this->isValid() === false && $this->invalidText){
                 $invalidFeedback = new Div(function (Div $it){
                     $it->addClass("invalid-feedback");
-                    $it->push($this->invalidText);
+                    $it->append($this->invalidText);
                 });
             }
 
@@ -106,7 +106,7 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
                 }else{
                     $formText = new Div(function (Div $it){
                         $it->addClass("form-text");
-                        $it->push($this->formText);
+                        $it->append($this->formText);
                     });
                 }
 
@@ -423,7 +423,8 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
                 $it->setName($this->getFullFieldName());
                 if($this->hasValue()){
                     $datetime = $this->getValue();
-                    $it->setValue(date_format($datetime, "Y-m-d"));
+                    if($datetime !== null)
+                        $it->setValue(date_format($datetime, "Y-m-d"));
                 }
                 if($isValid !== null)
                     $it->addClass($isValid ? "is-valid" : "is-invalid");
