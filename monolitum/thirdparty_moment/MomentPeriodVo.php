@@ -1,6 +1,6 @@
 <?php
 
-namespace monolitum\legacy_moment;
+namespace monolitum\thirdparty_moment;
 
 /**
  * MomentPeriodVo
@@ -54,7 +54,7 @@ class MomentPeriodVo
     }
 
     /**
-     * @return \monolitum\legacy_moment\Moment
+     * @return \monolitum\thirdparty_moment\Moment
      */
     public function getRefDate()
     {

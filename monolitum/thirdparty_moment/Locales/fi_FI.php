@@ -3,7 +3,7 @@
 // locale: Finnish (fi_FI)
 // author: Jesper Skytte Marcussen https://github.com/greew
 
-use monolitum\legacy_moment\Moment;
+use monolitum\thirdparty_moment\Moment;
 
 $numbersPast = explode(' ', 'nolla yksi kaksi kolme neljä viisi kuusi seitsemän kahdeksan yhdeksän');
 $numbersFuture = [

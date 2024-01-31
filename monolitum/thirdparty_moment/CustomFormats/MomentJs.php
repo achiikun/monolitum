@@ -1,8 +1,8 @@
 <?php
 
-namespace monolitum\legacy_moment\CustomFormats;
+namespace monolitum\thirdparty_moment\CustomFormats;
 
-use monolitum\legacy_moment\FormatsInterface;
+use monolitum\thirdparty_moment\FormatsInterface;
 
 /**
  * Class MomentJs

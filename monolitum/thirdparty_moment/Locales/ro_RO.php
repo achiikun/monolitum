@@ -3,7 +3,7 @@
 // locale: romanian (ro-ro)
 // author: Calin Rada https://github.com/calinrada
 
-use monolitum\legacy_moment\Moment;
+use monolitum\thirdparty_moment\Moment;
 
 $rtwp = function ($count, $direction, Moment $m, $key)
 {

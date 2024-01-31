@@ -3,7 +3,7 @@
 // locale: Czech (Czech Republic) (cs_CZ)
 // author: Jan Ptacek https://github.com/ptica
 
-use monolitum\legacy_moment\Moment;
+use monolitum\thirdparty_moment\Moment;
 
 /**
  * @param string $direction

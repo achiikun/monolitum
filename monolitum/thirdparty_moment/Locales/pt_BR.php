@@ -3,7 +3,7 @@
 // locale: portuguese (pt-br)
 // author: Jefferson Santos https://github.com/jefflssantos
 
-use monolitum\legacy_moment\Moment;
+use monolitum\thirdparty_moment\Moment;
 
 return array(
     "months"        => explode('_', 'janeiro_fevereiro_março_abril_maio_junho_julho_agosto_setembro_outubro_novembro_dezembro'),

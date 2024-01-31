@@ -1,6 +1,6 @@
 <?php
 
-namespace monolitum\legacy_moment;
+namespace monolitum\thirdparty_moment;
 
 /**
  * MomentFromVo

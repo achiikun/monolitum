@@ -3,7 +3,7 @@
 // locale: italia italiano (it_IT)
 // author: Marco Manfredini https://github.com/Manfre98
 
-use monolitum\legacy_moment\Moment;
+use monolitum\thirdparty_moment\Moment;
 
 return array(
     "months"        => explode('_', 'gennaio_febbraio_marzo_aprile_maggio_giugno_luglio_agosto_settembre_ottobre_novembre_dicembre'),

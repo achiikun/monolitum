@@ -54,7 +54,7 @@ return array(
         'lastDay'  => '[вчора]', // or "учора". 
         'lastWeek' => 'l',
         'sameElse' => 'l',
-        'withTime' => function (\monolitum\legacy_moment\Moment $number)
+        'withTime' => function (\monolitum\thirdparty_moment\Moment $number)
         {
             return $number->format('G') == 11 ? '[об] H:i' : '[о] H:i';
         },
@@ -62,7 +62,7 @@ return array(
     ),
     'relativeTime'      => array(
 //        'future' => 'о %s', // or "об"
-        'future' => function (\monolitum\legacy_moment\Moment $number)
+        'future' => function (\monolitum\thirdparty_moment\Moment $number)
         {
             return $number->format('G') == 11 ? 'об %s' : 'о %s';
         },

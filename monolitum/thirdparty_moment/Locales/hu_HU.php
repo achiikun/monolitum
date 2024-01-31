@@ -13,7 +13,7 @@ return array(
         "sameDay"  => '[ma] l[-kor]',
         "nextDay"  => '[holnap] l[-kor]',
         "lastDay"  => '[tegnap] l[-kor]',
-        "lastWeek" => function($n, $dir, \monolitum\legacy_moment\Moment $Moment){
+        "lastWeek" => function($n, $dir, \monolitum\thirdparty_moment\Moment $Moment){
             $weekEndings = explode('_','vasárnap hétfőn kedden szerdán csütörtökön pénteken szombaton');
 			return '[múlt] [' . $weekEndings[$Moment->getDay()] . '] l[-kor]';
         },

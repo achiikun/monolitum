@@ -3,7 +3,7 @@
 // locale: Polski (Poland) (pl_PL)
 // author: Mateusz Błaszczyk https://github.com/Zaszczyk
 
-use monolitum\legacy_moment\Moment;
+use monolitum\thirdparty_moment\Moment;
 
 $ifLastDigitIsSpecial = function ($count, $trueString, $falseString)
 {

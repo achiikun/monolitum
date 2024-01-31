@@ -3,7 +3,7 @@
 // locale: Catalan (ca_ES)
 // author: CROWD Studio https://github.com/crowd-studio
 
-use monolitum\legacy_moment\Moment;
+use monolitum\thirdparty_moment\Moment;
 
 return array(
     "months"        => explode('_', 'gener_febrer_març_abril_maig_juny_juliol_agost_setembre_octubre_novembre_desembre'),
