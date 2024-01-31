@@ -56,7 +56,7 @@ class Form_Validator_Entity extends Form_Validator
 
         foreach($this->model->getAttrs() as $attr){
 
-            // Jump attributes without Form specification
+            // Skip attributes without Form specification
             $ext = $attr->findExtension(AttrExt_Form::class);
             if($ext === null)
                 continue;
@@ -82,21 +82,40 @@ class Form_Validator_Entity extends Form_Validator
      */
     function getValidatedValue($attr)
     {
+        // Retrieve model
         if(is_string($this->model))
             $this->model = Entities_Manager::go_getModel($this->model);
 
+        // Retrieve attribute
         if(!($attr instanceof Attr))
             $attr = $this->model->getAttr($attr);
 
         if(key_exists($attr->getId(), $this->build_validatedValues)){
+            // The attr has been already validated
             $validatedValue = $this->build_validatedValues[$attr->getId()];
         }else{
 
+            // Validate the value that comes from outside
             $validatedValue = $this->validator->validate($this->model, $attr, $this->form->_getValidatePrefix());
 
-            if(!$validatedValue->isValid() && $this->currentEntity !== null)
-                $validatedValue = new ValidatedValue(true, true, $this->currentEntity->getValue($attr));
+            // If not valid, try to substitute with a valid value
+            if(!$validatedValue->isValid()){
 
+                // Skip attribute without Form specification
+                /** @var AttrExt_Form $ext */
+                $ext = $attr->findExtension(AttrExt_Form::class);
+                if($ext !== null && $ext->isSubstituteNotValid()){
+                    $validatedValue = new ValidatedValue(true, true, $ext->getDef());
+                }
+
+            }
+
+            // These lines are commented, because the value is not valid
+            // Set the current value in editing entity if not valid
+//            if(!$validatedValue->isValid() && $this->currentEntity !== null)
+//                $validatedValue = new ValidatedValue(true, true, $this->currentEntity->getValue($attr));
+
+            // Store it if the value must be validated, if not, then the dev only wanted to check some foreign value.
             $inArray = in_array($attr->getId(), $this->validate_attrs);
             if($this->validate_attrs_all ^ $inArray){
                 $this->build_validatedValues[$attr->getId()] = $validatedValue;
@@ -113,10 +132,25 @@ class Form_Validator_Entity extends Form_Validator
      */
     public function getDefaultValue($attr)
     {
-        if($this->currentEntity === null)
-            return new ValidatedValue(false);
+        if($this->currentEntity !== null)
+            return new ValidatedValue(true, true, $this->currentEntity->getValue($attr));
 
-        return new ValidatedValue(true, true, $this->currentEntity->getValue($attr));
+        // Retrieve model
+        if(is_string($this->model))
+            $this->model = Entities_Manager::go_getModel($this->model);
+
+        // Retrieve attribute
+        if(!($attr instanceof Attr))
+            $attr = $this->model->getAttr($attr);
+
+        // Skip attribute without Form specification
+        /** @var AttrExt_Form $ext */
+        $ext = $attr->findExtension(AttrExt_Form::class);
+        if($ext !== null && $ext->isDefaultSet()){
+            return new ValidatedValue(true, true, $ext->getDef());
+        }
+
+        return new ValidatedValue(false);
 
     }
 

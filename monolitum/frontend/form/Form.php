@@ -185,9 +185,11 @@ class Form extends Component
         return $this;
     }
 
-    public function setMethodGET()
+    public function setMethodGET($setAnonymousSubmission=true)
     {
         $this->methodGET = true;
+        if(is_bool($setAnonymousSubmission))
+            $this->anonymousSubmission = $setAnonymousSubmission;
     }
 
     /**
@@ -211,7 +213,7 @@ class Form extends Component
             $this->validator->validate_all_except(...$attrs);
             return $this;
         }else{
-            throw new DevPanic("Setting attributes to validate is not supported without validator");
+            throw new DevPanic("Setting attributes to validate is not supported without validator.");
         }
 
     }
@@ -226,9 +228,27 @@ class Form extends Component
             $this->validator->validate_only(...$attrs);
             return $this;
         }else{
-            throw new DevPanic("Setting attributes to validate is not supported without validator");
+            throw new DevPanic("Setting attributes to validate is not supported without validator.");
         }
 
+    }
+
+    /**
+     * @param Entity $currentEntity
+     * @return $this
+     */
+    public function setCurrentEntity($currentEntity)
+    {
+        if($this->validator !== null){
+            if($this->validator instanceof Form_Validator_Entity){
+                $this->validator->setCurrentEntity($currentEntity);
+                return $this;
+            }else{
+                throw new DevPanic("Form_Validator_Entity required to set current entity.");
+            }
+        }else{
+            throw new DevPanic("Setting attributes to validate is not supported without validator.");
+        }
     }
 
     /**
@@ -327,6 +347,7 @@ class Form extends Component
         }
 
 //        if($this->hasNestedForms || $this->rootForm !== null)
+        if(!$this->anonymousSubmission)
             $attrId = $this->formId . "__" . $attrId;
 
         return $attrId;
@@ -370,8 +391,9 @@ class Form extends Component
     public function _getValidatePrefix()
     {
 //        if($this->hasNestedForms || $this->rootForm !== null)
+        if(!$this->anonymousSubmission)
             return $this->formId . "__";
-//        return null;
+        return null;
     }
 
     /**
@@ -423,6 +445,7 @@ class Form extends Component
 
 
     /**
+     * Read the value from the external source, validate it and return it.
      * @param Attr|string $attr
      * @return ValidatedValue
      */
@@ -440,20 +463,18 @@ class Form extends Component
 
     }
 
+
     /**
+     * Return the value that must be displayed on the rendering screen.
+     * For example, if not validating any form, the value of the entity being edited.
+     * Or if user wrote a well formatted but not valid value, that value.
+     * Or if user not put any value and dev set a default value, that value.
      * @param Attr|string $attr
      * @return ValidatedValue
      */
     public function getDisplayValue($attr) {
 
-        if($this->validator === null){
-            if(key_exists($attr->getId(), $this->defaultValues)){
-                return new ValidatedValue(true, true, $this->defaultValues[$attr->getId()]);
-            }else{
-                return new ValidatedValue(false);
-            }
-        }else{
-
+        if($this->validator !== null){
             if($this->isValidating()){
 
                 $validatedValue = $this->validator->getValidatedValue($attr);
@@ -472,7 +493,15 @@ class Form extends Component
                 $validatedValue = $this->validator->getDefaultValue($attr);
             }
 
-            return $validatedValue;
+            if($validatedValue->isValid())
+                return $validatedValue;
+
+        }
+
+        if(key_exists($attr->getId(), $this->defaultValues)){
+            return new ValidatedValue(true, true, $this->defaultValues[$attr->getId()]);
+        }else{
+            return new ValidatedValue(false);
         }
 
     }
@@ -503,7 +532,7 @@ class Form extends Component
         if (!$exists) {
             $elem = new HtmlElement("input");
             $elem->setAttribute("type", "hidden");
-            if ($form->formId !== null) {
+            if (!$this->anonymousSubmission && $form->formId !== null) {
                 $elem->setAttribute("name", $form->formId . "__" . $key);
             } else {
                 $elem->setAttribute("name", $key);

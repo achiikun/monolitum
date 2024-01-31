@@ -95,12 +95,15 @@ abstract class Form_Validator
     }
 
     /**
+     * Read the value from the external source, validate it and return it.
      * @param Attr|string $attr
      * @return ValidatedValue
      */
     abstract function getValidatedValue($attr);
 
     /**
+     * Ignore any validation and return the default value.
+     * It will fetch the current editing entity or, if not, if the dev set any default value to the ext
      * @param Attr|string $attr
      * @return ValidatedValue
      */
