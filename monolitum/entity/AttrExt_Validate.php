@@ -7,6 +7,10 @@ class AttrExt_Validate extends AttrExt
 
     private $nullable = true;
 
+//    private $isDefaultSet = false;
+//    private $def = null;
+//    private $substituteNotValid = false;
+
     /**
      * @param bool $nonNullable
      * @return $this
@@ -18,7 +22,7 @@ class AttrExt_Validate extends AttrExt
     }
 
     /**
-     * @param bool $nonNullable
+     * @param bool $nullable
      * @return $this
      */
     public function nullable($nullable = true)
