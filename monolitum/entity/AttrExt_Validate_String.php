@@ -29,6 +29,20 @@ class AttrExt_Validate_String extends AttrExt_Validate
     private $maxChars = null;
 
     /**
+     * @var bool
+     */
+    private $trim;
+
+    /**
+     * @return $this
+     */
+    public function trim()
+    {
+        $this->trim = true;
+        return $this;
+    }
+
+    /**
      * @param int $maxChars
      * @return $this
      */
@@ -73,6 +87,16 @@ class AttrExt_Validate_String extends AttrExt_Validate
      */
     public function validate($validatedValue)
     {
+        // Transform the value before validating
+        if($validatedValue->isWellFormat() && $this->trim){
+            $value = $validatedValue->getValue();
+            $validatedValue = new ValidatedValue(
+                $validatedValue->isValid(),
+                $validatedValue->isWellFormat(),
+                is_string($value) ? trim($value) : $value
+            );
+        }
+
         $validatedValue = parent::validate($validatedValue);
 
         if(!$validatedValue->isValid())
