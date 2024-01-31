@@ -258,6 +258,8 @@ class DataTable extends ElementComponent
 
             }
 
+            $iterator->close();
+
         }
 
         parent::afterBuildNode();
