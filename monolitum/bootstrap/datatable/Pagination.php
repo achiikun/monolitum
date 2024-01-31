@@ -5,8 +5,6 @@ namespace monolitum\bootstrap\datatable;
 use monolitum\backend\params\Link;
 use monolitum\backend\params\Path;
 use monolitum\bootstrap\BS_Form_Submit;
-use monolitum\bootstrap\FormControl_Select;
-use monolitum\bootstrap\FormControl_Select_Option;
 use monolitum\bootstrap\style\BS_Form_InputGroup;
 use monolitum\bootstrap\style\BSDisplay;
 use monolitum\bootstrap\style\BSStyle;
@@ -18,8 +16,9 @@ use monolitum\frontend\component\Div;
 use monolitum\frontend\component\Li;
 use monolitum\frontend\css\CSSSize;
 use monolitum\frontend\ElementComponent;
-use monolitum\frontend\form\AttrExt_Form_Int;
 use monolitum\frontend\form\Form;
+use monolitum\frontend\form\FormControl_Select;
+use monolitum\frontend\form\FormControl_Select_Option;
 use monolitum\frontend\html\HtmlElement;
 
 class Pagination extends ElementComponent
@@ -186,9 +185,9 @@ class Pagination extends ElementComponent
         $hasNext = $this->page < $max_pages-1;
         $hasLast = $this->page < $max_pages;
 
-        $ul = new BSElementComponent(new HtmlElement("ul"));
+        $ul = new ElementComponent(new HtmlElement("ul"));
         $ul->addClass("pagination");
-        $ul->bsStyle()->display(BSDisplay::inline_flex());
+        $ul->push(BSDisplay::inline_flex());
 
         if($hasFirst){
             $ul->push($this->makeItem(
