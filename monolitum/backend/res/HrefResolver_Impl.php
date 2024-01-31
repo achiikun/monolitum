@@ -13,31 +13,31 @@ class HrefResolver_Impl implements HrefResolver
      */
     private $link;
 
-//    /**
-//     * @var bool
-//     */
-//    private $isSetParamsAlone;
+    /**
+     * @var bool
+     */
+    private $isSetParamsAlone;
 
     /**
      * @var Manager_Href_Resolver
      */
     private $manager;
 
-//    /**
-//     * @var array<string, string>
-//     */
-//    private $paramsAlone = [];
+    /**
+     * @var array<string, string>
+     */
+    private $paramsAlone = null;
 
     /**
      * @param Manager_Href_Resolver $manager
      * @param Link|Path $link
      * @param $isSetParamsAlone
      */
-    public function __construct($manager, $link)//, $isSetParamsAlone)
+    public function __construct($manager, $link, $isSetParamsAlone)
     {
         $this->link = $link;
         $this->manager = $manager;
-//        $this->isSetParamsAlone = $isSetParamsAlone;
+        $this->isSetParamsAlone = $isSetParamsAlone;
     }
 
     /**
@@ -48,29 +48,29 @@ class HrefResolver_Impl implements HrefResolver
         return $this->link;
     }
 
-//    /**
-//     * @return bool
-//     */
-//    public function isSetParamsAlone()
-//    {
-//        return $this->isSetParamsAlone;
-//    }
+    /**
+     * @return bool
+     */
+    function isSetParamsAlone()
+    {
+        return $this->isSetParamsAlone;
+    }
 
-//    /**
-//     * @param array<string, string> $paramsAlone
-//     */
-//    public function setParamsAlone($paramsAlone)
-//    {
-//        $this->paramsAlone = $paramsAlone;
-//    }
+    /**
+     * @param array<string, string> $paramsAlone
+     */
+    function setParamsAlone($paramsAlone)
+    {
+        $this->paramsAlone = $paramsAlone;
+    }
 
-//    /**
-//     * @return array<string, string>
-//     */
-//    public function getParamsAlone()
-//    {
-//        return $this->paramsAlone;
-//    }
+    /**
+     * @return array<string, string>
+     */
+    public function getParamsAlone()
+    {
+        return $this->paramsAlone;
+    }
 
     function resolve()
     {

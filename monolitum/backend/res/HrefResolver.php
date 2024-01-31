@@ -10,9 +10,10 @@ interface HrefResolver
      */
     function resolve();
 
-//    /**
-//     * @return array<string, string>
-//     */
-//    function getParamsAlone();
+    /**
+     * If the user requested to get the params alone, this method will return them.
+     * @return array<string, string>|null
+     */
+    function getParamsAlone();
 
 }
