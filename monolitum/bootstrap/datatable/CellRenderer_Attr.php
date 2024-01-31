@@ -12,8 +12,8 @@ use monolitum\entity\attr\Attr_String;
 use monolitum\frontend\component\Reference;
 use monolitum\frontend\component\Text;
 use monolitum\frontend\form\FormControl_CheckBox;
-use monolitum\legacy_moment\CustomFormats\MomentJs;
-use monolitum\legacy_moment\Moment;
+use monolitum\thirdparty_moment\CustomFormats\MomentJs;
+use monolitum\thirdparty_moment\Moment;
 
 class CellRenderer_Attr implements CellRenderer
 {
