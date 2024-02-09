@@ -490,7 +490,12 @@ class Form extends Component
 
             }else{
                 // Get the value on the entity
-                $validatedValue = $this->validator->getDefaultValue($attr);
+                if(key_exists($attr->getId(), $this->defaultValues)){
+                    $validatedValue = new ValidatedValue(true, true, $this->defaultValues[$attr->getId()]);
+                }else{
+                    $validatedValue = $this->validator->getDefaultValue($attr);
+                }
+
             }
 
             if($validatedValue->isValid())
