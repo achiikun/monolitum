@@ -15,12 +15,13 @@ class ResourceAddressResolver
      * (No matter slashes)
      * @param string $prefix
      * @param string $additionalPrefix
-     * @return void
+     * @return ResourceAddressResolver
      */
     public function prefix($prefix, $additionalPrefix){
         $this->prefixes[$prefix] = function ($url) use ($additionalPrefix) {
             return $additionalPrefix . $url;
         };
+        return $this;
     }
 
     /**
