@@ -2,6 +2,9 @@
 
 namespace monolitum\entity;
 
+/**
+ * Interface for Nodes to find a parent that can d CRUD over entities.
+ */
 interface Interface_Entity_DB
 {
 
