@@ -10,7 +10,7 @@ use monolitum\frontend\Component;
 use monolitum\frontend\ElementComponent;
 use monolitum\frontend\html\HtmlElement;
 
-abstract class Form_Attr_Component extends Component implements Interface_Form_Attr
+abstract class Form_Attr_Component extends Component implements I_Form_Attr
 {
 
     /**
@@ -37,6 +37,11 @@ abstract class Form_Attr_Component extends Component implements Interface_Form_A
      * @var string
      */
     protected $label;
+
+    /**
+     * @var string
+     */
+    private $placeholder;
 
     /**
      * @var bool
@@ -124,6 +129,14 @@ abstract class Form_Attr_Component extends Component implements Interface_Form_A
     }
 
     /**
+     * @param string $placeholder
+     */
+    public function placeholder($placeholder)
+    {
+        $this->placeholder = $placeholder;
+    }
+
+    /**
      * @return string
      */
     protected function getFullFieldName()
@@ -144,6 +157,13 @@ abstract class Form_Attr_Component extends Component implements Interface_Form_A
         return $label;
     }
 
+    /**
+     * @return string
+     */
+    public function getPlaceholder()
+    {
+        return $this->placeholder;
+    }
     /**
      * Returns if the value that user set is invalid.
      * @return bool|null

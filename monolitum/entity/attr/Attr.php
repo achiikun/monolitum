@@ -72,6 +72,8 @@ abstract class Attr
     }
 
     /**
+     * First validation of the user value received by parameter. Value might be empty, which means that is null.
+     * Returns a ValidatedValue that tells if the value was valid or not and the "parsed" value for this attribute.
      * @param mixed $value
      * @return ValidatedValue
      */

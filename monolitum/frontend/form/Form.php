@@ -88,7 +88,7 @@ class Form extends Component
     private $linkResolver;
 
     /**
-     * @var array<string, Interface_Form_Attr>
+     * @var array<string, I_Form_Attr>
      */
     private $formAttrs = [];
 
@@ -561,7 +561,7 @@ class Form extends Component
 
     /**
      * Called from form fields telling that the attribute it handles is present.
-     * @param Interface_Form_Attr $formAttr
+     * @param I_Form_Attr $formAttr
      * @param Attr $attr
      * @return void
      */

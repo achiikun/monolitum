@@ -9,7 +9,7 @@ use monolitum\entity\AttrExt_Validate;
 use monolitum\frontend\ElementComponent;
 use monolitum\frontend\html\HtmlElement;
 
-abstract class Form_Attr_ElementComponent extends ElementComponent implements Interface_Form_Attr
+abstract class Form_Attr_ElementComponent extends ElementComponent implements I_Form_Attr
 {
 
     /**
@@ -36,6 +36,11 @@ abstract class Form_Attr_ElementComponent extends ElementComponent implements In
      * @var string
      */
     protected $label;
+
+    /**
+     * @var string
+     */
+    private $placeholder;
 
     /**
      * @var bool
@@ -144,6 +149,14 @@ abstract class Form_Attr_ElementComponent extends ElementComponent implements In
     }
 
     /**
+     * @param string $placeholder
+     */
+    public function placeholder($placeholder)
+    {
+        $this->placeholder = $placeholder;
+    }
+
+    /**
      * @return string
      */
     protected function getFullFieldName()
@@ -162,6 +175,14 @@ abstract class Form_Attr_ElementComponent extends ElementComponent implements In
         if($label == null)
             $label = $this->label;
         return $label;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPlaceholder()
+    {
+        return $this->placeholder;
     }
 
     /**

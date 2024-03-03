@@ -358,6 +358,9 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
                     if($isValid !== null)
                         $it->addClass($isValid ? "is-valid" : "is-invalid");
 
+                    if($this->getPlaceholder() != null)
+                        $it->setPlaceholder($this->getPlaceholder());
+
                     if($this->hidden === true)
                         $it->convertToHidden();
 

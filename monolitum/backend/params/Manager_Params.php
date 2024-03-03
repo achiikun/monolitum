@@ -169,26 +169,7 @@ class Manager_Params extends Manager implements Validator
         else
             throw new DevPanic("No declared model as params: " . $model->getIdOrClass() . ".");
 
-        if($attr instanceof Attr_String || $attr instanceof Attr_Int || $attr instanceof Attr_Decimal || $attr instanceof Attr_Bool || $attr instanceof Attr_Date){
-
-            /** @var AttrExt_Param|null $attrExt_Param */
-            $attrExt_Param = $attr->findExtension(AttrExt_Param::class);
-
-            if($attrExt_Param != null){
-                $name = $attrExt_Param->getName();
-            }else{
-                $name = $attr->getId();
-            }
-            if($prefix !== null)
-                $name = $prefix . $name;
-
-            if(array_key_exists($name, $globalArray)){
-                return $attr->validate($globalArray[$name]);
-            }else{
-                return new ValidatedValue(true, true, null);
-            }
-
-        } else if($attr instanceof Attr_File){
+        if($attr instanceof Attr_File){
 
             /** @var AttrExt_Param|null $attrExt_Param */
             $attrExt_Param = $attr->findExtension(AttrExt_Param::class);
@@ -216,8 +197,25 @@ class Manager_Params extends Manager implements Validator
 
             return $attr->validate($value);
 
-        } else{
-            return new ValidatedValue(false);
+        } else {
+
+            /** @var AttrExt_Param|null $attrExt_Param */
+            $attrExt_Param = $attr->findExtension(AttrExt_Param::class);
+
+            if($attrExt_Param != null){
+                $name = $attrExt_Param->getName();
+            }else{
+                $name = $attr->getId();
+            }
+            if($prefix !== null)
+                $name = $prefix . $name;
+
+            if(array_key_exists($name, $globalArray)){
+                return $attr->validate($globalArray[$name]);
+            }else{
+                return new ValidatedValue(true, true, null);
+            }
+
         }
     }
 

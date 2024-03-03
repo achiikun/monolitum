@@ -21,6 +21,7 @@ use monolitum\entity\Entity;
 use monolitum\entity\Interface_Entity_DB;
 use monolitum\entity\Model;
 use monolitum\entity\values\Color;
+use monolitum\frontend\form\I_Form_Attr;
 use PDO;
 
 class Manager_DB extends Manager implements Active, Interface_Entity_DB
@@ -213,13 +214,13 @@ class Manager_DB extends Manager implements Active, Interface_Entity_DB
                     }
 
                 }else if($attr instanceof Attr_Bool){
-
                     $sql .= " TINYINT(1)";
-
                 }else if($attr instanceof Attr_Date){
                     $sql .= " DATE";
                 }else if($attr instanceof Attr_Color){
-                        $sql .= " CHAR(10)";
+                    $sql .= " CHAR(10)";
+                }else if($attr instanceof I_Attr_Databasable){
+                    $sql .= " " . $attr->getDDLType();
                 }else {
                     throw new DevPanic("Not recognized type");
                 }

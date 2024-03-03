@@ -2,7 +2,10 @@
 
 namespace monolitum\frontend\form;
 
-interface Interface_Form_Attr
+/**
+ * Interface to mark a component that is a form attribute. Form will call its afterBuildForm() method.
+ */
+interface I_Form_Attr
 {
 
     /**

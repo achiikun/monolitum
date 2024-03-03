@@ -8,10 +8,10 @@ use monolitum\frontend\Component;
 use monolitum\frontend\form\Form_Attr_Component;
 use monolitum\frontend\form\Form_Attr_ElementComponent;
 use monolitum\frontend\form\FormControl_Hidden;
-use monolitum\frontend\form\Interface_Form_Attr;
+use monolitum\frontend\form\I_Form_Attr;
 use monolitum\frontend\Rendered;
 
-class Form_Attr_WangEditor extends Form_Attr_Component implements Interface_Form_Attr
+class Form_Attr_WangEditor extends Form_Attr_Component implements I_Form_Attr
 {
 
     private $component;

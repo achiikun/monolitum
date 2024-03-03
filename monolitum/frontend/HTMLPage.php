@@ -60,6 +60,7 @@ class HTMLPage extends Component {
     }
 
     /**
+     * TODO: Create constant manager
      * @param string $key
      * @param $value
      * @return void

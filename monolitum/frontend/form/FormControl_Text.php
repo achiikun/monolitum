@@ -17,6 +17,15 @@ class FormControl_Text extends FormControl
     }
 
     /**
+     * @param string $placeholder
+     * @return void
+     */
+    public function setPlaceholder($placeholder){
+        $element = $this->getElement();
+        $element->setAttribute("placeholder", $placeholder);
+    }
+
+    /**
      * @param callable $builder
      * @return FormControl_Text
      */

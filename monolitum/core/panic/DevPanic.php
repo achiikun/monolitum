@@ -4,6 +4,9 @@ namespace monolitum\core\panic;
 
 use monolitum\core\Node;
 
+/**
+ * Panic intended to represent developer mistakes in their apps.
+ */
 class DevPanic extends Panic{
 
     /**
