@@ -63,4 +63,44 @@ class Attr_Quill extends Attr implements I_Attr_Databasable
         // Quill is stored in a LONGTEXT type, because might be a large json with embedded images.
         return "LONGTEXT";
     }
+
+    function getInsertUpdatePlaceholder()
+    {
+        return "?";
+    }
+
+    /**
+     * @param $rawValue QuillDocument
+     * @return string
+     */
+    function getValueForQuery($rawValue)
+    {
+        return $rawValue->makeDelta();
+    }
+
+    function parseValue($dbValue)
+    {
+        if($dbValue != null){ // Simple !=
+
+            if(PHP_MAJOR_VERSION >= 7){
+                try{
+                    $quill = $this->tryToParseValue($dbValue);
+                    return $quill;
+                }catch (\Error $exception){
+                    print($exception);
+                }
+            }else{
+
+                try{
+                    $quill = $this->tryToParseValue($dbValue);
+                    return $quill;
+                }catch (\Exception $exception){
+                    // PHP <7 has no Error, catch exception
+                }
+
+            }
+        }
+
+        return null;
+    }
 }

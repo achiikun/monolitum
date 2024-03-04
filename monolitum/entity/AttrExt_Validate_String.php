@@ -180,5 +180,34 @@ class AttrExt_Validate_String extends AttrExt_Validate
         return $this->maxChars;
     }
 
+    public function getEnumString($value)
+    {
+        if($this->enums !== null){
+            foreach ($this->enums as $enumKey => $enumValue){
+                if(is_string($enumKey)){
+                    if($value == $enumKey){
+                        if(is_array($enumValue)){
+                            return $enumValue[0];
+                        }else{
+                            return $enumValue;
+                        }
+                    }
+                }else if(is_string($enumValue)){
+                    if($value == $enumValue){
+                        return $enumValue;
+                    }
+                }else if(is_array($enumValue)){
+                    if($value == $enumValue[0]){
+                        return  $enumValue[1];
+                    }
+                }else{
+                    throw new DevPanic("Enum constant not found");
+                }
+            }
+        }
+
+        return null;
+    }
+
 }
 

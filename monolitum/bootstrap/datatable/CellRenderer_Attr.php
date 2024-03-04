@@ -9,6 +9,7 @@ use monolitum\entity\attr\Attr_Date;
 use monolitum\entity\attr\Attr_Decimal;
 use monolitum\entity\attr\Attr_Int;
 use monolitum\entity\attr\Attr_String;
+use monolitum\entity\AttrExt_Validate_String;
 use monolitum\frontend\component\Reference;
 use monolitum\frontend\component\Text;
 use monolitum\frontend\form\FormControl_CheckBox;
@@ -58,7 +59,17 @@ class CellRenderer_Attr implements CellRenderer
         } else {
             $attr = $entity->getAttr($this->attr);
             if($attr instanceof Attr_String){
-                return Text::of($entity->getString($attr));
+                /** @var AttrExt_Validate_String $extValidate */
+                $extValidate = $attr->findExtension(AttrExt_Validate_String::class);
+                $value = $entity->getString($attr);
+                if($value === null){
+
+                }else if($extValidate !== null && $extValidate->hasEnum()){
+                    $string = $extValidate->getEnumString($value);
+                    return Text::of($string);
+                }else{
+                    return Text::of($value);
+                }
             }else if($attr instanceof Attr_Int){
                 return Text::of(strval($entity->getInt($attr)));
             }else if($attr instanceof Attr_Decimal){

@@ -331,7 +331,7 @@ class Manager_DB extends Manager implements Active, Interface_Entity_DB
             }else if(is_int($value)){
                 $stmt->bindValue($idx+1, $value, PDO::PARAM_INT);
             }else if($value instanceof DateTime){
-                $stmt->bindValue($idx+1, date_format($value, 'Y-m-d\TH:i:s'), PDO::PARAM_STR);
+                $stmt->bindValue($idx+1, date_format($value, 'Y-m-d\TH:i:s'));
             }else{
                 $stmt->bindValue($idx+1, $value);
             }
@@ -357,6 +357,7 @@ class Manager_DB extends Manager implements Active, Interface_Entity_DB
     private function executeUpdate_Insert($query, $model, &$values){
         $sql = "INSERT INTO " . $this->prefix . $model->getId() . "(";
 
+        $placeholders = [];
         $count = 0;
         foreach ($query->getValues() as $attrName => $value) {
             if($count > 0)
@@ -364,19 +365,36 @@ class Manager_DB extends Manager implements Active, Interface_Entity_DB
             $sql .= "`" . $attrName . "`";
             if($value instanceof Color){
                 $values[] = $value->getHexValue();
+                $placeholders[] = "?";
             }else{
-                $values[] = $value;
+                $model = $query->getModel();
+                if($model !== null){
+                    $attr = $model->getAttr($attrName);
+                    if($attr instanceof I_Attr_Databasable){
+                        $values[] = $attr->getValueForQuery($value);
+                        $placeholders[] = $attr->getInsertUpdatePlaceholder();
+                    }else{
+                        $values[] = $value;
+                        $placeholders[] = "?";
+                    }
+                }else{
+                    $values[] = $value;
+                    $placeholders[] = "?";
+                }
             }
             $count++;
         }
 
         $sql .= ") VALUES (";
 
-        for($i = 0; $i < $count; $i++){
-            if($i === 0)
-                $sql .= "?";
-            else
-                $sql .= ",?";
+        $first = true;
+        foreach($placeholders as $placeholder){
+            if($first){
+                $first = false;
+                $sql .= $placeholder;
+            } else {
+                $sql .= "," . $placeholder;
+            }
         }
 
         $sql .= ")";
@@ -398,12 +416,29 @@ class Manager_DB extends Manager implements Active, Interface_Entity_DB
         foreach ($query->getValues() as $attrName => $value) {
             if($count > 0)
                 $sql .= ",";
-            $sql .= "`" . $attrName . "` = ?";
+
             if($value instanceof Color){
                 $values[] = $value->getHexValue();
+                $placeholder = "?";
             }else{
-                $values[] = $value;
+                $model = $query->getModel();
+                if($model !== null){
+                    $attr = $model->getAttr($attrName);
+                    if($attr instanceof I_Attr_Databasable){
+                        $values[] = $attr->getValueForQuery($value);
+                        $placeholder = $attr->getInsertUpdatePlaceholder();
+                    }else{
+                        $values[] = $value;
+                        $placeholder = "?";
+                    }
+                }else{
+                    $values[] = $value;
+                    $placeholder = "?";
+                }
             }
+
+            $sql .= "`" . $attrName . "` = " . $placeholder;
+
             $count++;
         }
 

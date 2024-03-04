@@ -132,6 +132,8 @@ class Query_Result
                     $entity->setBool($attr, $rowValue);
                 }else if($attr instanceof Attr_Date){
                     $entity->setDate($attr, date_create($rowValue));
+                }else if($attr instanceof I_Attr_Databasable){
+                    $entity->setValue($attr, $attr->parseValue($rowValue));
                 }
 
             }

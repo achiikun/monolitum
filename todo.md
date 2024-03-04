@@ -1,6 +1,7 @@
 # TODO
 
 - [X] Enable buttons to execute POST requests (using a form and a submit button)
+- [X] Integrate https://github.com/quilljs/quill and https://github.com/nadar/quill-delta-parser
 - [ ] WangEditor: Validate html / translate classes to style attr
 - [ ] Color picker
 - [ ] Domained Color Picker
@@ -11,4 +12,3 @@
 - [ ] Security: CRSF tokens in forms
 - [ ] Security: Hiding ids
 - [ ] Security: Antispam Manager
-- [ ] Integrate https://github.com/quilljs/quill and https://github.com/nadar/quill-delta-parser

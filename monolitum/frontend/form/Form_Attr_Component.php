@@ -8,6 +8,7 @@ use monolitum\entity\attr\Attr;
 use monolitum\entity\AttrExt_Validate;
 use monolitum\frontend\Component;
 use monolitum\frontend\ElementComponent;
+use monolitum\frontend\ElementComponent_Ext;
 use monolitum\frontend\html\HtmlElement;
 
 abstract class Form_Attr_Component extends Component implements I_Form_Attr
@@ -64,6 +65,11 @@ abstract class Form_Attr_Component extends Component implements I_Form_Attr
     protected $invalidText;
 
     /**
+     * @var ElementComponent_Ext[]
+     */
+    protected $catchedExtensions = [];
+
+    /**
      * @param HtmlElement $element
      * @param Attr|string $attrid
      * @param callable|null $builder
@@ -72,6 +78,23 @@ abstract class Form_Attr_Component extends Component implements I_Form_Attr
     {
         parent::__construct($builder);
         $this->attr = $attrid;
+    }
+
+    function receiveActive($active)
+    {
+        if($active instanceof ElementComponent_Ext){
+            $this->catchedExtensions[] = $active;
+            return true;
+        }
+        return parent::receiveActive($active);
+    }
+
+    /**
+     * @return ElementComponent_Ext[]
+     */
+    public function getCatchedExtensions()
+    {
+        return $this->catchedExtensions;
     }
 
     /**

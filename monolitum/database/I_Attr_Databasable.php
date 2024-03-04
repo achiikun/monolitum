@@ -12,4 +12,22 @@ interface I_Attr_Databasable
      * @return string
      */
     function getDDLType();
+
+    /**
+     * @return string
+     */
+    function getInsertUpdatePlaceholder();
+
+    /**
+     * @param $rawValue
+     * @return mixed
+     */
+    function getValueForQuery($rawValue);
+
+    /**
+     * @param $dbValue
+     * @return mixed
+     */
+    function parseValue($dbValue);
+
 }
