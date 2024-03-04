@@ -41,7 +41,16 @@ class HtmlElementContent implements Renderable
         $this->content = $content;
     }
 
-
+    /**
+     * @param string $content
+     * @return HtmlElementContent
+     */
+    public static function raw($content)
+    {
+        $html = new HtmlElementContent($content);
+        $html->setRaw();
+        return $html;
+    }
 
     /**
      * @return      string                  html element content

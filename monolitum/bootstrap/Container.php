@@ -82,4 +82,14 @@ class Container extends ElementComponent
         return $fc;
     }
 
+    /**
+     * @param callable $builder
+     * @return Container
+     */
+    public static function of($builder)
+    {
+        $fc = new Container($builder);
+        return $fc;
+    }
+
 }

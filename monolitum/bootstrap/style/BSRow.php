@@ -13,6 +13,11 @@ class BSRow extends ElementComponent_Ext
      */
     private $gap = null;
 
+    /**
+     * @var int
+     */
+    private $gutter = null;
+
     public function __construct()
     {
         parent::__construct(function (BSRow $it){
@@ -20,6 +25,9 @@ class BSRow extends ElementComponent_Ext
 
             if($it->gap !== null)
                 $it->addClass("gap-" . $it->gap);
+
+            if($it->gutter !== null)
+                $it->addClass("gx-" . $it->gutter);
 
         });
     }
@@ -31,6 +39,16 @@ class BSRow extends ElementComponent_Ext
     public function gap($value)
     {
         $this->gap = $value;
+        return $this;
+    }
+
+    /**
+     * @param int $value
+     * @return $this
+     */
+    public function gutter($value)
+    {
+        $this->gutter = $value;
         return $this;
     }
 

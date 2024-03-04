@@ -6,6 +6,7 @@ use monolitum\backend\params\Link;
 use monolitum\backend\params\Path;
 use monolitum\backend\res\Active_Create_HrefResolver;
 use monolitum\backend\res\HrefResolver;
+use monolitum\backend\res\HrefResolver_String;
 use monolitum\core\GlobalContext;
 use monolitum\core\Renderable_Node;
 use monolitum\frontend\html\HtmlElement;
@@ -14,7 +15,7 @@ class A extends AbstractText
 {
 
     /**
-     * @var Link|Path
+     * @var Link|Path|string
      */
     private $href;
     /**
@@ -28,7 +29,7 @@ class A extends AbstractText
     }
 
     /**
-     * @param Link|Path $href
+     * @param Link|Path|string $href
      */
     public function setHref($href)
     {
@@ -39,9 +40,13 @@ class A extends AbstractText
     {
 
         if($this->href){
-            $active = new Active_Create_HrefResolver($this->href);
-            GlobalContext::add($active);
-            $this->hrefResolver = $active->getHrefResolver();
+            if(is_string($this->href)){
+                $this->hrefResolver = new HrefResolver_String($this->href);
+            }else{
+                $active = new Active_Create_HrefResolver($this->href);
+                GlobalContext::add($active);
+                $this->hrefResolver = $active->getHrefResolver();
+            }
         }
 
         parent::afterBuildNode();

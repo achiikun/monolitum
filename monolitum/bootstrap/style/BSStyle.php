@@ -7,6 +7,7 @@ use monolitum\bootstrap\values\BSBound;
 use monolitum\bootstrap\values\BSColor;
 use monolitum\core\GlobalContext;
 use monolitum\frontend\ElementComponent_Ext;
+use monolitum\bootstrap\values\BSSize;
 
 class BSStyle extends ElementComponent_Ext
 {
@@ -23,6 +24,28 @@ class BSStyle extends ElementComponent_Ext
      */
     public static function addPadding($size, $bound = null){
         GlobalContext::add(BSStyle::padding($size, $bound));
+    }
+
+    /**
+     * @param BSSize $size
+     * @return BSStyle
+     */
+    public static function width($size)
+    {
+        return new BSStyle(function (BSStyle $it) use ($size) {
+            $it->getElementComponent()->addClass("w" . "-" . $size->getValue());
+        });
+    }
+
+    /**
+     * @param BSSize $size
+     * @return BSStyle
+     */
+    public static function height($size)
+    {
+        return new BSStyle(function (BSStyle $it) use ($size) {
+            $it->getElementComponent()->addClass("h" . "-" . $size->getValue());
+        });
     }
 
     /**
