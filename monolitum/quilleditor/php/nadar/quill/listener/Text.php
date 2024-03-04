@@ -17,22 +17,22 @@ class Text extends BlockListener
     /**
      * @var string
      */
-    public const CLOSEP = '</p>'.PHP_EOL;
+    const CLOSEP = '</p>'.PHP_EOL;
 
     /**
      * @var string
      */
-    public const OPENP = '<p>';
+    const OPENP = '<p>';
 
     /**
      * @var string
      */
-    public const LINEBREAK = '<br>';
+    const LINEBREAK = '<br>';
 
     /**
      * {@inheritDoc}
      */
-    public function priority(): int
+    public function priority()
     {
         return self::PRIORITY_GARBAGE_COLLECTOR;
     }

@@ -84,3 +84,14 @@ HTML Editor with "face and eyes".
 - monolitum/backend
 - monolitum/frontend
 - monolitum/bootstrap
+
+
+## : monolitum\quilleditor
+HTML Editor with "face and eyes".
+Original Quill in [github](https://github.com/nadar/quill-delta-parser) has been refactored to be compatible with PHP 5.6.
+
+### Dependencies
+- monolitum/core
+- monolitum/backend
+- monolitum/frontend
+- monolitum/bootstrap

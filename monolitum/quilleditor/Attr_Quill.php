@@ -5,7 +5,6 @@ namespace monolitum\quilleditor;
 use monolitum\database\I_Attr_Databasable;
 use monolitum\entity\attr\Attr;
 use monolitum\entity\ValidatedValue;
-use monolitum\monolitum\quilleditor\QuillDocument;
 use nadar\quill\Lexer;
 
 class Attr_Quill extends Attr implements I_Attr_Databasable
@@ -19,20 +18,40 @@ class Attr_Quill extends Attr implements I_Attr_Databasable
         return new Attr_Quill();
     }
 
+    /**
+     * @param string $value
+     * @return QuillDocument
+     */
+    private function tryToParseValue($value)
+    {
+        printf($value);
+        $lexer = new Lexer($value);
+
+        // We'll check if this method fails
+        $rendered = $lexer->render();
+
+        return new QuillDocument($lexer, $rendered);
+    }
+
     public function validate($value)
     {
         if(is_string($value)){
-            try{
-                $lexer = new Lexer($value);
 
-                // We'll check if this method fails
-                $rendered = $lexer->render();
+            if(PHP_MAJOR_VERSION >= 7){
+                try{
+                    $quill = $this->tryToParseValue($value);
+                    return new ValidatedValue(true, true, $quill);
+                }catch (\Error $exception){
 
-                $quill = new QuillDocument($lexer, $rendered);
+                }
+            }else{
 
-                return new ValidatedValue(true, true, $quill);
-
-            }catch (\Exception $exception){
+                try{
+                    $quill = $this->tryToParseValue($value);
+                    return new ValidatedValue(true, true, $quill);
+                }catch (\Exception $exception){
+                    // PHP <7 has no Error, catch exception
+                }
 
             }
         }

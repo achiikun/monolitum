@@ -19,17 +19,17 @@ class Lists extends BlockListener
     /**
      * @var string
      */
-    public const ATTRIBUTE_LIST = 'list';
+    const ATTRIBUTE_LIST = 'list';
 
     /**
      * @var string
      */
-    public const LIST_TYPE_BULLET = 'bullet';
+    const LIST_TYPE_BULLET = 'bullet';
 
     /**
      * @var string
      */
-    public const LIST_TYPE_ORDERED = 'ordered';
+    const LIST_TYPE_ORDERED = 'ordered';
 
     /**
      * {@inheritDoc}
@@ -66,7 +66,7 @@ class Lists extends BlockListener
             // while from first to the pick line and store content in buffer
             $buffer = null;
             if (!$isEmpty) {
-                $first->while(static function (&$index, Line $line) use (&$buffer, $pick) {
+                $first->while0(static function (&$index, Line $line) use (&$buffer, $pick) {
                     ++$index;
                     $buffer.= $line->getInput();
                     $line->setDone();

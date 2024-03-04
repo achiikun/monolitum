@@ -32,19 +32,19 @@ There is some copy-pasted code in order this framework to be self-contained.
 
 ### Moment.php
 
-Code of Moment.php is is copied into this repository. License is in this repo:
+Code of Moment.php is is copied into this repository. License (MIT) is in this repo:
 
 https://github.com/fightbulc/moment.php
 
 ### Bootstrap
 
-Code of Twitter Bootstrap is used. Licence is in this repo:
+Code of Twitter Bootstrap is used. Licence (MIT) is in this repo:
 
 https://github.com/twbs/bootstrap
 
 ### FontAwesome
 
-Code of Font Awesome is used. Licence is in this repo:
+Code of Font Awesome (Icons: CC BY 4.0) is used. Licence is in this repo:
 
 https://github.com/FortAwesome/Font-Awesome
 
@@ -54,8 +54,21 @@ Code of WangEditor is copied into this repository. License is in this repo:
 
 https://github.com/wangeditor-team/wangEditor
 
+### WangEditor
+
+Code of quilljs is copied into this repository.
+License (BSD-3-Clause) is in this repo:
+
+https://github.com/quilljs/quill
+
+Code of quill-delta-parser for PHP is copied into this repository.
+It was refactored to make it compatible with PHP 5.6.
+License (MIT) is in this repo:
+
+https://github.com/nadar/quill-delta-parser
+
 ### Naucon/HtmlBuilder
 
-Some code is based on Naucon's HtmlBuilder library. License is in this repo:
+Some code is based on Naucon's HtmlBuilder library. License (MIT) is in this repo:
 
 https://github.com/naucon/HtmlBuilder

@@ -1,6 +1,6 @@
 <?php
 
-namespace monolitum\monolitum\quilleditor;
+namespace monolitum\quilleditor;
 
 use nadar\quill\Lexer;
 

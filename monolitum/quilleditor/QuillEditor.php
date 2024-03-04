@@ -165,7 +165,7 @@ class QuillEditor extends ElementComponent
                               if (source == 'api') {
                                 console.log('An API call triggered this change.');
                               } else if (source == 'user') {
-                                document.getElementById('" . $this->editor_id . "').value = JSON.stringify(delta.ops);
+                                document.getElementById('" . $this->editor_id . "').value = JSON.stringify(quill.getContents().ops);
                                 console.log('A user action triggered this change.');
                                 console.log(JSON.stringify(quill.getContents().ops));
                               }

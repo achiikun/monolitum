@@ -67,12 +67,12 @@ class Lexer
      * @see https://github.com/nadar/quill-delta-parser/issues/12
      * @since 1.3.1
      */
-    public const DELTA_EOL = "\n";
+    const DELTA_EOL = "\n";
 
     /**
      * @var string An internal string for newlines, this makes it more easy to debug instead of using \n (newlines).
      */
-    public const NEWLINE_EXPRESSION = '<!-- <![CDATA[NEWLINE]]> -->';
+    const NEWLINE_EXPRESSION = '<!-- <![CDATA[NEWLINE]]> -->';
 
     /**
      * @var boolean Whether input should be escaped by listeners when mixed with html elements.
@@ -204,7 +204,7 @@ class Lexer
      *
      * @return array<mixed> The json as array formated.
      */
-    public function getJsonArray(): array
+    public function getJsonArray()
     {
         return is_array($this->json) ? $this->json : self::decodeJson($this->json);
     }
@@ -214,9 +214,9 @@ class Lexer
      *
      * @return array<mixed>
      */
-    public function getOps(): array
+    public function getOps()
     {
-        return $this->getJsonArray()['ops'] ?? $this->getJsonArray();
+        return isset($this->getJsonArray()['ops']) ? $this->getJsonArray()['ops'] : $this->getJsonArray();
     }
 
     /**
@@ -227,13 +227,13 @@ class Lexer
      */
     public function getLine($index)
     {
-        return $this->_lines[$index] ?? false;
+        return isset($this->_lines[$index]) ? $this->_lines[$index] : false;
     }
 
     /**
      * @return array<Line> Returns an array with all line objects.
      */
-    public function getLines(): array
+    public function getLines()
     {
         return $this->_lines;
     }
@@ -249,11 +249,13 @@ class Lexer
         $lines = [];
         $i = 0;
         foreach ($ops as $delta) {
+            if(!isset($delta['insert']))
+                continue;
             // replace newline chars with internal expression
             $insert = $this->replaceNewlineWithExpression($delta['insert']);
             // if its an empty "newline-line"
             if ($insert == self::NEWLINE_EXPRESSION) {
-                $lines[$i] = new Line($i, '', $delta['attributes'] ?? [], $this, true, true);
+                $lines[$i] = new Line($i, '', isset($delta['attributes']) ? $delta['attributes'] : [], $this, true, true);
                 ++$i;
             } else {
                 $insert = $this->normalizeInsert($insert);
@@ -275,7 +277,7 @@ class Lexer
                         $hasNewline = false;
                     }
 
-                    $lines[$i] = new Line($i, $value, $delta['attributes'] ?? [], $this, $hadEndNewline, $hasNewline);
+                    $lines[$i] = new Line($i, $value, isset($delta['attributes']) ? $delta['attributes'] : [], $this, $hadEndNewline, $hasNewline);
                     ++$i;
                 }
             }

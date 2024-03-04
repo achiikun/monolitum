@@ -16,28 +16,29 @@ abstract class Listener
     /**
      * @var integer Type inline listener
      */
-    public const TYPE_INLINE = 1;
+    const TYPE_INLINE = 1;
 
     /**
      * @var integer Type block listener
      */
-    public const TYPE_BLOCK = 2;
+    const TYPE_BLOCK = 2;
 
     /**
      * @var integer First priority listener within the given type
      */
-    public const PRIORITY_EARLY_BIRD = 1;
+    const PRIORITY_EARLY_BIRD = 1;
 
     /**
      * @var integer Second priority listener within the given type. This is currently only used
      * for TEXT listeners - as they need to be the very last entry.
      */
-    public const PRIORITY_GARBAGE_COLLECTOR = 2;
+    const PRIORITY_GARBAGE_COLLECTOR = 2;
 
     /**
      * Get the listener type, either INLINE (1) or BLOCK (2)
+     * @return int
      */
-    abstract public function type(): int;
+    abstract public function type();
 
     /**
      * Process the line
@@ -48,8 +49,9 @@ abstract class Listener
 
     /**
      * Get the priority either 1 or 2
+     * @return int
      */
-    public function priority(): int
+    public function priority()
     {
         return self::PRIORITY_EARLY_BIRD;
     }
@@ -80,7 +82,7 @@ abstract class Listener
      *
      * @return Pick[] An array with Line objects, for IDE purposes we return the Line object as phpdoc
      */
-    public function picks(): array
+    public function picks()
     {
         return $this->_picks;
     }

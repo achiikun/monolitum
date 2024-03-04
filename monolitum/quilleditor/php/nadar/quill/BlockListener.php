@@ -15,7 +15,7 @@ abstract class BlockListener extends Listener
     /**
      * {@inheritDoc}
      */
-    public function type(): int
+    public function type()
     {
         return self::TYPE_BLOCK;
     }
@@ -71,7 +71,7 @@ abstract class BlockListener extends Listener
 
             // while from first to the pick line and store content in buffer
             $buffer = null;
-            $first->while(static function (&$index, Line $line) use (&$buffer, $pick, $first) {
+            $first->while0(static function (&$index, Line $line) use (&$buffer, $pick, $first) {
                 ++$index;
                 $buffer .= $line->getInput();
                 $line->setDone();
@@ -98,13 +98,14 @@ abstract class BlockListener extends Listener
      * Returns the first Line from a Pick. If the Pick is the first Line, it will return it's own pick
      * This is done because blockItems can consist of multiple inline items
      *
+     * @return Line
      * @since 1.3.2
      */
-    protected function getFirstLine(Pick $pick): Line
+    protected function getFirstLine(Pick $pick)
     {
         $first = $pick->line;
 
-        $pick->line->while(
+        $pick->line->while0(
             static function (&$index, Line $line) use ($pick, &$first) {
                 --$index;
                 // its the same line as the start.. skip this one as its by default included in while operations

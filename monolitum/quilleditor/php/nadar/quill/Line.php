@@ -15,17 +15,17 @@ class Line
     /**
      * @var integer The status of a line which is not picked or done, which is default.
      */
-    public const STATUS_CLEAN = 1;
+    const STATUS_CLEAN = 1;
 
     /**
      * @var integer The status of the line if its picked by a listener
      */
-    public const STATUS_PICKED = 2;
+    const STATUS_PICKED = 2;
 
     /**
      * @var integer The status of the line if some of the listener marked this line as done.
      */
-    public const STATUS_DONE = 3;
+    const STATUS_DONE = 3;
 
     /**
      * @var array<string> An array with values which can be prependend to the actuall input string. This is mainly used if inline
@@ -277,7 +277,7 @@ class Line
      * second is the current line.
      * @return void
      */
-    public function while(callable $condition)
+    public function while0(callable $condition)
     {
         $iterate = true;
         $i = $this->getIndex();
@@ -310,7 +310,7 @@ class Line
     {
         $next = $this->next();
         if ($next) {
-            $next->while(static function (&$index, Line $line) use ($condition) {
+            $next->while0(static function (&$index, Line $line) use ($condition) {
                 ++$index;
                 return call_user_func($condition, $line);
             });
@@ -331,7 +331,7 @@ class Line
     {
         $previous = $this->previous();
         if ($previous) {
-            $previous->while(static function (&$index, Line $line) use ($condition) {
+            $previous->while0(static function (&$index, Line $line) use ($condition) {
                 --$index;
                 return call_user_func($condition, $line);
             });
@@ -460,8 +460,9 @@ class Line
 
     /**
      * Whether current line is an inline line or not.
+     * @return bool
      */
-    public function isInline(): bool
+    public function isInline()
     {
         return $this->isInline;
     }
@@ -610,7 +611,7 @@ class Line
      * @return array<string>
      * @since 1.3.0
      */
-    public function getDebugInfo(): array
+    public function getDebugInfo()
     {
         return $this->_debug;
     }
