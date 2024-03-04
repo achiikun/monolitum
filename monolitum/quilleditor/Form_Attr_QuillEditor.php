@@ -2,14 +2,11 @@
 
 namespace monolitum\quilleditor;
 
-use monolitum\bootstrap\BS_Form_Attr;
 use monolitum\bootstrap\FormLabel;
 use monolitum\core\GlobalContext;
 use monolitum\frontend\component\Div;
 use monolitum\frontend\form\Form_Attr_Component;
-use monolitum\frontend\form\Form_Attr_ElementComponent;
 use monolitum\frontend\form\FormControl_Hidden;
-use monolitum\frontend\Rendered;
 use monolitum\wangeditor\Form_Attr_WangEditor;
 
 class Form_Attr_QuillEditor extends Form_Attr_Component
@@ -23,9 +20,20 @@ class Form_Attr_QuillEditor extends Form_Attr_Component
         $this->experimental_letBuildChildsAfterBuild = true;
     }
 
+    public function getValue()
+    {
+
+        $quillValue = parent::getValue();
+
+        if($quillValue instanceof QuillDocument)
+            $quillValue = $quillValue->makeDelta();
+
+        return $quillValue;
+    }
+
     public function afterBuildForm()
     {
-        // TODO if hidden handle it different
+
         if($this->hidden){
             $this->component = new FormControl_Hidden(function (FormControl_Hidden $it){
                 $it->setId($this->getFullFieldName());
@@ -68,7 +76,7 @@ class Form_Attr_QuillEditor extends Form_Attr_Component
     /**
      * @param string $attrId
      * @param callable|null $builder
-     * @return Form_Attr_WangEditor
+     * @return Form_Attr_QuillEditor
      */
     public static function add($attrId, $builder = null)
     {

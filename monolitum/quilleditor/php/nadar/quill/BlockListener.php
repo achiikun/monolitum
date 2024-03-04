@@ -89,7 +89,7 @@ abstract class BlockListener extends Listener
                 $replace[] = $value;
             }
 
-            $pick->line->output = BlockListener . phpstr_replace($search, $replace, $wrapper) . PHP_EOL;
+            $pick->line->output = str_replace($search, $replace, $wrapper) . PHP_EOL;
             $pick->line->setDone();
         }
     }

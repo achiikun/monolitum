@@ -54,7 +54,7 @@ class QuillEditor extends ElementComponent
         $this->html_content = $content;
 
         $element = $this->getElement();
-        $element->setAttribute("value", $content);
+        $element->setAttribute("value", $content, true);
 
         return $this;
     }
@@ -171,9 +171,11 @@ class QuillEditor extends ElementComponent
                               }
                             });
                             var contents = document.getElementById('" . $this->editor_id . "').value;
-                            if(contents) quill.setContents(new Delta(
+                            console.log(contents);
+                            if(contents) quill.setContents(//new Delta(
                                 JSON.parse(contents)
-                            ));
+                            //)
+                            );
                     "))->setRaw(true))
                 )
         ]);

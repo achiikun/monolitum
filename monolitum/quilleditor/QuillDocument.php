@@ -23,4 +23,12 @@ class QuillDocument
         $this->rendered = $rendered;
     }
 
+    /**
+     * @return string
+     */
+    public function makeDelta()
+    {
+        return json_encode($this->lexer->getJsonArray());
+    }
+
 }

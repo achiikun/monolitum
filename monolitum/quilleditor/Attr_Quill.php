@@ -24,7 +24,6 @@ class Attr_Quill extends Attr implements I_Attr_Databasable
      */
     private function tryToParseValue($value)
     {
-        printf($value);
         $lexer = new Lexer($value);
 
         // We'll check if this method fails
@@ -42,7 +41,7 @@ class Attr_Quill extends Attr implements I_Attr_Databasable
                     $quill = $this->tryToParseValue($value);
                     return new ValidatedValue(true, true, $quill);
                 }catch (\Error $exception){
-
+                    print($exception);
                 }
             }else{
 
