@@ -75,7 +75,7 @@ class BSButton extends AbstractText
     }
 
     /**
-     * @param array<string|int> $post
+     * @param bool $post
      * @return void
      */
     public function setPost($post=true){
