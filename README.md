@@ -48,13 +48,7 @@ Code of Font Awesome (Icons: CC BY 4.0) is used. Licence is in this repo:
 
 https://github.com/FortAwesome/Font-Awesome
 
-### WangEditor
-
-Code of WangEditor is copied into this repository. License is in this repo:
-
-https://github.com/wangeditor-team/wangEditor
-
-### WangEditor
+### QuillEditor
 
 Code of quilljs is copied into this repository.
 License (BSD-3-Clause) is in this repo:
