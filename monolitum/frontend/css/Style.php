@@ -32,12 +32,42 @@ class Style
     }
 
     /**
+     * @param SizeAutoProperty $width
+     * @return $this
+     */
+    public function minWidth(SizeAutoProperty $width)
+    {
+        $this->properties["min-width"] = $width;
+        return $this;
+    }
+
+    /**
      * @param SizeAutoProperty $height
      * @return $this
      */
     public function height(SizeAutoProperty $height)
     {
         $this->properties["height"] = $height;
+        return $this;
+    }
+
+    /**
+     * @param SizeAutoProperty $height
+     * @return $this
+     */
+    public function maxHeight(SizeAutoProperty $height)
+    {
+        $this->properties["max-height"] = $height;
+        return $this;
+    }
+
+    /**
+     * @param SizeAutoProperty $height
+     * @return $this
+     */
+    public function minHeight(SizeAutoProperty $height)
+    {
+        $this->properties["min-height"] = $height;
         return $this;
     }
 
@@ -54,5 +84,6 @@ class Style
         return implode( '', $declarations );
 
     }
+
 
 }

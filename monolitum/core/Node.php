@@ -84,12 +84,13 @@ abstract class Node implements Passive {
 
     /**
      * @param Active $actives
-     * @return void
+     * @return $this
      */
     public function push(...$actives){
         foreach ($actives as $active) {
             $this->_receive($active, 0);
         }
+        return $this;
     }
     
     final function _receive($active, $currentDepth) {

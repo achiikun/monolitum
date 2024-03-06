@@ -25,4 +25,14 @@ class Hr extends ElementComponent
         return $fc;
     }
 
+    /**
+     * @param callable $builder
+     * @return Hr
+     */
+    public static function of($builder = null)
+    {
+        $fc = new Hr($builder);
+        return $fc;
+    }
+
 }
