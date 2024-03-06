@@ -14,14 +14,14 @@ Engine of the framework
 
 
 ## : monolitum\entity
-Classes to define and use data. This framework relies on entities and attributes to perform: parameters and forms parsing, database operations.
+Classes to define and use data. This framework relies on entities and attributes to perform: get/post parameter parsing, form validation and database operations.
 
 ### Dependencies
 - monolitum/core
 
 
 ## : monolitum\backend
-Generic Nodes to work with parameters, page routing. 
+Generic Nodes to work with get/post parameters, page routing and resource management. 
 
 ### Dependencies
 - monolitum/core
@@ -29,7 +29,7 @@ Generic Nodes to work with parameters, page routing.
 
 
 ## : monolitum\database
-Simple ORM classes to perform operations on database based on Models and data in Entities.
+Simple ORM classes to perform operations on database based on Models and Data in Entities.
 
 ### Dependencies
 - monolitum/core
