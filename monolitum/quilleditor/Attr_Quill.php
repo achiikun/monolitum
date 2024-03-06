@@ -32,6 +32,28 @@ class Attr_Quill extends Attr implements I_Attr_Databasable
         return new QuillDocument($lexer, $rendered);
     }
 
+
+    private function createValueFromRaw($dbValue)
+    {
+        $delta = is_string($dbValue) ? [
+            "ops" => [
+                [
+                    "insert" => $dbValue
+                ]
+            ]
+        ] : [
+            "ops" => []
+        ];
+
+        $lexer = new Lexer($delta);
+
+        // We'll check if this method fails
+        $rendered = $lexer->render();
+
+        return new QuillDocument($lexer, $rendered);
+
+    }
+
     public function validate($value)
     {
         if(is_string($value)){
@@ -41,7 +63,7 @@ class Attr_Quill extends Attr implements I_Attr_Databasable
                     $quill = $this->tryToParseValue($value);
                     return new ValidatedValue(true, true, $quill);
                 }catch (\Error $exception){
-                    print($exception);
+                    // Error
                 }
             }else{
 
@@ -87,7 +109,8 @@ class Attr_Quill extends Attr implements I_Attr_Databasable
                     $quill = $this->tryToParseValue($dbValue);
                     return $quill;
                 }catch (\Error $exception){
-                    print($exception);
+                    $quill = $this->createValueFromRaw($dbValue);
+                    return $quill;
                 }
             }else{
 
@@ -95,7 +118,8 @@ class Attr_Quill extends Attr implements I_Attr_Databasable
                     $quill = $this->tryToParseValue($dbValue);
                     return $quill;
                 }catch (\Exception $exception){
-                    // PHP <7 has no Error, catch exception
+                    $quill = $this->createValueFromRaw($dbValue);
+                    return $quill;
                 }
 
             }
@@ -103,4 +127,5 @@ class Attr_Quill extends Attr implements I_Attr_Databasable
 
         return null;
     }
+
 }

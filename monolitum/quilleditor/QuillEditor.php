@@ -152,8 +152,9 @@ class QuillEditor extends ElementComponent
                                 $this->placeholder !== null
                                     ? "placeholder: \""
                                         . addslashes($this->placeholder)
+                                        . "\","
                                     : ""
-                                ) . "\",
+                                ) . "
                               readOnly: " . ($isDisabled ? "true" : "false") . ",
                               modules: {
                                 toolbar: toolbarOptions

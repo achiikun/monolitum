@@ -5,10 +5,8 @@ namespace monolitum\quilleditor;
 use monolitum\bootstrap\FormLabel;
 use monolitum\core\GlobalContext;
 use monolitum\frontend\component\Div;
-use monolitum\frontend\ElementComponent_Ext;
 use monolitum\frontend\form\Form_Attr_Component;
 use monolitum\frontend\form\FormControl_Hidden;
-use monolitum\wangeditor\Form_Attr_WangEditor;
 
 class Form_Attr_QuillEditor extends Form_Attr_Component
 {
