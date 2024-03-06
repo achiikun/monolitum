@@ -2,15 +2,15 @@
 
 namespace monolitum\frontend\form;
 
+use monolitum\backend\params\Manager_Params;
+use monolitum\core\Find;
 use monolitum\core\panic\DevPanic;
 use monolitum\entity\attr\Attr;
+use monolitum\entity\AttrExt_Validate;
 use monolitum\entity\Entities_Manager;
 use monolitum\entity\Entity;
 use monolitum\entity\Model;
 use monolitum\entity\ValidatedValue;
-use monolitum\core\Find;
-use monolitum\backend\params\Manager_Params;
-use monolitum\backend\params\Validator;
 
 abstract class Form_Validator
 {
@@ -139,12 +139,12 @@ abstract class Form_Validator
 
         $validated = $varManager->validate($model, $attr);
 
-        /** @var AttrExt_Form $ext */
-        $ext = $attr->findExtension(AttrExt_Form::class);
+        /** @var AttrExt_Validate $ext */
+        $ext = $attr->findExtension(AttrExt_Validate::class);
         if(!$ext)
             return $validated;
 
-        return $ext->revalidate($validated);
+        return $ext->validate($validated);
 
     }
 
@@ -155,6 +155,17 @@ abstract class Form_Validator
     public function getAttr($attrId)
     {
         return $attrId;
+    }
+
+    /**
+     * @param string|Attr $attrId
+     * @return bool
+     */
+    public function isAttrInValidateList($attrId)
+    {
+        $attr = $this->getAttr($attrId);
+        $inArray = in_array($attr->getId(), $this->validate_attrs);
+        return $this->validate_attrs_all ^ $inArray;
     }
 
 }

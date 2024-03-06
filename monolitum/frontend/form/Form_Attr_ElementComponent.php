@@ -170,10 +170,10 @@ abstract class Form_Attr_ElementComponent extends ElementComponent implements I_
     protected function getLabel()
     {
         $label = null;
-        if($this->formExt != null)
-            $label = $this->formExt->getLabel();
         if($label == null)
             $label = $this->label;
+        if($label == null && $this->formExt != null)
+            $label = $this->formExt->getLabel();
         return $label;
     }
 

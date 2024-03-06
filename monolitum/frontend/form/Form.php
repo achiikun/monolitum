@@ -477,10 +477,14 @@ class Form extends Component
         if($this->validator !== null){
             if($this->isValidating()){
 
-                $validatedValue = $this->validator->getValidatedValue($attr);
+                if($this->validator->isAttrInValidateList($attr)){
 
-                if($validatedValue->isValid() || $validatedValue->isWellFormat())
-                    return $validatedValue;
+                    $validatedValue = $this->validator->getValidatedValue($attr);
+
+                    if($validatedValue->isValid() || $validatedValue->isWellFormat())
+                        return $validatedValue;
+
+                }
 
                 if(key_exists($attr->getId(), $this->defaultValues)){
                     $validatedValue = new ValidatedValue(true, true, $this->defaultValues[$attr->getId()]);
