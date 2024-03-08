@@ -4,6 +4,7 @@
   - [ ] Color picker
   - [ ] Domained Color Picker
   - [ ] Tag picker
+  - [ ] Integrate select picker: https://github.com/snapappointments/bootstrap-select
   - [X] Integrate https://github.com/quilljs/quill and https://github.com/nadar/quill-delta-parser
 
 ### Something appearing on screen
@@ -13,6 +14,7 @@
   - [ ] Static Tooltips
 
 ### UX
+  - [ ] i18n enums
   - [ ] Save ref stack in url to go back (e.g. recovering table filter when returning from edit)
 
 ### Security

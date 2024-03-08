@@ -273,13 +273,19 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
 
                     foreach ($validateExt->getEnums() as $itemKey => $itemValue) {
 
+                        // TODO include this: https://github.com/snapappointments/bootstrap-select
+
                         FormControl_Select_Option::add(function (FormControl_Select_Option $it) use ($selected, $itemKey, $itemValue) {
 
                             $item = null;
                             if(is_string($itemKey)){
                                 $item = $itemKey;
                                 if(is_array($itemValue)){
-                                    $it->setContent($itemValue[0]);
+                                    foreach($itemValue as $firstValue){
+                                        // TODO select "language"
+                                        $it->setContent($firstValue);
+                                        break;
+                                    }
                                 }else{
                                     $it->setContent($itemValue);
                                 }
