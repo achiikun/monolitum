@@ -247,12 +247,16 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
                     if($this->hidden === true)
                         $it->convertToHidden();
 
-                    if($validateExt->isNullable()){
+                    $it->setPicker();
 
-                        $nullLabel = null;
-                        if($formExt instanceof AttrExt_Form_String){
-                            $nullLabel = $formExt->getNullLabel();
-                        }
+                    $nullLabel = null;
+                    if($formExt instanceof AttrExt_Form_String){
+                        $nullLabel = $formExt->getNullLabel($this->language);
+
+                        $it->setSearchable($formExt->isSearchable());
+                    }
+
+                    if($validateExt->isNullable()){
 
                         FormControl_Select_Option::add(function (FormControl_Select_Option $it) use ($selected, $nullLabel) {
 
@@ -269,34 +273,43 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
 
                         });
 
+                    }else{
+
+                        $it->setAttribute("data-placeholder", $nullLabel);
+
+                        FormControl_Select_Option::add(function (FormControl_Select_Option $it) use ($selected) {
+                            $it->setContent("");
+                        });
+
                     }
 
                     foreach ($validateExt->getEnums() as $itemKey => $itemValue) {
 
                         // TODO include this: https://github.com/snapappointments/bootstrap-select
 
-                        FormControl_Select_Option::add(function (FormControl_Select_Option $it) use ($selected, $itemKey, $itemValue) {
+                        FormControl_Select_Option::add(function (FormControl_Select_Option $it) use ($validateExt, $selected, $itemKey, $itemValue) {
 
                             $item = null;
                             if(is_string($itemKey)){
                                 $item = $itemKey;
-                                if(is_array($itemValue)){
-                                    foreach($itemValue as $firstValue){
-                                        // TODO select "language"
-                                        $it->setContent($firstValue);
-                                        break;
-                                    }
-                                }else{
-                                    $it->setContent($itemValue);
-                                }
+//                                if(is_array($itemValue)){
+//                                    foreach($itemValue as $firstValue){
+//                                        // TODO select "language"
+//                                        $it->setContent($firstValue);
+//                                        break;
+//                                    }
+//                                }else{
+//                                    $it->setContent($itemValue);
+//                                }
                             }else if(is_array($itemValue)){
-                                $it->setContent($itemValue[1]);
+//                                $it->setContent($itemValue[1]);
                                 $item = $itemValue[0];
                             }else{
-                                $it->setContent($itemValue);
+//                                $it->setContent($itemValue);
                             }
 
                             $it->setValue($item);
+                            $it->setContent($validateExt->getEnumString($item, $this->language));
 
                             if($item == $selected)
                                 $it->setSelected();

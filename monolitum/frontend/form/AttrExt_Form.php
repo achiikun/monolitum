@@ -8,12 +8,12 @@ class AttrExt_Form extends AttrExt
 {
 
     /**
-     * @var string
+     * @var string | string[]
      */
     private $label;
 
     /**
-     * @var string|null
+     * @var string|string[]|null
      */
     private $nullLabel;
 
@@ -22,7 +22,7 @@ class AttrExt_Form extends AttrExt
     private $substituteNotValid = false;
 
     /**
-     * @param string $label
+     * @param string|string[] $label
      * @return $this
      */
     function label($label) {
@@ -31,7 +31,7 @@ class AttrExt_Form extends AttrExt
     }
 
     /**
-     * @param string $nullLabel
+     * @param string|string[] $nullLabel
      * @return $this
      */
     function nullLabel($nullLabel) {
@@ -55,17 +55,37 @@ class AttrExt_Form extends AttrExt
     /**
      * @return string
      */
-    public function getLabel()
+    public function getLabel($language=null)
     {
-        return $this->label;
+        if(is_array($this->label)){
+            if($language != null){
+                return $this->label[$language];
+            }else{
+                foreach ($this->label as $l){
+                    return $l;
+                }
+            }
+        }else{
+            return $this->label;
+        }
     }
 
     /**
      * @return string|null
      */
-    public function getNullLabel()
+    public function getNullLabel($language=null)
     {
-        return $this->nullLabel;
+        if(is_array($this->nullLabel)){
+            if($language != null){
+                return $this->nullLabel[$language];
+            }else{
+                foreach ($this->nullLabel as $l){
+                    return $l;
+                }
+            }
+        }else{
+            return $this->nullLabel;
+        }
     }
 
     /**

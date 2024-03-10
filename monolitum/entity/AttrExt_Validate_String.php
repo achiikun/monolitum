@@ -19,6 +19,11 @@ class AttrExt_Validate_String extends AttrExt_Validate
     private $enums;
 
     /**
+     * @var mixed
+     */
+    private $enumsDefaultLanguage = null;
+
+    /**
      * @var int
      */
     private $filter_validate;
@@ -66,9 +71,10 @@ class AttrExt_Validate_String extends AttrExt_Validate
      * @param array<string>|array<array<string>> $strings
      * @return $this
      */
-    public function enum($strings)
+    public function enum($strings, $defaultLanguage=null)
     {
         $this->enums = $strings;
+        $this->enumsDefaultLanguage = $defaultLanguage;
         return $this;
     }
 
@@ -180,14 +186,28 @@ class AttrExt_Validate_String extends AttrExt_Validate
         return $this->maxChars;
     }
 
-    public function getEnumString($value)
+    public function getEnumString($value, $language=null)
     {
         if($this->enums !== null){
+            if($language == null)
+                $language = $this->enumsDefaultLanguage;
             foreach ($this->enums as $enumKey => $enumValue){
                 if(is_string($enumKey)){
                     if($value == $enumKey){
                         if(is_array($enumValue)){
-                            return $enumValue[0];
+                            /** @var array $enumValueArray */
+                            $enumValueArray = $enumValue;
+                            if(empty($enumValueArray)){
+                                return $enumKey;
+                            }
+                            if($language !== null){
+                                return $enumValueArray[$language];
+                            }else{
+                                foreach($enumValueArray as $firstValue){
+                                    return $firstValue;
+                                }
+                            }
+                            return $enumKey;
                         }else{
                             return $enumValue;
                         }

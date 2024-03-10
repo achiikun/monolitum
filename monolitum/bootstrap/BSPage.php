@@ -24,6 +24,32 @@ class BSPage extends HTMLPage{
         JSScript::addLocal(Path::ofRelativeToClass(BSPage::class,"js","bootstrap.js"));
 
     }
-    
-    
+
+    public function includeBootstrapSelect2IfNot()
+    {
+        $this->includeJQueryIfNot();
+        if(!$this->getConstant("bootstrap-select2-js-css")){
+            CSSLink::addLocal(Path::ofRelativeToClass(BS::class,"css", "select2.min.css"));
+            CSSLink::addLocal(Path::ofRelativeToClass(BS::class,"css", "select2-bootstrap-5-theme.min.css"));
+            JSScript::addLocal(Path::ofRelativeToClass(BS::class,"js", "select2.full.min.js"));
+            $this->setConstant("bootstrap-select2-js-css");
+        }
+    }
+
+    public function includeJQueryIfNot()
+    {
+        if(!$this->getConstant("jquery-js")){
+            JSScript::addLocal(Path::ofRelativeToClass(BS::class,"js", "jquery-3.7.1.min.js"));
+            $this->setConstant("jquery-js");
+        }
+    }
+
+    public function includePopperIfNot()
+    {
+        if(!$this->getConstant("popper-js")){
+            JSScript::addLocal(Path::ofRelativeToClass(BS::class,"js", "popper.min.js"));
+            $this->setConstant("popper-js");
+        }
+    }
+
 }

@@ -46,7 +46,8 @@ class Component extends Renderable_Node implements Active{
 
     protected function receiveActive($active)
     {
-        if($active instanceof Renderable_Node && !($active instanceof Router_Panic) || $active instanceof HtmlElement){
+        if(Renderable_Node::isAppendableRenderableNode($active)
+            || $active instanceof HtmlElement){
             $this->append($active);
             return true;
         }

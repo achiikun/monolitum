@@ -2,7 +2,9 @@
 
 namespace monolitum\core;
 
+use monolitum\backend\router\Router_Panic;
 use monolitum\core\panic\DevPanic;
+use monolitum\frontend\component\Head;
 use monolitum\frontend\Rendered;
 
 abstract class Renderable_Node extends Node implements Active {
@@ -15,6 +17,13 @@ abstract class Renderable_Node extends Node implements Active {
     public function __construct($builder = null)
     {
         parent::__construct($builder);
+    }
+
+    public static function isAppendableRenderableNode(Active $active)
+    {
+        return $active instanceof Renderable_Node
+            && !($active instanceof Head)
+            && !($active instanceof Router_Panic);
     }
 
     /**
@@ -66,7 +75,7 @@ abstract class Renderable_Node extends Node implements Active {
 
     protected function receiveActive($active)
     {
-        if($active instanceof Renderable_Node && !($active instanceof PanicRouter)){
+        if(Renderable_Node::isAppendableRenderableNode($active)){
             $this->append($active);
             return true;
         }

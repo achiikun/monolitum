@@ -36,11 +36,29 @@ Code of Moment.php is is copied into this repository. License (MIT) is in this r
 
 https://github.com/fightbulc/moment.php
 
+### JQuery
+
+Code of JQuery is used. Licence (MIT) is in this repo:
+
+https://github.com/jquery/jquery
+
 ### Bootstrap
 
 Code of Twitter Bootstrap is used. Licence (MIT) is in this repo:
 
 https://github.com/twbs/bootstrap
+
+### Select2
+
+Code of Select2 is used. Licence (MIT) is in this repo:
+
+https://github.com/select2/select2
+
+### Bootstrap Select2 Theme
+
+Code of Bootstrap Select2 Theme is used. Licence (MIT) is in this repo:
+
+https://github.com/apalfrey/select2-bootstrap-5-theme
 
 ### FontAwesome
 

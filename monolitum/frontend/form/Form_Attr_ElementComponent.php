@@ -38,6 +38,11 @@ abstract class Form_Attr_ElementComponent extends ElementComponent implements I_
     protected $label;
 
     /**
+     * @var mixed
+     */
+    protected $language;
+
+    /**
      * @var string
      */
     private $placeholder;
@@ -146,6 +151,14 @@ abstract class Form_Attr_ElementComponent extends ElementComponent implements I_
     public function label($label)
     {
         $this->label = $label;
+    }
+
+    /**
+     * @param mixed $language
+     */
+    public function language($language)
+    {
+        $this->language = $language;
     }
 
     /**

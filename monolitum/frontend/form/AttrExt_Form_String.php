@@ -18,6 +18,11 @@ class AttrExt_Form_String extends AttrExt_Form
     private $html;
 
     /**
+     * @var bool
+     */
+    private $searchable = false;
+
+    /**
      * @return $this
      */
     public function password() {
@@ -36,6 +41,16 @@ class AttrExt_Form_String extends AttrExt_Form
     }
 
     /**
+     * @param bool $searchable
+     * @return $this
+     */
+    public function searchable($searchable=true)
+    {
+        $this->searchable = $searchable;
+        return $this;
+    }
+
+    /**
      * @return bool
      */
     public function isPassword()
@@ -49,6 +64,14 @@ class AttrExt_Form_String extends AttrExt_Form
     public function isHtml()
     {
         return $this->html;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSearchable()
+    {
+        return $this->searchable;
     }
 
     static function of(){
