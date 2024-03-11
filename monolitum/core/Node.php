@@ -45,9 +45,14 @@ abstract class Node implements Passive {
     private $panicked = false;
 
     /**
-     * @var array<class-string, Passive>
+     * @var array<class-string, Passive|Active>
      */
-    private $passiveCacheByClassName = [];
+    private $passiveActiveCacheByClassName = [];
+
+    /**
+     * @var array<class-string, Active>
+     */
+    private $interceptedActives = [];
 
     public $experimental_letBuildChildsAfterBuild = false;
 
@@ -83,6 +88,7 @@ abstract class Node implements Passive {
     }
 
     /**
+     * Pushes upstream
      * @param Active $actives
      * @return $this
      */
@@ -90,6 +96,18 @@ abstract class Node implements Passive {
         foreach ($actives as $active) {
             $this->_receive($active, 0);
         }
+        return $this;
+    }
+
+    /**
+     * Make this node to intercept a given class and return a harcoded value.
+     * @param class-string $activeClass
+     * @param Active $active
+     * @return $this
+     */
+    public function intercept($activeClass, $active)
+    {
+        $this->interceptedActives[$activeClass] = $active;
         return $this;
     }
     
@@ -101,17 +119,28 @@ abstract class Node implements Passive {
             if($this instanceof $active->class){
                 $active->respond($this->ctx, $this);
                 return; // not cache
+
             }else{
-                // find in cache
+
                 if(
-                    isset($this->passiveCacheByClassName[$active->class])
-                    || array_key_exists($active->class, $this->passiveCacheByClassName)
+                    isset($this->interceptedActives[$active->class])
+                    || array_key_exists($active->class, $this->interceptedActives)
                 ){
-                    $active->respond($this->ctx, $this->passiveCacheByClassName[$active->class]);
+                    // find in intercepted
+                    $active->respond($this->ctx, $this->interceptedActives[$active->class]);
+                    return; // not cache
+
+                }else if(
+                    isset($this->passiveActiveCacheByClassName[$active->class])
+                    || array_key_exists($active->class, $this->passiveActiveCacheByClassName)
+                ){
+                    // find in cache
+                    $active->respond($this->ctx, $this->passiveActiveCacheByClassName[$active->class]);
                     return; // not (re)cache
+
                 }
             }
-        }else if($active instanceof Router_Panic){
+        }else if($active instanceof Router_Panic) {
             $this->setPanicRouter($active);
             $processed = true;
         }else{
@@ -128,7 +157,7 @@ abstract class Node implements Passive {
             if($currentDepth === 0 && $active instanceof Find && $active->wantsToCache()) {
                 $response = $active->getResponded();
                 if($response != null){
-                    $this->passiveCacheByClassName[$active->class] = $response;
+                    $this->passiveActiveCacheByClassName[$active->class] = $response;
                 }
             }
         }

@@ -40,7 +40,7 @@ class Find implements Active
 
     /**
      * @param Context $context
-     * @param Passive $router
+     * @param Active|Passive $router
      * @return void
      */
     public function respond($context, $router)
@@ -66,7 +66,7 @@ class Find implements Active
     /**
      * @param class-string $class
      * @param bool $cache
-     * @return Passive|null
+     * @return Active|Passive|null
      */
     static function sync($class, $cache=true, $dontThrowIfNotReceived=false){
         $var = new Ref();
@@ -83,7 +83,7 @@ class Find implements Active
      * @param class-string $class
      * @param Passive $passive
      * @param bool $cache
-     * @return Passive|null
+     * @return Active|Passive|null
      */
     static function syncFrom($class, $passive, $cache=true, $dontThrowIfNotReceived=false){
         $var = new Ref();
