@@ -4,6 +4,7 @@ namespace monolitum\quilleditor;
 
 use monolitum\bootstrap\FormLabel;
 use monolitum\core\GlobalContext;
+use monolitum\core\tsrt\TStr;
 use monolitum\frontend\component\Div;
 use monolitum\frontend\form\Form_Attr_Component;
 use monolitum\frontend\form\FormControl_Hidden;
@@ -49,7 +50,7 @@ class Form_Attr_QuillEditor extends Form_Attr_Component
 
                 $it->append(new FormLabel(function(FormLabel $it){
                     $it->setName($this->getFullFieldName());
-                    $it->setContent($this->getLabel());
+                    $it->setContent(TStr::unwrap($this->getLabel()));
                 }, "form-label"));
 
                 $it->append(new QuillEditor(function (QuillEditor $it) {
@@ -59,7 +60,7 @@ class Form_Attr_QuillEditor extends Form_Attr_Component
                         $it->setValue($this->getValue());
 
                     if($this->getPlaceholder() != null)
-                        $it->setPlaceholder($this->getPlaceholder());
+                        $it->setPlaceholder(TStr::unwrap($this->getPlaceholder()));
 
                     if($this->disabled !== null ? $this->disabled : $this->getForm()->isDisabled())
                         $it->setDisabled();

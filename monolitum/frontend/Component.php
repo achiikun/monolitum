@@ -8,6 +8,8 @@ use monolitum\core\GlobalContext;
 use monolitum\core\panic\DevPanic;
 use monolitum\core\Renderable;
 use monolitum\core\Renderable_Node;
+use monolitum\core\tsrt\TStr;
+use monolitum\core\tsrt\TStrLang;
 use monolitum\frontend\html\HtmlElement;
 use monolitum\frontend\html\HtmlElementContent;
 
@@ -28,7 +30,7 @@ class Component extends Renderable_Node implements Active{
     }
 
     /**
-     * @param Renderable_Node|Renderable|HtmlElement|HtmlElementContent|string $active
+     * @param Renderable_Node|Renderable|HtmlElement|HtmlElementContent|string|TStr $active
      * @param int|null $idx
      * @return $this
      */
@@ -36,8 +38,8 @@ class Component extends Renderable_Node implements Active{
     {
         if ($active instanceof Renderable_Node) {
             parent::append($active);
-        }else if(is_string($active)){
-            parent::append(new HtmlElementContent($active), $idx);
+        }else if(is_string($active) || $active instanceof TStr){
+            parent::append(new HtmlElementContent(TStr::unwrap($active, TStrLang::findWithOverwritten())), $idx);
         }else{
             parent::append($active, $idx);
         }

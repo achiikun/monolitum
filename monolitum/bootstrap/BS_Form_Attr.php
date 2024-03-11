@@ -3,8 +3,10 @@
 namespace monolitum\bootstrap;
 
 use monolitum\bootstrap\style\BSColSpanResponsive;
+use monolitum\core\Find;
 use monolitum\core\GlobalContext;
-use monolitum\entity\attr\Attr;
+use monolitum\core\tsrt\TStr;
+use monolitum\core\tsrt\TStrLang;
 use monolitum\entity\attr\Attr_Bool;
 use monolitum\entity\attr\Attr_Date;
 use monolitum\entity\attr\Attr_Decimal;
@@ -212,6 +214,8 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
 
         $formControl = null;
 
+        $language = TStrLang::findWithOverwritten($this->language); // TODO Active get language
+
         if($attr instanceof Attr_Bool){
 
             $formControl = new FormControl_CheckBox(function(FormControl_CheckBox $it){
@@ -232,7 +236,7 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
 
             if($validateExt instanceof AttrExt_Validate_String && $validateExt->hasEnum()){
 
-                $formControl = new FormControl_Select(function (FormControl_Select $it) use ($formExt, $validateExt) {
+                $formControl = new FormControl_Select(function (FormControl_Select $it) use ($isValid, $language, $formExt, $validateExt) {
                     $it->setId($this->getFullFieldName());
                     $it->setName($this->getFullFieldName());
 
@@ -242,7 +246,10 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
                     $it->setValue($selected);
 
                     if($this->disabled !== null ? $this->disabled : $this->form->isDisabled())
-                        $it->setDisabled(true);
+                        $it->setDisabled();
+
+                    if($isValid !== null)
+                        $it->addClass($isValid ? "is-valid" : "is-invalid");
 
                     if($this->hidden === true)
                         $it->convertToHidden();
@@ -251,17 +258,17 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
 
                     $nullLabel = null;
                     if($formExt instanceof AttrExt_Form_String){
-                        $nullLabel = $formExt->getNullLabel($this->language);
+                        $nullLabel = $formExt->getNullLabel();
 
                         $it->setSearchable($formExt->isSearchable());
                     }
 
                     if($validateExt->isNullable()){
 
-                        FormControl_Select_Option::add(function (FormControl_Select_Option $it) use ($selected, $nullLabel) {
+                        FormControl_Select_Option::add(function (FormControl_Select_Option $it) use ($language, $selected, $nullLabel) {
 
                             if($nullLabel !== null){
-                                $it->setContent($nullLabel);
+                                $it->setContent(TStr::unwrap($nullLabel, $language));
                             }else{
                                 $it->setContent("");
                             }
@@ -275,7 +282,7 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
 
                     }else{
 
-                        $it->setAttribute("data-placeholder", $nullLabel);
+                        $it->setAttribute("data-placeholder", TStr::unwrap($nullLabel, $language));
 
                         FormControl_Select_Option::add(function (FormControl_Select_Option $it) use ($selected) {
                             $it->setContent("");
@@ -285,31 +292,17 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
 
                     foreach ($validateExt->getEnums() as $itemKey => $itemValue) {
 
-                        // TODO include this: https://github.com/snapappointments/bootstrap-select
-
-                        FormControl_Select_Option::add(function (FormControl_Select_Option $it) use ($validateExt, $selected, $itemKey, $itemValue) {
+                        FormControl_Select_Option::add(function (FormControl_Select_Option $it) use ($language, $validateExt, $selected, $itemKey, $itemValue) {
 
                             $item = null;
                             if(is_string($itemKey)){
                                 $item = $itemKey;
-//                                if(is_array($itemValue)){
-//                                    foreach($itemValue as $firstValue){
-//                                        // TODO select "language"
-//                                        $it->setContent($firstValue);
-//                                        break;
-//                                    }
-//                                }else{
-//                                    $it->setContent($itemValue);
-//                                }
                             }else if(is_array($itemValue)){
-//                                $it->setContent($itemValue[1]);
                                 $item = $itemValue[0];
-                            }else{
-//                                $it->setContent($itemValue);
                             }
 
                             $it->setValue($item);
-                            $it->setContent($validateExt->getEnumString($item, $this->language));
+                            $it->setContent(TStr::unwrap($validateExt->getEnumString($item), $language));
 
                             if($item == $selected)
                                 $it->setSelected();

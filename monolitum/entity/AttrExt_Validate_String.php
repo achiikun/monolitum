@@ -3,7 +3,7 @@ namespace monolitum\entity;
 
 use http\Params;
 use monolitum\core\panic\DevPanic;
-use monolitum\frontend\form\AttrExt_Form_String;
+use monolitum\core\tsrt\TStr;
 
 class AttrExt_Validate_String extends AttrExt_Validate
 {
@@ -14,14 +14,9 @@ class AttrExt_Validate_String extends AttrExt_Validate
     private $regex;
 
     /**
-     * @var string[]
+     * @var string[]|TStr[]
      */
     private $enums;
-
-    /**
-     * @var mixed
-     */
-    private $enumsDefaultLanguage = null;
 
     /**
      * @var int
@@ -32,6 +27,16 @@ class AttrExt_Validate_String extends AttrExt_Validate
      * @var int|null
      */
     private $maxChars = null;
+
+    /**
+     * @var \Closure
+     */
+    private $validatorFunction = null;
+
+    /**
+     * @var \Closure
+     */
+    private $postprocessorFunction = null;
 
     /**
      * @var bool
@@ -68,13 +73,12 @@ class AttrExt_Validate_String extends AttrExt_Validate
     }
 
     /**
-     * @param array<string>|array<array<string>> $strings
+     * @param string[]|TStr[] $strings
      * @return $this
      */
-    public function enum($strings, $defaultLanguage=null)
+    public function enum($strings)
     {
         $this->enums = $strings;
-        $this->enumsDefaultLanguage = $defaultLanguage;
         return $this;
     }
 
@@ -84,6 +88,26 @@ class AttrExt_Validate_String extends AttrExt_Validate
      */
     public function filter_validate($filter_validate){
         $this->filter_validate = $filter_validate;
+        return $this;
+    }
+
+    /**
+     * @param \Closure $validatorFunction
+     * @return $this
+     */
+    public function func_validator(\Closure $validatorFunction)
+    {
+        $this->validatorFunction = $validatorFunction;
+        return $this;
+    }
+
+    /**
+     * @param \Closure $validatorFunction
+     * @return $this
+     */
+    public function func_postprocessor(\Closure $postprocessorFunction)
+    {
+        $this->postprocessorFunction = $postprocessorFunction;
         return $this;
     }
 
@@ -137,16 +161,22 @@ class AttrExt_Validate_String extends AttrExt_Validate
                     $error = true;
                 }
             }
-            if($this->maxChars !== null){
+            if(!$error && $this->maxChars !== null){
                 if(strlen($validatedValue->getValue()) > $this->maxChars)
                     $error = true;
             }
-            if($this->regex !== null){
+            if(!$error && $this->regex !== null){
                 if(!preg_match($this->regex, $validatedValue->getValue()))
                     $error = true;
             }
-            if($this->filter_validate !== null){
+            if(!$error && $this->filter_validate !== null){
                 if(!filter_var($validatedValue->getValue(), $this->filter_validate))
+                    $error = true;
+            }
+            if(!$error && $this->validatorFunction !== null){
+                $vf = $this->validatorFunction;
+                $result = $vf($validatedValue->getValue());
+                if(!$result)
                     $error = true;
             }
         }
@@ -154,6 +184,13 @@ class AttrExt_Validate_String extends AttrExt_Validate
         if($error){
             return new ValidatedValue(false, true, $validatedValue->getValue());
         }else{
+
+            if($this->postprocessorFunction !== null){
+                $vf = $this->postprocessorFunction;
+                $result = $vf($validatedValue->getValue());
+                return new ValidatedValue($validatedValue->isValid(), $validatedValue->isWellFormat(), $result, $validatedValue->getError());
+            }
+
             return $validatedValue;
         }
     }
@@ -186,31 +223,17 @@ class AttrExt_Validate_String extends AttrExt_Validate
         return $this->maxChars;
     }
 
-    public function getEnumString($value, $language=null)
+    /**
+     * @param $value
+     * @return TStr|string|null
+     */
+    public function getEnumString($value)
     {
         if($this->enums !== null){
-            if($language == null)
-                $language = $this->enumsDefaultLanguage;
             foreach ($this->enums as $enumKey => $enumValue){
                 if(is_string($enumKey)){
                     if($value == $enumKey){
-                        if(is_array($enumValue)){
-                            /** @var array $enumValueArray */
-                            $enumValueArray = $enumValue;
-                            if(empty($enumValueArray)){
-                                return $enumKey;
-                            }
-                            if($language !== null){
-                                return $enumValueArray[$language];
-                            }else{
-                                foreach($enumValueArray as $firstValue){
-                                    return $firstValue;
-                                }
-                            }
-                            return $enumKey;
-                        }else{
-                            return $enumValue;
-                        }
+                        return $enumValue;
                     }
                 }else if(is_string($enumValue)){
                     if($value == $enumValue){

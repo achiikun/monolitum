@@ -4,6 +4,8 @@ namespace monolitum\frontend;
 use monolitum\core\Node;
 use monolitum\core\Renderable;
 use monolitum\core\Renderable_Node;
+use monolitum\core\tsrt\TStr;
+use monolitum\core\tsrt\TStrLang;
 use monolitum\frontend\css\Style;
 use monolitum\frontend\html\HtmlElement;
 
@@ -109,11 +111,11 @@ class ElementComponent extends Component
     }
 
     /**
-     * @param string $content
+     * @param string|TStr $content
      * @return $this
      */
     public function setContent($content){
-        $this->element->setContent($content);
+        $this->element->setContent(TStr::unwrap($content, TStrLang::findWithOverwritten()));
         return $this;
     }
 
