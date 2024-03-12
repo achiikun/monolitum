@@ -4,6 +4,7 @@ namespace monolitum\frontend\form;
 
 use monolitum\core\Find;
 use monolitum\core\panic\DevPanic;
+use monolitum\core\ts\TS;
 use monolitum\entity\attr\Attr;
 use monolitum\entity\AttrExt_Validate;
 use monolitum\frontend\ElementComponent;
@@ -33,7 +34,7 @@ abstract class Form_Attr_ElementComponent extends ElementComponent implements I_
     protected $validateExt;
 
     /**
-     * @var string
+     * @var string|TS
      */
     protected $label;
 
@@ -43,7 +44,7 @@ abstract class Form_Attr_ElementComponent extends ElementComponent implements I_
     protected $language;
 
     /**
-     * @var string
+     * @var string|TS
      */
     private $placeholder;
 
@@ -146,7 +147,7 @@ abstract class Form_Attr_ElementComponent extends ElementComponent implements I_
     }
 
     /**
-     * @param string $label
+     * @param string|TS $label
      */
     public function label($label)
     {
@@ -162,7 +163,7 @@ abstract class Form_Attr_ElementComponent extends ElementComponent implements I_
     }
 
     /**
-     * @param string $placeholder
+     * @param string|TS $placeholder
      */
     public function placeholder($placeholder)
     {
@@ -178,7 +179,7 @@ abstract class Form_Attr_ElementComponent extends ElementComponent implements I_
     }
 
     /**
-     * @return string
+     * @return string|TS
      */
     protected function getLabel()
     {
@@ -191,7 +192,7 @@ abstract class Form_Attr_ElementComponent extends ElementComponent implements I_
     }
 
     /**
-     * @return string
+     * @return string|TS
      */
     public function getPlaceholder()
     {

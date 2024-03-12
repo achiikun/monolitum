@@ -67,12 +67,14 @@ class A extends AbstractText
 
     /**
      * @param string|Renderable_Node $content
+     * @param Link|Path|string $href
      * @return A
      */
-    public static function of($content)
+    public static function fromContent($content, $href)
     {
         $fc = new A();
         $fc->append($content);
+        $fc->setHref($href);
         return $fc;
     }
 
@@ -80,7 +82,7 @@ class A extends AbstractText
      * @param callable $builder
      * @return A
      */
-    public static function build($builder = null)
+    public static function of($builder = null)
     {
         return new A($builder);
     }

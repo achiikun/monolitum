@@ -18,6 +18,15 @@ class Div extends ElementComponent
      * @param callable $builder
      * @return Div
      */
+    public static function of($builder = null)
+    {
+        return new Div($builder);
+    }
+
+    /**
+     * @param callable $builder
+     * @return Div
+     */
     public static function add($builder = null)
     {
         $fc = new Div($builder);

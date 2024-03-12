@@ -15,18 +15,24 @@ class P extends AbstractText
     }
 
     /**
-     * @param string|Renderable_Node|callable $content
+     * @param string|Renderable_Node $content
      * @return P
      */
-    public static function of($content)
+    public static function from($content)
     {
-        if(is_callable($content)){
-            $fc = new P($content);
-        } else{
-            $fc = new P();
-            $fc->append($content);
-        }
+        $fc = new P();
+        $fc->append($content);
         return $fc;
+
+    }
+
+    /**
+     * @param callable $builder
+     * @return P
+     */
+    public static function of($builder = null)
+    {
+        return new P($builder);
     }
 
     /**

@@ -4,6 +4,7 @@ namespace monolitum\frontend\component;
 
 use monolitum\core\GlobalContext;
 use monolitum\core\Renderable_Node;
+use monolitum\core\ts\TS;
 use monolitum\frontend\html\HtmlElement;
 
 class H extends AbstractText
@@ -16,10 +17,10 @@ class H extends AbstractText
 
     /**
      * @param int $level
-     * @param string|Renderable_Node $content
+     * @param string|TS|Renderable_Node $content
      * @return H
      */
-    public static function of($level, $content)
+    public static function from($level, $content)
     {
         $fc = new H($level);
         $fc->append($content);
@@ -30,7 +31,7 @@ class H extends AbstractText
      * @param callable $builder
      * @return H
      */
-    public static function build($level, $builder = null)
+    public static function of($level, $builder = null)
     {
         return new H($level, $builder);
     }

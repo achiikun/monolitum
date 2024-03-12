@@ -2,6 +2,7 @@
 
 namespace monolitum\frontend\component;
 
+use monolitum\core\ts\TS;
 use monolitum\frontend\ElementComponent;
 use monolitum\frontend\html\HtmlElementContent;
 
@@ -14,11 +15,11 @@ abstract class AbstractText extends ElementComponent
     }
 
     /**
-     * @param string $text
+     * @param string|TS $text
      */
     public function appendText($text)
     {
-        $this->append(new HtmlElementContent($text));
+        $this->append(new HtmlElementContent(TS::unwrap($text)));
     }
 
 }

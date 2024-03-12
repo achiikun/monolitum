@@ -1,6 +1,7 @@
 <?php
 namespace monolitum\bootstrap;
 
+use monolitum\bootstrap\values\BSColor;
 use monolitum\core\GlobalContext;
 use monolitum\frontend\form\Form_Submit;
 use monolitum\frontend\html\HtmlElement;
@@ -8,18 +9,35 @@ use monolitum\frontend\html\HtmlElement;
 class BS_Form_Submit extends Form_Submit
 {
 
+    private $colorSet = false;
+
     public function __construct(callable $builder)
     {
         parent::__construct(new HtmlElement("button"), $builder);
         $this->getElement()->setAttribute("type", "submit");
+        $this->getElement()->addClass("btn");
         $this->getElement()->setRequireEndTag(true);
+    }
+
+    /**
+     * @param BSColor $color
+     * @return $this
+     */
+    public function color($color, $outline = false){
+        $this->colorSet = true;
+        if($outline)
+            $this->addClass("btn-outline-" . $color->getValue());
+        else
+            $this->addClass("btn-" . $color->getValue());
+        return $this;
     }
 
     protected function buildNode()
     {
         parent::buildNode();
         $this->addClass("btn");
-        $this->addClass("btn-primary");
+        if(!$this->colorSet)
+            $this->addClass("btn-primary");
     }
 
     protected function afterBuildNode()

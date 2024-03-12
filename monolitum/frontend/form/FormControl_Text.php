@@ -2,6 +2,7 @@
 namespace monolitum\frontend\form;
 
 use monolitum\core\GlobalContext;
+use monolitum\core\ts\TS;
 use monolitum\frontend\html\HtmlElement;
 
 class FormControl_Text extends FormControl
@@ -17,12 +18,12 @@ class FormControl_Text extends FormControl
     }
 
     /**
-     * @param string $placeholder
+     * @param string|TS $placeholder
      * @return void
      */
     public function setPlaceholder($placeholder){
         $element = $this->getElement();
-        $element->setAttribute("placeholder", $placeholder);
+        $element->setAttribute("placeholder", TS::unwrap($placeholder));
     }
 
     /**
