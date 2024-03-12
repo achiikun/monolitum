@@ -31,6 +31,7 @@ class BSPage extends HTMLPage{
         if(!$this->getConstant("bootstrap-select2-js-css")){
             CSSLink::addLocal(Path::ofRelativeToClass(BS::class,"css", "select2.min.css"));
             CSSLink::addLocal(Path::ofRelativeToClass(BS::class,"css", "select2-bootstrap-5-theme.min.css"));
+            CSSLink::addLocal(Path::ofRelativeToClass(BS::class,"css", "select2-bootstrap-fixes.css"));
             JSScript::addLocal(Path::ofRelativeToClass(BS::class,"js", "select2.full.min.js"));
             $this->setConstant("bootstrap-select2-js-css");
         }
