@@ -4,7 +4,7 @@ namespace monolitum\frontend\form;
 
 use monolitum\core\Find;
 use monolitum\core\panic\DevPanic;
-use monolitum\core\tsrt\TStr;
+use monolitum\core\ts\TS;
 use monolitum\entity\attr\Attr;
 use monolitum\entity\AttrExt_Validate;
 use monolitum\frontend\Component;
@@ -41,7 +41,7 @@ abstract class Form_Attr_Component extends Component implements I_Form_Attr
     protected $label;
 
     /**
-     * @var string|TStr
+     * @var string|TS
      */
     private $placeholder;
 
@@ -61,7 +61,7 @@ abstract class Form_Attr_Component extends Component implements I_Form_Attr
     private $userSetInvalid = false;
 
     /**
-     * @var string|TStr|ElementComponent}
+     * @var string|TS|ElementComponent}
      */
     protected $invalidText;
 
@@ -134,7 +134,7 @@ abstract class Form_Attr_Component extends Component implements I_Form_Attr
     }
 
     /**
-     * @param string|TStr|ElementComponent $string
+     * @param string|TS|ElementComponent $string
      * @return $this
      */
     public function setInvalid($string=null)
@@ -145,7 +145,7 @@ abstract class Form_Attr_Component extends Component implements I_Form_Attr
     }
 
     /**
-     * @param string|TStr $label
+     * @param string|TS $label
      */
     public function label($label)
     {
@@ -153,7 +153,7 @@ abstract class Form_Attr_Component extends Component implements I_Form_Attr
     }
 
     /**
-     * @param string|TStr $placeholder
+     * @param string|TS $placeholder
      */
     public function placeholder($placeholder)
     {
@@ -169,7 +169,7 @@ abstract class Form_Attr_Component extends Component implements I_Form_Attr
     }
 
     /**
-     * @return string|TStr
+     * @return string|TS
      */
     protected function getLabel()
     {

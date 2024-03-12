@@ -1,12 +1,11 @@
 <?php
 
-namespace monolitum\core\tsrt;
+namespace monolitum\core\ts;
 
 use monolitum\core\Active;
 use monolitum\core\Find;
-use monolitum\core\Passive;
 
-class TStrLang implements Active
+class TSLang implements Active
 {
     public $lang;
 
@@ -23,8 +22,8 @@ class TStrLang implements Active
         if($overwritten !== null){
             return $overwritten;
         }else{
-            /** @var TStrLang $tstrlang */
-            $tstrlang = Find::sync(TStrLang::class, true, true);
+            /** @var TSLang $tstrlang */
+            $tstrlang = Find::sync(TSLang::class, true, true);
             if($tstrlang !== null){
                 return $tstrlang->lang;
             }else{
@@ -35,11 +34,11 @@ class TStrLang implements Active
 
     /**
      * @param string $lang
-     * @return TStrLang
+     * @return TSLang
      */
     public static function of($lang)
     {
-        return new TStrLang($lang);
+        return new TSLang($lang);
     }
 
     function onNotReceived()

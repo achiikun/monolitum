@@ -1,19 +1,19 @@
 <?php
 namespace monolitum\frontend\form;
 
-use monolitum\core\tsrt\TStr;
+use monolitum\core\ts\TS;
 use monolitum\entity\AttrExt;
 
 class AttrExt_Form extends AttrExt
 {
 
     /**
-     * @var string|TStr
+     * @var string|TS
      */
     private $label;
 
     /**
-     * @var string|TStr|null
+     * @var string|TS|null
      */
     private $nullLabel;
 
@@ -22,7 +22,7 @@ class AttrExt_Form extends AttrExt
     private $substituteNotValid = false;
 
     /**
-     * @param string|TStr $label
+     * @param string|TS $label
      * @return $this
      */
     function label($label) {
@@ -53,7 +53,7 @@ class AttrExt_Form extends AttrExt
     }
 
     /**
-     * @return string|TStr
+     * @return string|TS
      */
     public function getLabel()
     {
@@ -61,7 +61,7 @@ class AttrExt_Form extends AttrExt
     }
 
     /**
-     * @return string|TStr|null
+     * @return string|TS|null
      */
     public function getNullLabel()
     {

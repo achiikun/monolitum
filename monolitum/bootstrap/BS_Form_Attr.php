@@ -3,10 +3,9 @@
 namespace monolitum\bootstrap;
 
 use monolitum\bootstrap\style\BSColSpanResponsive;
-use monolitum\core\Find;
 use monolitum\core\GlobalContext;
-use monolitum\core\tsrt\TStr;
-use monolitum\core\tsrt\TStrLang;
+use monolitum\core\ts\TS;
+use monolitum\core\ts\TSLang;
 use monolitum\entity\attr\Attr_Bool;
 use monolitum\entity\attr\Attr_Date;
 use monolitum\entity\attr\Attr_Decimal;
@@ -214,7 +213,7 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
 
         $formControl = null;
 
-        $language = TStrLang::findWithOverwritten($this->language); // TODO Active get language
+        $language = TSLang::findWithOverwritten($this->language); // TODO Active get language
 
         if($attr instanceof Attr_Bool){
 
@@ -268,7 +267,7 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
                         FormControl_Select_Option::add(function (FormControl_Select_Option $it) use ($language, $selected, $nullLabel) {
 
                             if($nullLabel !== null){
-                                $it->setContent(TStr::unwrap($nullLabel, $language));
+                                $it->setContent(TS::unwrap($nullLabel, $language));
                             }else{
                                 $it->setContent("");
                             }
@@ -282,7 +281,7 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
 
                     }else{
 
-                        $it->setAttribute("data-placeholder", TStr::unwrap($nullLabel, $language));
+                        $it->setAttribute("data-placeholder", TS::unwrap($nullLabel, $language));
 
                         FormControl_Select_Option::add(function (FormControl_Select_Option $it) use ($selected) {
                             $it->setContent("");
@@ -302,7 +301,7 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
                             }
 
                             $it->setValue($item);
-                            $it->setContent(TStr::unwrap($validateExt->getEnumString($item), $language));
+                            $it->setContent(TS::unwrap($validateExt->getEnumString($item), $language));
 
                             if($item == $selected)
                                 $it->setSelected();

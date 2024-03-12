@@ -1,11 +1,11 @@
 <?php
 
-namespace monolitum\core\tsrt;
+namespace monolitum\core\ts;
 
 /**
  * Translatable string
  */
-class TStr_Default extends TStr
+class TS_Default extends TS
 {
 
     private $defaultString = null;
@@ -42,18 +42,18 @@ class TStr_Default extends TStr
 
     /**
      * @param string[] $string
-     * @return TStr_Default
+     * @return TS_Default
      */
     public static function ofStringArray($string){
-        $tstr = new TStr_Default();
+        $ts = new TS_Default();
         foreach ($string as $lang => $value){
             if($lang === null){
-                $tstr->defaultString = $string;
+                $ts->defaultString = $string;
             }else{
-                $tstr->stringsByLanguage[$lang] = $value;
+                $ts->stringsByLanguage[$lang] = $value;
             }
         }
-        return $tstr;
+        return $ts;
     }
 
 }

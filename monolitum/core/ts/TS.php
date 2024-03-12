@@ -1,11 +1,11 @@
 <?php
 
-namespace monolitum\core\tsrt;
+namespace monolitum\core\ts;
 
 /**
  * Translatable string
  */
-abstract class TStr
+abstract class TS
 {
 
     /**
@@ -17,7 +17,7 @@ abstract class TStr
     {
         if(is_string($string)){
             return $string;
-        }else if($string instanceof TStr){
+        }else if($string instanceof TS){
             return $string->getTranslation($lang);
         }else if(is_array($string)){
             if(array_key_exists($lang, $string)){
@@ -39,10 +39,10 @@ abstract class TStr
 
     /**
      * @param string[] $string
-     * @return TStr
+     * @return TS
      */
     public static function of($string){
-        return TStr_Default::ofStringArray($string);
+        return TS_Default::ofStringArray($string);
     }
 
 }

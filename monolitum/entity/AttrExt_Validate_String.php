@@ -1,9 +1,8 @@
 <?php
 namespace monolitum\entity;
 
-use http\Params;
 use monolitum\core\panic\DevPanic;
-use monolitum\core\tsrt\TStr;
+use monolitum\core\ts\TS;
 
 class AttrExt_Validate_String extends AttrExt_Validate
 {
@@ -14,7 +13,7 @@ class AttrExt_Validate_String extends AttrExt_Validate
     private $regex;
 
     /**
-     * @var string[]|TStr[]
+     * @var string[]|TS[]
      */
     private $enums;
 
@@ -73,7 +72,7 @@ class AttrExt_Validate_String extends AttrExt_Validate
     }
 
     /**
-     * @param string[]|TStr[] $strings
+     * @param string[]|TS[] $strings
      * @return $this
      */
     public function enum($strings)
@@ -225,7 +224,7 @@ class AttrExt_Validate_String extends AttrExt_Validate
 
     /**
      * @param $value
-     * @return TStr|string|null
+     * @return TS|string|null
      */
     public function getEnumString($value)
     {
