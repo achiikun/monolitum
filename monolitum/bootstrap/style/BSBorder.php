@@ -226,8 +226,9 @@ class BSBorder extends ElementComponent_Ext implements BSBuiltIntoInterface
         if($this->width !== null){
             if($this->width == 0)
                 $component->addClass("border-0");
-            else
-                $component->addClass("border-" . $this->width);
+            else{
+                $component->addClass("border", "border-" . $this->width);
+            }
         }else{
             $component->addClass("border");
         }
