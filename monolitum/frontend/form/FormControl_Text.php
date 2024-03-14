@@ -17,6 +17,11 @@ class FormControl_Text extends FormControl
         $this->getElement()->setAttribute("type", "text");
     }
 
+    public function setInputType($inputType)
+    {
+        $this->getElement()->setAttribute("type", $inputType);
+    }
+
     /**
      * @param string|TS $placeholder
      * @return void

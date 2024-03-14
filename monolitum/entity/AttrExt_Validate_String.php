@@ -13,14 +13,29 @@ class AttrExt_Validate_String extends AttrExt_Validate
     private $regex;
 
     /**
+     * @var string|TS
+     */
+    private $regexError;
+
+    /**
      * @var string[]|TS[]
      */
     private $enums;
 
     /**
+     * @var string|TS
+     */
+    private $enumsError;
+
+    /**
      * @var int
      */
-    private $filter_validate;
+    private $filterValidate;
+
+    /**
+     * @var string|TS
+     */
+    private $filterValidateError;
 
     /**
      * @var int|null
@@ -28,9 +43,19 @@ class AttrExt_Validate_String extends AttrExt_Validate
     private $maxChars = null;
 
     /**
+     * @var string|TS
+     */
+    private $maxCharsError;
+
+    /**
      * @var \Closure
      */
     private $validatorFunction = null;
+
+    /**
+     * @var string|TS
+     */
+    private $validatorFunctionError;
 
     /**
      * @var \Closure
@@ -53,55 +78,65 @@ class AttrExt_Validate_String extends AttrExt_Validate
 
     /**
      * @param int $maxChars
+     * @param string|TS $maxCharsError
      * @return $this
      */
-    public function maxChars($maxChars)
+    public function maxChars($maxChars, $maxCharsError = null)
     {
         $this->maxChars = $maxChars;
+        $this->maxCharsError = $maxCharsError;
         return $this;
     }
 
     /**
-     * @param string $string
+     * @param string $regex
+     * @param string|TS $regexError
      * @return $this
      */
-    public function regex($string)
+    public function regex($regex, $regexError = null)
     {
-        $this->regex = $string;
+        $this->regex = $regex;
+        $this->regexError = $regexError;
         return $this;
     }
 
     /**
      * @param string[]|TS[] $strings
+     * @param string|TS $enumsError
      * @return $this
      */
-    public function enum($strings)
+    public function enum($strings, $enumsError = null)
     {
         $this->enums = $strings;
+        $this->enumsError = $enumsError;
         return $this;
     }
 
     /**
-     * @param int $filter_validate
+     * @param int $filterValidate
+     * @param string|TS $filterValidateError
      * @return $this
      */
-    public function filter_validate($filter_validate){
-        $this->filter_validate = $filter_validate;
+    public function filter_validate($filterValidate, $filterValidateError = null){
+        $this->filterValidate = $filterValidate;
+        $this->filterValidateError = $filterValidateError;
         return $this;
     }
 
     /**
      * @param \Closure $validatorFunction
+     * @param string|TS $validatorFunctionError
      * @return $this
      */
-    public function func_validator(\Closure $validatorFunction)
+    public function func_validator(\Closure $validatorFunction, $validatorFunctionError = null)
     {
         $this->validatorFunction = $validatorFunction;
+        $this->validatorFunctionError = $validatorFunctionError;
         return $this;
     }
 
     /**
-     * @param \Closure $validatorFunction
+     * @param \Closure $postprocessorFunction
      * @return $this
      */
     public function func_postprocessor(\Closure $postprocessorFunction)
@@ -132,6 +167,7 @@ class AttrExt_Validate_String extends AttrExt_Validate
             return $validatedValue;
 
         $error = false;
+        $errorMessage = null;
 
         if(!$validatedValue->isNull()){
             if($this->enums !== null){
@@ -158,30 +194,39 @@ class AttrExt_Validate_String extends AttrExt_Validate
                 }
                 if(!$found){
                     $error = true;
+                    $errorMessage = $this->enumsError;
                 }
             }
             if(!$error && $this->maxChars !== null){
-                if(strlen($validatedValue->getValue()) > $this->maxChars)
+                if(strlen($validatedValue->getValue()) > $this->maxChars) {
                     $error = true;
+                    $errorMessage = $this->maxCharsError;
+                }
             }
             if(!$error && $this->regex !== null){
-                if(!preg_match($this->regex, $validatedValue->getValue()))
+                if(!preg_match($this->regex, $validatedValue->getValue())) {
                     $error = true;
+                    $errorMessage = $this->regexError;
+                }
             }
-            if(!$error && $this->filter_validate !== null){
-                if(!filter_var($validatedValue->getValue(), $this->filter_validate))
+            if(!$error && $this->filterValidate !== null){
+                if(!filter_var($validatedValue->getValue(), $this->filterValidate)) {
                     $error = true;
+                    $errorMessage = $this->filterValidateError;
+                }
             }
             if(!$error && $this->validatorFunction !== null){
                 $vf = $this->validatorFunction;
                 $result = $vf($validatedValue->getValue());
-                if(!$result)
+                if(!$result){
                     $error = true;
+                    $errorMessage = $this->validatorFunctionError;
+                }
             }
         }
 
         if($error){
-            return new ValidatedValue(false, true, $validatedValue->getValue());
+            return new ValidatedValue(false, true, $validatedValue->getValue(), $errorMessage);
         }else{
 
             if($this->postprocessorFunction !== null){

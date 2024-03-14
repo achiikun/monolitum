@@ -92,11 +92,14 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
         }else{
 
             $invalidFeedback = null;
-            if($this->isValid() === false && $this->invalidText){
-                $invalidFeedback = new Div(function (Div $it){
-                    $it->addClass("invalid-feedback");
-                    $it->append($this->invalidText);
-                });
+            if($this->isValid() === false){
+                $invalidText = TS::unwrap($this->getInvalidText(), TSLang::findWithOverwritten($this->overwrittenLanguage));
+                if($invalidText !== null){
+                    $invalidFeedback = new Div(function (Div $it) use ($invalidText) {
+                        $it->addClass("invalid-feedback");
+                        $it->append($invalidText);
+                    });
+                }
             }
 
             $formText = null;
@@ -213,7 +216,7 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
 
         $formControl = null;
 
-        $language = TSLang::findWithOverwritten($this->language); // TODO Active get language
+        $finalLanguage = TSLang::findWithOverwritten($this->overwrittenLanguage); // TODO Active get finalLanguage
 
         if($attr instanceof Attr_Bool){
 
@@ -235,7 +238,7 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
 
             if($validateExt instanceof AttrExt_Validate_String && $validateExt->hasEnum()){
 
-                $formControl = new FormControl_Select(function (FormControl_Select $it) use ($isValid, $language, $formExt, $validateExt) {
+                $formControl = new FormControl_Select(function (FormControl_Select $it) use ($isValid, $finalLanguage, $formExt, $validateExt) {
                     $it->setId($this->getFullFieldName());
                     $it->setName($this->getFullFieldName());
 
@@ -264,10 +267,10 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
 
                     if($validateExt->isNullable()){
 
-                        FormControl_Select_Option::add(function (FormControl_Select_Option $it) use ($language, $selected, $nullLabel) {
+                        FormControl_Select_Option::add(function (FormControl_Select_Option $it) use ($finalLanguage, $selected, $nullLabel) {
 
                             if($nullLabel !== null){
-                                $it->setContent(TS::unwrap($nullLabel, $language));
+                                $it->setContent(TS::unwrap($nullLabel, $finalLanguage));
                             }else{
                                 $it->setContent("");
                             }
@@ -281,7 +284,7 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
 
                     }else{
 
-                        $it->setAttribute("data-placeholder", TS::unwrap($nullLabel, $language));
+                        $it->setAttribute("data-placeholder", TS::unwrap($nullLabel, $finalLanguage));
 
                         FormControl_Select_Option::add(function (FormControl_Select_Option $it) use ($selected) {
                             $it->setContent("");
@@ -291,7 +294,7 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
 
                     foreach ($validateExt->getEnums() as $itemKey => $itemValue) {
 
-                        FormControl_Select_Option::add(function (FormControl_Select_Option $it) use ($language, $validateExt, $selected, $itemKey, $itemValue) {
+                        FormControl_Select_Option::add(function (FormControl_Select_Option $it) use ($finalLanguage, $validateExt, $selected, $itemKey, $itemValue) {
 
                             $item = null;
                             if(is_string($itemKey)){
@@ -301,7 +304,7 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
                             }
 
                             $it->setValue($item);
-                            $it->setContent(TS::unwrap($validateExt->getEnumString($item), $language));
+                            $it->setContent(TS::unwrap($validateExt->getEnumString($item), $finalLanguage));
 
                             if($item == $selected)
                                 $it->setSelected();
@@ -360,17 +363,24 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
 
             }else{
 
-                $formControl = new FormControl_Text(function(FormControl_Text $it) use ($isValid) {
+                $formControl = new FormControl_Text(function(FormControl_Text $it) use ($formExt, $finalLanguage, $isValid) {
                     $it->setId($this->getFullFieldName());
                     $it->setName($this->getFullFieldName());
                     $it->autocomplete(false);
+
+                    if($formExt instanceof AttrExt_Form_String){
+                        $inputType = $formExt->getInputType();
+                        if($inputType !== null)
+                            $it->setInputType($inputType);
+                    }
+
                     if($this->hasValue())
                         $it->setValue($this->getValue());
                     if($isValid !== null)
                         $it->addClass($isValid ? "is-valid" : "is-invalid");
 
                     if($this->getPlaceholder() != null)
-                        $it->setPlaceholder($this->getPlaceholder());
+                        $it->setPlaceholder(TS::unwrap($this->getPlaceholder(), $finalLanguage));
 
                     if($this->hidden === true)
                         $it->convertToHidden();

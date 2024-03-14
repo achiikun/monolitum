@@ -41,7 +41,7 @@ abstract class Form_Attr_ElementComponent extends ElementComponent implements I_
     /**
      * @var mixed
      */
-    protected $language;
+    protected $overwrittenLanguage;
 
     /**
      * @var string|TS
@@ -64,9 +64,9 @@ abstract class Form_Attr_ElementComponent extends ElementComponent implements I_
     private $userSetInvalid = false;
 
     /**
-     * @var string|ElementComponent
+     * @var string|TS|ElementComponent
      */
-    protected $invalidText;
+    protected $overwrittenInvalidText;
 
     /**
      * @var bool
@@ -125,13 +125,13 @@ abstract class Form_Attr_ElementComponent extends ElementComponent implements I_
     }
 
     /**
-     * @param string|ElementComponent $string
+     * @param string|TS|ElementComponent $string
      * @return $this
      */
-    public function setInvalid($string=null)
+    public function setOverrideInvalid($string=null)
     {
         $this->userSetInvalid = true;
-        $this->invalidText = $string;
+        $this->overwrittenInvalidText = $string;
         return $this;
     }
 
@@ -159,7 +159,7 @@ abstract class Form_Attr_ElementComponent extends ElementComponent implements I_
      */
     public function language($language)
     {
-        $this->language = $language;
+        $this->overwrittenLanguage = $language;
     }
 
     /**
@@ -211,6 +211,25 @@ abstract class Form_Attr_ElementComponent extends ElementComponent implements I_
         if($isValid === null)
             return null;
         return $isValid->isValid() && !$this->userSetInvalid;
+    }
+
+    /**
+     * Returns if the value that user set is invalid.
+     * @return string|TS|ElementComponent|null
+     */
+    protected function getInvalidText()
+    {
+        if($this->form->isSilentValidation())
+            return null;
+        $isValid = $this->form->getValidatedValue($this->attr);
+        if($isValid === null || ($isValid->isValid() && !$this->userSetInvalid))
+            return null;
+
+        $error = $this->overwrittenInvalidText;
+        if($error == null)
+            $error = $isValid->getError();
+
+        return $error;
     }
 
     /**

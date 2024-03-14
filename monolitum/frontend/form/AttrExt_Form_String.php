@@ -23,6 +23,11 @@ class AttrExt_Form_String extends AttrExt_Form
     private $searchable = false;
 
     /**
+     * @var string
+     */
+    private $inputType;
+
+    /**
      * @return $this
      */
     public function password() {
@@ -51,6 +56,16 @@ class AttrExt_Form_String extends AttrExt_Form
     }
 
     /**
+     * @param $string string
+     * @return $this
+     */
+    public function inputType($string)
+    {
+        $this->inputType = $string;
+        return $this;
+    }
+
+    /**
      * @return bool
      */
     public function isPassword()
@@ -74,9 +89,18 @@ class AttrExt_Form_String extends AttrExt_Form
         return $this->searchable;
     }
 
+    /**
+     * @return string
+     */
+    public function getInputType()
+    {
+        return $this->inputType;
+    }
+
     static function of(){
         return new AttrExt_Form_String();
     }
+
 
 }
 

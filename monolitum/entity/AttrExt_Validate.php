@@ -2,22 +2,30 @@
 
 namespace monolitum\entity;
 
+use monolitum\core\ts\TS;
+
 class AttrExt_Validate extends AttrExt
 {
 
     private $nullable = true;
+
+    /**
+     * @var string|TS
+     */
+    private $nullableError;
 
 //    private $isDefaultSet = false;
 //    private $def = null;
 //    private $substituteNotValid = false;
 
     /**
-     * @param bool $nonNullable
+     * @param string|TS $nullableError
      * @return $this
      */
-    public function nonNullable($nonNullable = true)
+    public function nonNullable($nullableError = null)
     {
-        $this->nullable = !$nonNullable;
+        $this->nullable = false;
+        $this->nullableError = $nullableError;
         return $this;
     }
 
@@ -46,7 +54,7 @@ class AttrExt_Validate extends AttrExt
     public function validate($validatedValue){
 
         if(!$this->isNullable() && $validatedValue->isNull())
-            return new ValidatedValue(false, true, $validatedValue->getValue());
+            return new ValidatedValue(false, true, $validatedValue->getValue(), $this->nullableError);
 
         return $validatedValue;
 
