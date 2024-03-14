@@ -246,7 +246,7 @@ class Manager_Path extends Manager
      * @param Path $path;
      * @return string|null
      */
-    private function writePath($path, $encodeUrl=true)
+    public static function writePath($path, $encodeUrl=true)
     {
         if($path == null){
             return null;
@@ -269,6 +269,27 @@ class Manager_Path extends Manager
                 return null;
             }
         }
+    }
+
+    public static function encodeParams($params)
+    {
+
+        $first = true;
+        $url = "";
+
+        foreach ($params as $key => $value){
+
+            if($first)
+                $first = false;
+            else
+                $url .= '&';
+            $url .= urlencode($key);
+            $url .= "=";
+            $url .= urlencode($value);
+        }
+
+        return $url;
+
     }
 
     /**
