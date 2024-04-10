@@ -118,21 +118,26 @@ class Manager_Crypto extends Manager
             if($algorithm === null)
                 $algorithm = self::DEFAULT_SYMMETRIC_ALG;
 
-            $iv = null;
             if($randomInitializationVector){
+
                 if(PHP_MAJOR_VERSION >= 7){
                     $iv = random_bytes(16);
                 }else{
                     // Deprecated but used before PHP7
                     $iv = mcrypt_create_iv(16, MCRYPT_DEV_URANDOM);
                 }
+
+                return pack("C", strlen($iv)) . $iv . openssl_encrypt($data, $algorithm, $key->getPassword(), OPENSSL_RAW_DATA, $iv);
+
             }else{
+
                 $iv = $key->getDefaultInitializationVector();
                 if($iv == null)
                     $iv = self::DEFAULT_SYMMETRIC_IV;
-            }
 
-            return $randomInitializationVector . openssl_encrypt($data, $algorithm, $key->getPassword(), 0, $iv);
+                return pack("C", 0) . openssl_encrypt($data, $algorithm, $key->getPassword(), OPENSSL_RAW_DATA, $iv);
+
+            }
 
         }else if(array_key_exists($keyname, $this->asymmetricKeys)){
             // Encrypt with my public key, so later I can decrypt it
@@ -158,7 +163,7 @@ class Manager_Crypto extends Manager
      * @param $randomInitializationVector
      * @return string|null
      */
-    public function decrypt($keyname, $data, $randomInitializationVector=true)
+    public function decrypt($keyname, $data)
     {
 
         if($data === null)
@@ -171,23 +176,25 @@ class Manager_Crypto extends Manager
             if($algorithm === null)
                 $algorithm = self::DEFAULT_SYMMETRIC_ALG;
 
-            $iv = null;
-            if($randomInitializationVector){
+            $lenOfIvStr = substr($data, 0, 1);
+            if($lenOfIvStr === false || $lenOfIvStr === "")
+                throw new DevPanic("IV not found in data.");
 
-                $iv = substr($data, 0, 16);
+            $lenOfIv = unpack("C", $lenOfIvStr)[1];
 
-                if($iv === false)
+            if($lenOfIv > 0){
+                $iv = substr($data, 1, $lenOfIv);
+                if($iv === false || $iv === "")
                     throw new DevPanic("IV not found in data.");
-
-                $data = substr($data, 16);
-
             }else{
                 $iv = $key->getDefaultInitializationVector();
-                if($iv == null)
+                if($iv === null)
                     $iv = self::DEFAULT_SYMMETRIC_IV;
             }
 
-            $decrypt_result =  openssl_decrypt($data, $algorithm, $key->getPassword(), 0, $iv);
+            $data = substr($data, $lenOfIv+1);
+
+            $decrypt_result =  openssl_decrypt($data, $algorithm, $key->getPassword(), OPENSSL_RAW_DATA, $iv);
 
             if($decrypt_result === false){
                 return null;
