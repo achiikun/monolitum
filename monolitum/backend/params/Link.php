@@ -32,7 +32,11 @@ class Link
      */
     public function __construct($path = null)
     {
-        $this->path = $path;
+        if($path === null){
+            $this->path = Path::ofRelative(0);
+        }else{
+            $this->path = $path;
+        }
     }
 
     /**
@@ -127,7 +131,7 @@ class Link
      * @param Path $path
      * @return Link
      */
-    public static function of($path){
+    public static function of($path = null){
         return new Link($path);
     }
 

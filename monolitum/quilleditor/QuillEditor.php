@@ -59,7 +59,7 @@ class QuillEditor extends ElementComponent
         return $this;
     }
 
-    public function setContent($content)
+    public function setContent($content, $raw=false)
     {
         $this->setValue($content);
         return $this;

@@ -6,6 +6,7 @@ use monolitum\core\ts\TS;
 use monolitum\core\ts\TSLang;
 use monolitum\frontend\css\Style;
 use monolitum\frontend\html\HtmlElement;
+use monolitum\frontend\html\HtmlElementContent;
 
 class ElementComponent extends Component
 {
@@ -112,8 +113,12 @@ class ElementComponent extends Component
      * @param string|TS $content
      * @return $this
      */
-    public function setContent($content){
-        $this->element->setContent(TS::unwrap($content, TSLang::findWithOverwritten()));
+    public function setContent($content, $raw=false){
+        if($raw){
+            $this->element->setContent(HtmlElementContent::raw(TS::unwrap($content, TSLang::findWithOverwritten())));
+        }else{
+            $this->element->setContent(TS::unwrap($content, TSLang::findWithOverwritten()));
+        }
         return $this;
     }
 
