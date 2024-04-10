@@ -26,6 +26,7 @@ Generic Nodes to work with get/post parameters, page routing and resource manage
 ### Dependencies
 - monolitum/core
 - monolitum/entity
+- **OPEN SSL (External)**
 
 
 ## : monolitum\database
