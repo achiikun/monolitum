@@ -113,7 +113,7 @@ abstract class Form_Validator
      * @param string $prefix prefix of the attribute that must be set
      * @return ValidatedValue if found, executed action string
      */
-    abstract function validateSubmissionAction($prefix);
+    abstract function validateSubmissionKey($prefix);
 
     /**
      * @param Entity $entity

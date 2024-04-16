@@ -158,7 +158,7 @@ class Form_Validator_Entity extends Form_Validator
      * @param $prefix
      * @return ValidatedValue|null
      */
-    public function validateSubmissionAction($prefix)
+    public function validateSubmissionKey($prefix)
     {
         return $this->validator->validateStringPost_NameStartingWith_ReturnEnding($prefix);
     }

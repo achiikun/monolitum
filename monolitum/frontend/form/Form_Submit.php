@@ -22,7 +22,7 @@ abstract class Form_Submit extends ElementComponent
     /**
      * @var string
      */
-    protected $action;
+    protected $submitKey;
 
     /**
      * @var Link|Path
@@ -99,7 +99,7 @@ abstract class Form_Submit extends ElementComponent
     {
 
         $prefix = $this->form->_getSubmitPrefix($this);
-        $action = $this->getAction();
+        $action = $this->getSubmitKey();
 
         return ($prefix !== null ? $prefix : "") .  ($action !== null ? $action : "");
     }
@@ -122,19 +122,19 @@ abstract class Form_Submit extends ElementComponent
     }
 
     /**
-     * @param string $action
+     * @param string $submitKey
      */
-    public function setAction($action)
+    public function setSubmitKey($submitKey)
     {
-        $this->action = $action;
+        $this->submitKey = $submitKey;
     }
 
     /**
      * @return string
      */
-    public function getAction()
+    public function getSubmitKey()
     {
-        return $this->action;
+        return $this->submitKey;
     }
 
     /**

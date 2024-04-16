@@ -672,9 +672,9 @@ class Form extends Component
             $this->rootForm->_registerNestedForm($this);
         }
 
-        $validatedValueAction = $this->getSubmissionAction();
+        $validatedValueKey = $this->getSubmissionKey();
 
-        if($validatedValueAction !== null && $validatedValueAction->isValid()) {
+        if($validatedValueKey !== null && $validatedValueKey->isValid()) {
             $this->build_isValidating = true;
         }
 
@@ -686,16 +686,16 @@ class Form extends Component
 
         if($this->isValidating() && !$this->notValidate){
 
-            $validatedValueAction = $this->getSubmissionAction();
+            $validatedValueKey = $this->getSubmissionKey();
 
             $this->validator->_validateAll();
 
-            $action = $validatedValueAction->getValue();
+            $action = $validatedValueKey->getValue();
             if(is_string($action) && !empty($action)){
 
                 // Find submit button that triggered this action
                 foreach ($this->formSubmit as $submit){
-                    $submitAction = $submit->getAction();
+                    $submitAction = $submit->getSubmitKey();
                     if($submitAction === $action){
                         // Found
                         $onValidated = $submit->getOnValidated();
@@ -829,7 +829,7 @@ class Form extends Component
 
     /**
      * Creates a Form using Manager_Params as provider and a Model as model.
-     * @param class-string|Model $model
+     * @param class-string|Model|AnonymousModel $model
      * @param callable $builder
      * @return Form
      */
@@ -910,10 +910,10 @@ class Form extends Component
     /**
      * @return ValidatedValue|null
      */
-    public function getSubmissionAction()
+    public function getSubmissionKey()
     {
         if($this->validator !== null && $this->formId !== null){
-            return $this->validator->validateSubmissionAction($this->formId . "_submit__");
+            return $this->validator->validateSubmissionKey($this->formId . "_submit__");
         }
         return null;
     }
