@@ -1,0 +1,46 @@
+version: "3.9"
+services:
+    php-apache:
+        ports:
+            - "8000:80"
+        build: './build/php'
+        volumes:
+            - ./app:/var/www/html
+
+            - ./app/apb:/var/www/html/apb
+            - ./app/apb/monolitum:/var/www/html/apb/monolitum
+
+            - ./app/balukova:/var/www/html/balukova
+            - ./app/balukova/monolitum:/var/www/html/balukova/monolitum
+
+            - ./build/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+            - ./build/php/conf.d/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
+        depends_on:
+            - db
+    db:
+        image: mariadb
+        restart: always
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_USERNAME: root
+            MYSQL_ROOT_PASSWORD: secret
+        volumes:
+            - dbData:/var/lib/mysql
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        links:
+            - db:db
+        ports:
+            - "8001:80"
+        environment:
+            MYSQL_ROOT_PASSWORD: 'root'
+            PMA_HOST: db
+            PMA_USER: 'root'
+            PMA_PASSWORD: 'secret'
+        depends_on:
+            - db
+volumes:
+  app:
+  dbData:
