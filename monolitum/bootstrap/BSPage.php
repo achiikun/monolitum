@@ -2,19 +2,23 @@
 
 namespace monolitum\bootstrap;
 
+use monolitum\backend\params\Path;
+use monolitum\bootstrap\style\BSStyle;
+use monolitum\bootstrap\values\BSSize;
 use monolitum\frontend\component\CSSLink;
 use monolitum\frontend\component\JSScript;
 use monolitum\frontend\component\Meta;
 use monolitum\frontend\HTMLPage;
-use monolitum\backend\params\Path;
 
 class BSPage extends HTMLPage{
-    
+
     public function buildPage()
     {
         parent::buildPage();
 
         Meta::add("viewport", "width=device-width, initial-scale=1.0");
+
+        $this->push(BSStyle::height(BSSize::s100()));
 
         CSSLink::addLocal(Path::ofRelativeToClass(BSPage::class,"css","bootstrap-reboot.css"));
         CSSLink::addLocal(Path::ofRelativeToClass(BSPage::class,"css","bootstrap.css"));

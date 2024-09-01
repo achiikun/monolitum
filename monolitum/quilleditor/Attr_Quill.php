@@ -58,6 +58,11 @@ class Attr_Quill extends Attr implements I_Attr_Databasable
     {
         if(is_string($value)){
 
+            $trimmedValue = trim($value);
+
+            if($trimmedValue == "")
+                return new ValidatedValue(true, true, null);
+
             if(PHP_MAJOR_VERSION >= 7){
                 try{
                     $quill = $this->tryToParseValue($value);
@@ -97,6 +102,8 @@ class Attr_Quill extends Attr implements I_Attr_Databasable
      */
     function getValueForQuery($rawValue)
     {
+        if($rawValue === null)
+            return null;
         return $rawValue->makeDelta();
     }
 

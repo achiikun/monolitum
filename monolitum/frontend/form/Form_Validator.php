@@ -28,6 +28,11 @@ abstract class Form_Validator
     /**
      * @var bool
      */
+    protected $build_isAlreadyValidated = false;
+
+    /**
+     * @var bool
+     */
     protected $validate_attrs_all = true;
 
     /**
@@ -83,6 +88,7 @@ abstract class Form_Validator
 
     function _validateAll(){
         $this->build_allValid = true;
+        $this->build_isAlreadyValidated = true;
     }
 
     /**
@@ -90,7 +96,8 @@ abstract class Form_Validator
      */
     public function isAllValid()
     {
-        $this->_validateAll();
+        if(!$this->build_isAlreadyValidated)
+            $this->_validateAll();
         return $this->build_allValid;
     }
 

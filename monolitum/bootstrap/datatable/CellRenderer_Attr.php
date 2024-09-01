@@ -4,6 +4,8 @@ namespace monolitum\bootstrap\datatable;
 
 use DateTime;
 use monolitum\core\panic\DevPanic;
+use monolitum\core\ts\TS;
+use monolitum\core\ts\TSLang;
 use monolitum\entity\attr\Attr_Bool;
 use monolitum\entity\attr\Attr_Date;
 use monolitum\entity\attr\Attr_Decimal;
@@ -66,6 +68,7 @@ class CellRenderer_Attr implements CellRenderer
 
                 }else if($extValidate !== null && $extValidate->hasEnum()){
                     $string = $extValidate->getEnumString($value);
+                    $string = TS::unwrap($string, TSLang::findWithOverwritten());
                     return Text::of($string);
                 }else{
                     return Text::of($value);

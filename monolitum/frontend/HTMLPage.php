@@ -30,9 +30,15 @@ class HTMLPage extends Component {
 //    private $body_components = [];
 
     /**
+     * @var ElementComponent
+     */
+    private $body;
+
+    /**
      * @param callable|null $builder
      */
     function __construct($builder = null){
+        $this->body = new ElementComponent(new HtmlElement('body'));
         parent::__construct($builder);
     }
 
@@ -48,7 +54,7 @@ class HTMLPage extends Component {
      * @param Renderable_Node $body_component
      */
     public function addBodyElement($body_component){
-        $this->append($body_component);
+        $this->body->push($body_component);
     }
 
     /**
@@ -69,8 +75,6 @@ class HTMLPage extends Component {
         $this->pageConstants[$key] = $value;
     }
 
-
-
     protected function receiveActive($active)
     {
         if($active instanceof Head){
@@ -81,24 +85,29 @@ class HTMLPage extends Component {
         }else if($active instanceof Renderable_Node){
             $this->addBodyElement($active);
             return true;
+        }else if($active instanceof ElementComponent_Ext){
+            $this->body->push($active);
+            return true;
         }
         return parent::receiveActive($active);
     }
-    
+
     public function buildComponent()
     {
-        
         $this->buildPage();
+
         if($this->getContext()->getPanic())
             return;
 
+        $this->buildChild($this->body);
+
     }
-    
+
     public function executeComponent()
     {
 
         $html = new HtmlElement('html');
-        
+
         $head = new HtmlElement('head');
         foreach($this->head_components as $head_component){
             if($head_component instanceof Node)
@@ -108,26 +117,28 @@ class HTMLPage extends Component {
 
         }
         $html->addChildElement($head);
-        
-        $body = new HtmlElement('body');
+
         parent::executeComponent();
 
-        Renderable_Node::renderRenderedTo(parent::render(), $body);
+        $this->executeChild($this->body);
+
+//        Renderable_Node::renderRenderedTo(parent::render(), $body);
 
 //        foreach($this->body_components as $body_component){
 //            if($body_component instanceof Node)
 //                $this->executeChild($body_component);
 //            Renderable_Node::renderRenderedTo($body_component, $body);
 //        }
-        $html->addChildElement($body);
-        
+
+        Renderable_Node::renderRenderedTo($this->body->render(), $html);
+
         $htmlBuilder = new HtmlBuilder();
         echo $htmlBuilder->render($html);
-        
+
     }
-    
+
     function buildPage(){
-        
+
     }
 
 }
