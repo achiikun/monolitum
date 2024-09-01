@@ -60,13 +60,14 @@ class Manager_Mailer extends Manager
 
             if (!array_key_exists($keyname, $this->smtps) || !$this->smtps[$keyname]->connected()) {
                 $smtp = new SMTP();
-
-                if(!$smtp->connect($mailCredentials->getHost())){
-                    throw new MailPanic();
-                }
-                if(!$smtp->authenticate($mailCredentials->getAddress(), $mailCredentials->getPassword())){
-                    throw new MailPanic();
-                }
+//
+//                if(!$smtp->connect($mailCredentials->getHost(), 587)){
+//                    throw new MailPanic($smtp->getError());
+//                }
+//                $smtp->startTLS();
+//                if(!$smtp->authenticate($mailCredentials->getAddress(), $mailCredentials->getPassword())){
+//                    throw new MailPanic($smtp->getError());
+//                }
 
                 $this->smtps[$keyname] = $smtp;
             }else{
@@ -75,10 +76,21 @@ class Manager_Mailer extends Manager
 
             $phpMailer = new PHPMailer();
             $phpMailer->setSMTPInstance($smtp);
+
             try {
+
+                // SMTP Configuration
+                $phpMailer->isSMTP();
+                $phpMailer->Host = $mailCredentials->getHost();
+                $phpMailer->SMTPAuth = true;
+                $phpMailer->Username = $mailCredentials->getAddress();
+                $phpMailer->Password = $mailCredentials->getPassword();
+                $phpMailer->SMTPSecure = 'tls';
+                $phpMailer->Port = 587;
+
                 $phpMailer->setFrom($mailCredentials->getAddress(), $mailCredentials->getName());
             } catch (Exception $e) {
-                throw new MailPanic();
+                throw new MailPanic($smtp->getError());
             }
 
             return $phpMailer;
