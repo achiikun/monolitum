@@ -127,9 +127,45 @@ class QuillEditor extends ElementComponent
                 )
                 ->addChildElement((new HtmlElement("script"))
                     ->setContent((new HtmlElementContent("
+                    
+                        const BlockEmbed = Quill.import('blots/block/embed');
+                        
+//                        class Hr extends BlockEmbed {
+//                          static blotName = 'divider';
+//                          static className = 'my-hr';
+//                          static tagName = 'hr';
+//                            static create(value) {
+//                                let node = super.create(value);
+//                                // give it some margin
+//                                node.setAttribute('style', \"height:0px; margin-top:10px; margin-bottom:10px;\");
+//                                return node;
+//                            }
+//                        }
+//                        var customHrHandler = function(){
+//                            // get the position of the cursor
+//                            var range = quill.getSelection();
+//                            if (range) {
+//                                // insert the <hr> where the cursor is
+//                                quill.insertEmbed(range.index,\"hr\",\"null\")
+//                            }
+//                        }
+//                        
+//                        Quill.register({
+//                            'formats/hr': Hr
+//                        });
+                        class DividerBlot extends BlockEmbed {
+                            static blotName = 'divider';
+                            static tagName = 'hr';
+                        }
+                        Quill.register(DividerBlot);
+                        
+                        var icons = Quill.import('ui/icons');
+//                        icons['divider'] = '<i class=\"fa fa-grip-lines\" aria-hidden=\"true\"></i>';
+                        icons['divider'] = '<i class=\"fa fa-slash\" style=\"-webkit-transform: rotate(142deg);transform: rotate(142deg);\" aria-hidden=\"true\"></i>';
+
                         const toolbarOptions = [
                           ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-                          ['blockquote', 'code-block'],
+                          ['blockquote', 'code-block', {'divider': 'hr'}],
                           ['link', 'image'],//, 'video', 'formula'],
                         
                           [{ 'header': 1 }, { 'header': 2 }],               // custom button values
@@ -162,7 +198,30 @@ class QuillEditor extends ElementComponent
                               theme: 'snow'
                             };
                           const quill = new Quill('#" . $this->container_id . "', options);
-                          quill.on('text-change', (delta, oldDelta, source) => {
+                          
+                          quill.getModule('toolbar').handlers.divider = (value) => {
+                            const selection = quill.getSelection(focus = true);
+                            let position = 0;
+                            // divider will replace any selected text
+                            if (!!selection.length) {
+                                quill.deleteText(selection);
+                            }
+                            // if last position in editor, add newline after divider (caret will not be after hr otherwise)
+                            if (selection.index === quill.getLength() - 1) {
+                                quill.insertText(selection.index, '\\n')
+                            }
+                            // if at end of block, insert hr after newline character (quill will add a newline after divider otherwise)
+//                            if (JSON.stringify(quill.getContents(selection.index, 1)) == JSON.stringify({ ops: [{ insert: \"\\n\" }] })) {
+//                                position = selection.index + 1;
+//                            } else {
+                                position = selection.index;
+//                            }
+                            quill.insertEmbed(position, 'divider', true);
+                            // move selection after divider
+                            quill.setSelection(selection.index + 1);
+                        }
+                        
+                         quill.on('text-change', (delta, oldDelta, source) => {
                               if (source == 'api') {
                                 console.log('An API call triggered this change.');
                               } else if (source == 'user') {
