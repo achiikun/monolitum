@@ -13,6 +13,16 @@ abstract class TS
      * @param string $lang
      * @return string
      */
+    public static function unwrapAuto($string){
+        return TS::unwrap($string, TSLang::findWithOverwritten());
+    }
+
+
+    /**
+     * @param mixed $string
+     * @param string $lang
+     * @return string
+     */
     public static function unwrap($string, $lang=null)
     {
         if(is_string($string)){
