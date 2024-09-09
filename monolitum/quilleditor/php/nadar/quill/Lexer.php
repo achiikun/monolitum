@@ -2,6 +2,8 @@
 
 namespace nadar\quill;
 
+use nadar\quill\listener\Size;
+use nadar\quill\listener\HorizontalRow;
 use nadar\quill\listener\Align;
 use nadar\quill\listener\BackgroundColor;
 use nadar\quill\listener\Blockquote;
@@ -152,16 +154,18 @@ class Lexer
         $this->registerListener(new BackgroundColor());
         $this->registerListener(new Link());
         $this->registerListener(new Video());
+        $this->registerListener(new Size());
         $this->registerListener(new Strike());
         $this->registerListener(new Underline());
         $this->registerListener(new Heading());
+        $this->registerListener(new HorizontalRow());
         $this->registerListener(new CodeBlock());
-        $this->registerListener(new Text());
         $this->registerListener(new Lists());
         $this->registerListener(new Blockquote());
         $this->registerListener(new Font());
         $this->registerListener(new Script());
         $this->registerListener(new Align());
+        $this->registerListener(new Text());
     }
 
     /**
