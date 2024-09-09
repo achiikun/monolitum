@@ -13,7 +13,7 @@ class Query_Aggregation_Executor extends Query_Aggregation
     /**
      * @return mixed
      */
-    public function execute()
+    public function executeAndClose()
     {
         return $this->getManager()->executeQuery($this);
     }

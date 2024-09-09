@@ -155,7 +155,7 @@ class Query_Result
 
     }
 
-    public function first()
+    public function firstAndClose()
     {
         $entity = $this->next();
         $this->close();

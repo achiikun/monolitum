@@ -127,17 +127,6 @@ abstract class Entity
 
     /**
      * @param Attr|string $attr
-     * @param $value
-     * @return $this
-     */
-    public function setValue($attr, $value)
-    {
-        return $this->_set($attr, $value);
-    }
-
-
-    /**
-     * @param Attr|string $attr
      * @param int $int
      * @return $this
      */
@@ -156,6 +145,15 @@ abstract class Entity
     }
 
     /**
+     * @param Attr|string $attr
+     * @param bool $bool
+     * @return $this
+     */
+    public function setBool($attr, $bool){
+        return $this->_set($attr, $bool);
+    }
+
+    /**
      * @param string $attr
      * @return DateTime
      */
@@ -167,20 +165,33 @@ abstract class Entity
 
     /**
      * @param Attr|string $attr
-     * @param bool $bool
-     * @return $this
-     */
-    public function setBool($attr, $bool){
-        return $this->_set($attr, $bool);
-    }
-
-    /**
-     * @param Attr|string $attr
      * @param DateTime $date
      * @return $this
      */
     public function setDate($attr, $date){
         return $this->_set($attr, $date);
+    }
+
+    /**
+     * @param string $attr
+     * @return object
+     */
+    public function getValue($attr)
+    {
+        if($attr instanceof Attr)
+            $attr = $attr->getId();
+        return key_exists($attr, $this->values) ? $this->values[$attr] : null;
+    }
+
+
+    /**
+     * @param Attr|string $attr
+     * @param $value
+     * @return $this
+     */
+    public function setValue($attr, $value)
+    {
+        return $this->_set($attr, $value);
     }
 
     abstract function buildModel();
@@ -196,13 +207,6 @@ abstract class Entity
             return key_exists($attr->getId(), $this->values);
         return key_exists($attr, $this->values);
 
-    }
-
-    public function getValue($attr)
-    {
-        if($attr instanceof Attr)
-            $attr = $attr->getId();
-        return key_exists($attr, $this->values) ? $this->values[$attr] : null;
     }
 
     /**

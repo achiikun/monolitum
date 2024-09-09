@@ -120,7 +120,7 @@ class Auth_Manager extends Renderable_Node implements Active
             ->execute();
 
         /** @var Entity|null $user */
-        $this->user = $userIterable->first();
+        $this->user = $userIterable->firstAndClose();
 
         if($this->user == null){
             return false;
@@ -164,7 +164,7 @@ class Auth_Manager extends Renderable_Node implements Active
                 ->execute();
 
             /** @var Entity|null $user */
-            $this->user = $userIterable->first();
+            $this->user = $userIterable->firstAndClose();
 
             if($this->user == null)
                 $_SESSION['username'] = null;
@@ -190,7 +190,7 @@ class Auth_Manager extends Renderable_Node implements Active
                 ->execute();
 
             /** @var Entity|null $user */
-            $this->user = $userIterable->first();
+            $this->user = $userIterable->firstAndClose();
 
         }
 
