@@ -31,4 +31,22 @@ class QuillDocument
         return json_encode($this->lexer->getJsonArray());
     }
 
+    /**
+     * @return string
+     */
+    public function renderHTML()
+    {
+        return $this->rendered;
+    }
+
+    /**
+     * @param string $search
+     * @param string $replace
+     * @return void
+     */
+    public function replace($search, $replace)
+    {
+        $this->rendered = str_replace($search, "$replace", $this->rendered);
+    }
+
 }
