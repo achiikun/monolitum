@@ -22,5 +22,6 @@
   - [ ] encrypt resource urls
   - [ ] CRSF tokens in forms
   - [ ] Hiding ids
-  - [ ] Antispam Manager
+  - [ ] Antispam Manager (ip register)
+  - [ ] Antispam Manager (captcha)
   - [X] Enable buttons to execute POST requests (using a form and a submit button)
