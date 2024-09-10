@@ -14,7 +14,7 @@ interface Validator
      * @param Attr|string $attr
      * @return ValidatedValue
      */
-    function validate($model, $attr, $prefix=null);
+    function validate($model, $attr, $prefix=null, $post=null);
 
     /**
      * @param string $name

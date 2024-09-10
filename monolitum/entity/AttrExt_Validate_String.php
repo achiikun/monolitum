@@ -89,6 +89,8 @@ class AttrExt_Validate_String extends AttrExt_Validate
     }
 
     /**
+     * Set a regular expression to validate the string.
+     * It must follow the following pattern "/^...$/"
      * @param string $regex
      * @param string|TS $regexError
      * @return $this
