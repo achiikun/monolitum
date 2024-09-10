@@ -358,7 +358,7 @@ class HtmlElement implements Renderable
      * @param bool $requireEndTag
      * @return $this
      */
-    public function setRequireEndTag($requireEndTag)
+    public function setRequireEndTag($requireEndTag=true)
     {
         $this->requireEndTag = $requireEndTag;
         return $this;

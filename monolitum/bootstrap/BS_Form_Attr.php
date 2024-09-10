@@ -122,12 +122,14 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
 
                 $this->formWrapper->append($this->createFormControl());
 
-                $this->formWrapper->append(
-                    new FormLabel(function(FormLabel $it){
-                        $it->setName($this->getFullFieldName());
-                        $it->setContent($this->getLabel());
-                    }, "form-check-label")
-                );
+                if(is_string($this->getLabel()) && strlen($this->getLabel()) > 0){
+                    $this->formWrapper->append(
+                        new FormLabel(function(FormLabel $it){
+                            $it->setName($this->getFullFieldName());
+                            $it->setContent($this->getLabel());
+                        }, "form-check-label")
+                    );
+                }
 
                 if($invalidFeedback){
                     $this->formWrapper->append($invalidFeedback);
@@ -143,10 +145,13 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
 
                 $this->formWrapper->addClass("form-group");
 
-                $formLabel = new FormLabel(function(FormLabel $it){
-                    $it->setName($this->getFullFieldName());
-                    $it->setContent($this->getLabel());
-                }, $this->isRow != null ? "col-form-label" : "form-label");
+                $formLabel = null;
+                if(is_string($this->getLabel()) && strlen($this->getLabel()) > 0) {
+                    $formLabel = new FormLabel(function (FormLabel $it) {
+                        $it->setName($this->getFullFieldName());
+                        $it->setContent($this->getLabel());
+                    }, $this->isRow != null ? "col-form-label" : "form-label");
+                }
 
                 if($this->isRow){
                     $this->formWrapper->addClass("row");
@@ -154,7 +159,9 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
 
                 $formControl = $this->createFormControl();
 
-                if($this->isRow != null){
+                if($formLabel == null){
+                    $this->formWrapper->append($formControl);
+                }else if($this->isRow != null){
                     $this->isRow->buildInto($formLabel, true);
 
                     $formControlWrapper = new Div();

@@ -16,7 +16,9 @@ class FormLabel extends ElementComponent
     public function __construct(callable $builder = null, $class = "form-label")
     {
         parent::__construct(new HtmlElement("label"), $builder);
+        $this->getElement()->setRequireEndTag();
         $this->class = $class;
+
     }
 
     public function setName($name)
