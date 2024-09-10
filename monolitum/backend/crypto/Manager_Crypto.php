@@ -362,13 +362,37 @@ class Manager_Crypto extends Manager
     }
 
     /**
+     * @param int $length
+     * @return string
+     */
+    public function generateStringCode($length = 8, $uc=true, $lc=true, $n=true, $sc=false)
+    {
+        $chars = '';
+        if ($lc) {
+            $chars .= "abcdefghijklmnopqrstuvwxyz";
+        }
+
+        if ($uc) {
+            $chars .= "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        }
+
+        if ($n) {
+            $chars .= "0123456789";
+        }
+
+        if ($sc) {
+            $chars .= "!@#$%^&*()_-=+;:,.";
+        }
+
+        return substr(str_shuffle($chars), 0, $length);
+    }
+
+    /**
      * @param callable|null $builder
      */
     public static function add($builder)
     {
         GlobalContext::add(new Manager_Crypto($builder));
     }
-
-
 
 }
