@@ -22,13 +22,18 @@ class TSLang implements Active
         if($overwritten !== null){
             return $overwritten;
         }else{
-            /** @var TSLang $tstrlang */
-            $tstrlang = Find::sync(TSLang::class, true, true);
-            if($tstrlang !== null){
-                return $tstrlang->lang;
-            }else{
-                return null;
-            }
+            return self::find();
+        }
+    }
+
+    public static function find()
+    {
+        /** @var TSLang $tstrlang */
+        $tstrlang = Find::sync(TSLang::class, true, true);
+        if($tstrlang !== null){
+            return $tstrlang->lang;
+        }else{
+            return null;
         }
     }
 
