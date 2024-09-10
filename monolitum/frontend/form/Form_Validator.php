@@ -21,6 +21,11 @@ abstract class Form_Validator
     protected $build_validatedValues = [];
 
     /**
+     * @var array<string, ValidatedValue>
+     */
+    protected $overwritten_validatedValues = [];
+
+    /**
      * @var bool
      */
     protected $build_allValid = false;
@@ -173,6 +178,16 @@ abstract class Form_Validator
         $attr = $this->getAttr($attrId);
         $inArray = in_array($attr->getId(), $this->validate_attrs);
         return $this->validate_attrs_all ^ $inArray;
+    }
+
+    /**
+     * @param string|Attr $attrId
+     * @param ValidatedValue $value
+     */
+    public function overwriteValidatedValue($attrId, $value)
+    {
+        $attr = $this->getAttr($attrId);
+        $this->overwritten_validatedValues[$attr->getId()] = $value;
     }
 
 }

@@ -2,21 +2,17 @@
 
 namespace monolitum\backend\params;
 
+use monolitum\backend\Manager;
+use monolitum\core\Find;
 use monolitum\core\GlobalContext;
+use monolitum\core\panic\DevPanic;
+use monolitum\entity\AnonymousModel;
 use monolitum\entity\attr\Attr;
-use monolitum\entity\attr\Attr_Bool;
-use monolitum\entity\attr\Attr_Date;
-use monolitum\entity\attr\Attr_Decimal;
 use monolitum\entity\attr\Attr_File;
-use monolitum\entity\attr\Attr_Int;
-use monolitum\entity\attr\Attr_String;
 use monolitum\entity\AttrExt_Validate;
 use monolitum\entity\Entities_Manager;
 use monolitum\entity\Model;
 use monolitum\entity\ValidatedValue;
-use monolitum\core\Find;
-use monolitum\backend\Manager;
-use monolitum\core\panic\DevPanic;
 
 class Manager_Params extends Manager implements Validator
 {
@@ -123,18 +119,23 @@ class Manager_Params extends Manager implements Validator
 
 
     /**
-     * @param Model|string $model
+     * @param AnonymousModel|Model|string $model
      * @param Attr|string $attr
      * @param string $prefix
      * @return ValidatedValue
      */
-    public function validate($model, $attr, $prefix=null){
+    public function validate($model, $attr, $prefix=null, $post=null){
 
         /** @var Model $model */
-        $model = Entities_Manager::go_getModel($model);
+        if(is_string($model))
+            $model = Entities_Manager::go_getModel($model);
         $attr = $model->getAttr($attr);
 
-        $validatedValue = $this->validateOnlyFormat($model, $attr, $prefix);
+        if($model instanceof Model){
+            $validatedValue = $this->validateOnlyFormat($model, $attr, $prefix);
+        } else {
+            $validatedValue = $this->validateOnlyFormatAnonymous($model, $attr, $prefix, $post);
+        }
 
         if($validatedValue->isValid()){
 
@@ -152,35 +153,31 @@ class Manager_Params extends Manager implements Validator
     }
 
     /**
-     * @param Model|string $model
+     * @param AnonymousModel $model
      * @param Attr|string $attr
      * @param string $prefix
      * @return ValidatedValue
      */
-    public function validateOnlyFormat($model, $attr, $prefix=null){
-        /** @var Model $model */
-        $model = Entities_Manager::go_getModel($model);
+    public function validateOnlyFormatAnonymous($model, $attr, $prefix, $post){
+
         $attr = $model->getAttr($attr);
 
-        if(array_key_exists($model->getIdOrClass(), $this->postModels))
+        if($post)
             $globalArray = $_POST;
-        else if(array_key_exists($model->getIdOrClass(), $this->getModels))
-            $globalArray = $_GET;
         else
-            throw new DevPanic("No declared model as params: " . $model->getIdOrClass() . ".");
+            $globalArray = $_GET;
+
+        /** @var AttrExt_Param|null $attrExt_Param */
+        $attrExt_Param = $attr->findExtension(AttrExt_Param::class);
+        if($attrExt_Param != null){
+            $name = $attrExt_Param->getName();
+        }else{
+            $name = $attr->getId();
+        }
+        if($prefix !== null)
+            $name = $prefix . $name;
 
         if($attr instanceof Attr_File){
-
-            /** @var AttrExt_Param|null $attrExt_Param */
-            $attrExt_Param = $attr->findExtension(AttrExt_Param::class);
-
-            if($attrExt_Param != null){
-                $name = $attrExt_Param->getName();
-            }else{
-                $name = $attr->getId();
-            }
-            if($prefix !== null)
-                $name = $prefix . $name;
 
             $value = array_key_exists($name, $_FILES) ? $_FILES[$name] : null;
 
@@ -199,16 +196,62 @@ class Manager_Params extends Manager implements Validator
 
         } else {
 
-            /** @var AttrExt_Param|null $attrExt_Param */
-            $attrExt_Param = $attr->findExtension(AttrExt_Param::class);
-
-            if($attrExt_Param != null){
-                $name = $attrExt_Param->getName();
+            if(array_key_exists($name, $globalArray)){
+                return $attr->validate($globalArray[$name]);
             }else{
-                $name = $attr->getId();
+                return new ValidatedValue(true, true, null);
             }
-            if($prefix !== null)
-                $name = $prefix . $name;
+
+        }
+    }
+
+    /**
+     * @param Model|string $model
+     * @param Attr|string $attr
+     * @param string $prefix
+     * @return ValidatedValue
+     */
+    public function validateOnlyFormat($model, $attr, $prefix=null){
+        /** @var Model $model */
+        if(is_string($model))
+            $model = Entities_Manager::go_getModel($model);
+        $attr = $model->getAttr($attr);
+
+        if(array_key_exists($model->getIdOrClass(), $this->postModels))
+            $globalArray = $_POST;
+        else if(array_key_exists($model->getIdOrClass(), $this->getModels))
+            $globalArray = $_GET;
+        else
+            throw new DevPanic("No declared model as params: " . $model->getIdOrClass() . ".");
+
+        /** @var AttrExt_Param|null $attrExt_Param */
+        $attrExt_Param = $attr->findExtension(AttrExt_Param::class);
+        if($attrExt_Param != null){
+            $name = $attrExt_Param->getName();
+        }else{
+            $name = $attr->getId();
+        }
+        if($prefix !== null)
+            $name = $prefix . $name;
+
+        if($attr instanceof Attr_File){
+
+            $value = array_key_exists($name, $_FILES) ? $_FILES[$name] : null;
+
+            if($value !== null){
+                if (
+                    !isset($value['error']) ||
+                    is_array($value['error'])
+                ) {
+                    return new ValidatedValue(false, false, null, Attr_File::ERROR_BAD_FORMAT);
+                }
+                if($value['error'] == UPLOAD_ERR_NO_FILE)
+                    $value = null;
+            }
+
+            return $attr->validate($value);
+
+        } else {
 
             if(array_key_exists($name, $globalArray)){
                 return $attr->validate($globalArray[$name]);

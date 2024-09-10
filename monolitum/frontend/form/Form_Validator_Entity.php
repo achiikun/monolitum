@@ -28,13 +28,21 @@ class Form_Validator_Entity extends Form_Validator
     private $currentEntity;
 
     /**
+     * @var bool|null
+     */
+    private $post = null;
+
+    /**
      * @param Validator $validator
      * @param class-string|AnonymousModel|Model $model
      */
-    public function __construct($validator, $model)
+    public function __construct($validator, $model, $post)
     {
         $this->validator = $validator;
         $this->model = $model;
+        if($model instanceof AnonymousModel){
+            $this->post = isset($post) ? $post : true;
+        }
     }
 
     /**
@@ -90,13 +98,16 @@ class Form_Validator_Entity extends Form_Validator
         if(!($attr instanceof Attr))
             $attr = $this->model->getAttr($attr);
 
-        if(key_exists($attr->getId(), $this->build_validatedValues)){
+        if(key_exists($attr->getId(), $this->overwritten_validatedValues)){
+            // The attr has been overwritten
+            $validatedValue = $this->overwritten_validatedValues[$attr->getId()];
+        }else if(key_exists($attr->getId(), $this->build_validatedValues)){
             // The attr has been already validated
             $validatedValue = $this->build_validatedValues[$attr->getId()];
         }else{
 
             // Validate the value that comes from outside
-            $validatedValue = $this->validator->validate($this->model, $attr, $this->form->_getValidatePrefix());
+            $validatedValue = $this->validator->validate($this->model, $attr, $this->form->_getValidatePrefix(), $this->post);
 
             // If not valid, try to substitute with a valid value
             if(!$validatedValue->isValid()){

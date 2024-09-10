@@ -839,7 +839,8 @@ class Form extends Component
         $manager_params = Find::sync(Manager_Params::class);
         $fc = new Form(new Form_Validator_Entity(
             $manager_params,
-            $model
+            $model,
+            true
         ), null, $builder);
         GlobalContext::add($fc);
         return $fc;
@@ -857,7 +858,8 @@ class Form extends Component
         $manager_params = Find::sync(Manager_Params::class);
         $fc = new Form((new Form_Validator_Entity(
             $manager_params,
-            $model
+            $model,
+            true
         ))->setCurrentEntity($entity), null, $builder);
         GlobalContext::add($fc);
         return $fc;
@@ -876,7 +878,8 @@ class Form extends Component
         $manager_params = Find::sync(Manager_Params::class);
         $fc = new Form(new Form_Validator_Entity(
             $manager_params,
-            $model
+            $model,
+            true
         ), $formId, $builder);
         GlobalContext::add($fc);
         return $fc;
