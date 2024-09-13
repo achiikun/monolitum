@@ -14,12 +14,12 @@ class Attr_Color extends Attr
     public function validate($value)
     {
         if(is_string($value)){
-            return new ValidatedValue(true, true, strlen($value) == 0 ? null : Color::ofHex($value));
+            return new ValidatedValue(true, true, strlen($value) == 0 ? null : Color::fromHex($value));
         }else if(is_bool($value)){
             return new ValidatedValue(true, true, $value ? Color::white() : Color::black());
         }else if(is_int($value)){
             $hex = str_pad(dechex($value), 8, '0', STR_PAD_LEFT);
-            return new ValidatedValue(true, true, Color::ofHex($hex));
+            return new ValidatedValue(true, true, Color::fromHex($hex));
         }else if(is_null($value)){
             return new ValidatedValue(true, true, null);
         }

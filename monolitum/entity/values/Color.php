@@ -193,7 +193,7 @@ class Color
         return new Color(255,255,255, $alpha);
     }
 
-    static function ofHex($hex){
+    static function fromHex($hex){
 
         // trim the '#' character
         $hex = ltrim((string)$hex, '#');
