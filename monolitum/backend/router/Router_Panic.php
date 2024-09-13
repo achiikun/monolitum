@@ -63,7 +63,7 @@ class Router_Panic extends Router_InstanceOf_Abstract implements PanicRouter{
      * @param callable $builder
      * @return Router_Panic
      */
-    public static function of(callable $builder)
+    public static function from(callable $builder)
     {
         return new Router_Panic($builder);
     }

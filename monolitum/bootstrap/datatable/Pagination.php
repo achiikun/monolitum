@@ -192,7 +192,7 @@ class Pagination extends ElementComponent
         if($hasFirst){
             $ul->push($this->makeItem(
                 $this->firstText !== null ? $this->firstText : "<<",
-                Link::of(Path::ofRelative())
+                Link::from(Path::ofRelative())
                     ->setCopyAllParams()
                     ->addParams([
                         $this->param_page => 0
@@ -203,7 +203,7 @@ class Pagination extends ElementComponent
         if($hasPrevious){
             $ul->push($this->makeItem(
                 $this->prevText !== null ? $this->prevText : "<",
-                Link::of(Path::ofRelative())
+                Link::from(Path::ofRelative())
                     ->setCopyAllParams()
                     ->addParams([
                         $this->param_page => $this->page-1
@@ -230,7 +230,7 @@ class Pagination extends ElementComponent
         for($i = $first; $i <= $last; $i++){
             $ul->push($this->makeItem(
                 strval($i),
-                Link::of(Path::ofRelative())
+                Link::from(Path::ofRelative())
                     ->setCopyAllParams()
                     ->addParams([
                         $this->param_page => $i
@@ -242,7 +242,7 @@ class Pagination extends ElementComponent
         if($hasNext){
             $ul->push($this->makeItem(
                 $this->nextText !== null ? $this->nextText : ">",
-                Link::of(Path::ofRelative())
+                Link::from(Path::ofRelative())
                     ->setCopyAllParams()
                     ->addParams([
                         $this->param_page => $this->page+1
@@ -253,7 +253,7 @@ class Pagination extends ElementComponent
         if($hasLast){
             $ul->push($this->makeItem(
                 $this->lastText !== null ? $this->lastText : ">>",
-                Link::of(Path::ofRelative())
+                Link::from(Path::ofRelative())
                     ->setCopyAllParams()
                     ->addParams([
                         $this->param_page => $max_pages
@@ -321,7 +321,7 @@ class Pagination extends ElementComponent
 
                 $it->setMethodGET();
                 $it->setDefaultValue($this->param_page, $this->page);
-                $it->setLink(Link::of(Path::ofRelative())->setCopyParamsExcept($this->param_page));
+                $it->setLink(Link::from(Path::ofRelative())->setCopyParamsExcept($this->param_page));
 
                 Div::add(function (Div $it) {
 

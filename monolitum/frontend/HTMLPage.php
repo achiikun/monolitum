@@ -96,8 +96,8 @@ class HTMLPage extends Component {
     {
         $this->buildPage();
 
-        if($this->getContext()->getPanic())
-            return;
+//        if($this->getContext()->getPanic())
+//            return;
 
         $this->buildChild($this->body);
 
@@ -118,7 +118,7 @@ class HTMLPage extends Component {
         }
         $html->addChildElement($head);
 
-        parent::executeComponent();
+//        parent::executeComponent();
 
         $this->executeChild($this->body);
 

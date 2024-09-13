@@ -79,7 +79,7 @@ class Accordion_Item
      * @param bool $collapsed
      * @return Accordion_Item
      */
-    public static function of($header, $body, $collapsed = true){
+    public static function from($header, $body, $collapsed = true){
         $item = new Accordion_Item();
         $item->header($header);
         $item->body($body);

@@ -110,7 +110,7 @@ class AttrExt_Form extends AttrExt
 //        return $validated;
 //    }
 
-    public static function of(){
+    public static function from(){
         return new AttrExt_Form();
     }
 

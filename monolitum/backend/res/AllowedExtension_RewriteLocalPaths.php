@@ -60,7 +60,7 @@ class AllowedExtension_RewriteLocalPaths extends AllowedExtension
                                 }
                             }
 
-                            $active = new Active_Resolve_Res(Path::of(...$currentPath));
+                            $active = new Active_Resolve_Res(Path::from(...$currentPath));
                             $active->setEncodeUrl(false);
                             GlobalContext::add($active, $this->getManager());
                             $resolvedString = $active->getResResolver()->resolve();

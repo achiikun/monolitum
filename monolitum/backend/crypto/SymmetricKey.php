@@ -53,7 +53,7 @@ class SymmetricKey
      * @param $defaultInitializationVector
      * @return SymmetricKey
      */
-    public static function of($password, $algorithm=null, $defaultInitializationVector=null)
+    public static function from($password, $algorithm=null, $defaultInitializationVector=null)
     {
         $self = new SymmetricKey();
         $self->password = $password;

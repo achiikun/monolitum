@@ -8,7 +8,7 @@ class Attr_Int extends Attr
     /**
      * @return Attr_Int
      */
-    public static function of(){
+    public static function from(){
         return new Attr_Int();
     }
 

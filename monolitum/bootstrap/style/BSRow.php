@@ -55,7 +55,7 @@ class BSRow extends ElementComponent_Ext
     /**
      * @return BSRow
      */
-    public static function of(){
+    public static function from(){
         return new BSRow();
     }
 

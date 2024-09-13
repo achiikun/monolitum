@@ -18,7 +18,7 @@ class Li extends AbstractText
      * @param string|Renderable_Node $content
      * @return Li
      */
-    public static function of($content)
+    public static function from($content)
     {
         $fc = new Li();
         $fc->append($content);
@@ -29,7 +29,7 @@ class Li extends AbstractText
      * @param callable $builder
      * @return Li
      */
-    public static function build($builder = null)
+    public static function of($builder = null)
     {
         $fc = new Li($builder);
         return $fc;

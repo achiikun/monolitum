@@ -25,7 +25,7 @@ class Path
      * @param string ...$strings
      * @return Path
      */
-    public static function of(...$strings){
+    public static function from(...$strings){
         $path = new Path();
         $path->path = $strings;
         return $path;

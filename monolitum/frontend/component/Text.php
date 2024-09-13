@@ -20,7 +20,7 @@ class Text extends Renderable_Node
         $this->string = $string;
     }
 
-    public static function of($string)
+    public static function from($string)
     {
         return new Text($string);
     }

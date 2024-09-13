@@ -28,7 +28,7 @@ class Attr_Decimal extends Attr
     /**
      * @return Attr_Decimal
      */
-    public static function of($decimals = 0){
+    public static function from($decimals = 0){
         return new Attr_Decimal($decimals);
     }
 

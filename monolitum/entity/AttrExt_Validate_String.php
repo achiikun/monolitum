@@ -244,7 +244,7 @@ class AttrExt_Validate_String extends AttrExt_Validate
     /**
      * @return AttrExt_Validate_String
      */
-    public static function of(){
+    public static function from(){
         return new AttrExt_Validate_String();
     }
 

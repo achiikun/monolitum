@@ -222,9 +222,9 @@ class Manager_Path extends Manager
             $path = $active->getUrl();
 
             if(strlen($path) > 0){
-                $active->setPath(Path::of(...explode("/", $path)));
+                $active->setPath(Path::from(...explode("/", $path)));
             }else{
-                $active->setPath(Path::of());
+                $active->setPath(Path::from());
             }
 
             return true;
@@ -233,7 +233,7 @@ class Manager_Path extends Manager
             $currentLength = count($this->path) - $active->getParents();
 
             if($currentLength > 0){
-                $active->setPath(Path::of(...array_slice($this->path, 0, $currentLength)));
+                $active->setPath(Path::from(...array_slice($this->path, 0, $currentLength)));
             }
 
             return true;

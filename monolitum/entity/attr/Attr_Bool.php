@@ -8,7 +8,7 @@ class Attr_Bool extends Attr
     /**
      * @return Attr_Bool
      */
-    public static function of() {
+    public static function from() {
         return new Attr_Bool();
     }
 

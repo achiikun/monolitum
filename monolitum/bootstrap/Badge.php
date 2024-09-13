@@ -23,7 +23,7 @@ class Badge extends AbstractText
      * @param BSColor $color
      * @return Badge
      */
-    public static function of($content, $color)
+    public static function from($content, $color)
     {
         $fc = new Badge();
         $fc->append($content);
@@ -35,7 +35,7 @@ class Badge extends AbstractText
      * @param callable $builder
      * @return Badge
      */
-    public static function build($builder = null)
+    public static function of($builder = null)
     {
         return new Badge($builder);
     }

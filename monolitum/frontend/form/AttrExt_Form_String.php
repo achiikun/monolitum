@@ -97,7 +97,7 @@ class AttrExt_Form_String extends AttrExt_Form
         return $this->inputType;
     }
 
-    static function of(){
+    static function from(){
         return new AttrExt_Form_String();
     }
 

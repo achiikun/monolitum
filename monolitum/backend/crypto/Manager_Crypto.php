@@ -91,7 +91,7 @@ class Manager_Crypto extends Manager
 //        // Decrypt the data using the private key and store the results in $decrypted
 //        openssl_private_decrypt($encrypted, $decrypted, $privKey);
 
-        return AsymmetricKey::of(
+        return AsymmetricKey::from(
             $pubKey,
             $privKey,
             $digestAlg != null || $bits !== null ? $config : null

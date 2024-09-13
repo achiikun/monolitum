@@ -18,15 +18,6 @@ class Ul extends ElementComponent
      * @param callable $builder
      * @return Ul
      */
-    public static function build($builder = null)
-    {
-        return new Ul($builder);
-    }
-
-    /**
-     * @param callable $builder
-     * @return Ul
-     */
     public static function add($builder = null)
     {
         $fc = new Ul($builder);

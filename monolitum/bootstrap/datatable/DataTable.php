@@ -183,7 +183,7 @@ class DataTable extends ElementComponent
 
         $baseLink = $this->sortable_base_link;
         if($baseLink === null)
-            $baseLink = Link::of(Path::ofRelative())->setCopyAllParams();
+            $baseLink = Link::from(Path::ofRelative())->setCopyAllParams();
 
         foreach ($this->columns as $column){
             if($column->isSortable()){
@@ -222,7 +222,7 @@ class DataTable extends ElementComponent
 
             while ($iterator->hasNext()){
                 $entity = $iterator->next();
-                
+
                 $row = [];
 
                 foreach($this->columns as $column){

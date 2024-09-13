@@ -18,7 +18,7 @@ class Span extends AbstractText
      * @param string|Renderable_Node $content
      * @return Span
      */
-    public static function of($content)
+    public static function from($content)
     {
         $fc = new Span();
         $fc->append($content);
@@ -29,7 +29,7 @@ class Span extends AbstractText
      * @param callable $builder
      * @return Span
      */
-    public static function build($builder = null)
+    public static function of($builder = null)
     {
         return new Span($builder);
     }

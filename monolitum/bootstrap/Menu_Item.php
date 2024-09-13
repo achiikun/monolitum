@@ -153,7 +153,7 @@ class Menu_Item extends Li
      * @param string $content
      * @return Menu_Item
      */
-    public static function of($content){
+    public static function from($content){
         $item = new Menu_Item();
         $item->text($content);
         return $item;

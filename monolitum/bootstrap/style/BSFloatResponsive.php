@@ -59,7 +59,7 @@ class BSFloatResponsive extends Responsive implements BSBuiltIntoInterface
      * @param BSFloat $def
      * @return BSFloatResponsive
      */
-    public static function of($def = null)
+    public static function from($def = null)
     {
         return new BSFloatResponsive($def);
     }

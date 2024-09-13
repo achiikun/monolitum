@@ -18,8 +18,8 @@ class FA_Head extends Node implements Head
 
     protected function buildNode()
     {
-        CSSLink::addLocal(Path::of("monolitum", "fontawesome", "res", "css", "all.css"));
-        CSSLink::addLocal(Path::of("monolitum", "fontawesome", "res", "css", "fontawesome.css"));
+        CSSLink::addLocal(Path::from("monolitum", "fontawesome", "res", "css", "all.css"));
+        CSSLink::addLocal(Path::from("monolitum", "fontawesome", "res", "css", "fontawesome.css"));
         parent::buildNode();
     }
 

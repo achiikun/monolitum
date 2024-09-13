@@ -63,7 +63,7 @@ class AttrExt_Validate extends AttrExt
     /**
      * @return AttrExt_Validate
      */
-    static function of(){
+    static function from(){
         return new AttrExt_Validate();
     }
 

@@ -69,19 +69,19 @@ class CellRenderer_Attr implements CellRenderer
                 }else if($extValidate !== null && $extValidate->hasEnum()){
                     $string = $extValidate->getEnumString($value);
                     $string = TS::unwrap($string, TSLang::findWithOverwritten());
-                    return Text::of($string);
+                    return Text::from($string);
                 }else{
-                    return Text::of($value);
+                    return Text::from($value);
                 }
             }else if($attr instanceof Attr_Int){
-                return Text::of(strval($entity->getInt($attr)));
+                return Text::from(strval($entity->getInt($attr)));
             }else if($attr instanceof Attr_Decimal){
-                return Text::of(strval($entity->getInt($attr) / pow(10, $attr->getDecimals())));
+                return Text::from(strval($entity->getInt($attr) / pow(10, $attr->getDecimals())));
             }else if($attr instanceof Attr_Date){
                 $val = $entity->getDate($attr);
 
                 //if(PHP_MAJOR_VERSION == 8 && PHP_MINOR_VERSION > 1 || PHP_MAJOR_VERSION > 8){
-                    return Text::of($val !== null ? Moment::fromDateTime($val)->format(
+                    return Text::from($val !== null ? Moment::fromDateTime($val)->format(
                         ($this->format !== null ? $this->format : null),//"%Y-%m-%d")
                         new MomentJs()
                     ) : "");
@@ -316,7 +316,7 @@ class CellRenderer_Attr implements CellRenderer
         throw new DevPanic("No table found");
     }
 
-    public static function of($attr)
+    public static function from($attr)
     {
         return new CellRenderer_Attr($attr);
     }

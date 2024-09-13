@@ -14,7 +14,7 @@ class Attr_Quill extends Attr implements I_Attr_Databasable
     /**
      * @return Attr_Quill
      */
-    public static function of(){
+    public static function from(){
         return new Attr_Quill();
     }
 

@@ -306,7 +306,7 @@ class NavBar extends ElementComponent implements Menu_Item_Holder
 
                 if($this->brandTitle !== null){
                     if(is_string($this->brandTitle)){
-                        $component = Span::of($this->brandTitle);
+                        $component = Span::fromContent($this->brandTitle);
                         $component->push(BSVerticalAlign::middle());
                     }
                     else

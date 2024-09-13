@@ -24,7 +24,7 @@ class Attr_File extends Attr
     /**
      * @return Attr_File
      */
-    public static function of(){
+    public static function from(){
         return new Attr_File();
     }
 

@@ -105,7 +105,7 @@ class AttrExt_Validate_Int extends AttrExt_Validate
     /**
      * @return AttrExt_Validate_Int
      */
-    public static function of(){
+    public static function from(){
         return new AttrExt_Validate_Int();
     }
 

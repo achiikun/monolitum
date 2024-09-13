@@ -30,7 +30,7 @@ class Attr_String extends Attr
     /**
      * @return Attr_String
      */
-    public static function of(){
+    public static function from(){
         return new Attr_String();
     }
 

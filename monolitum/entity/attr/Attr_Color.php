@@ -29,7 +29,7 @@ class Attr_Color extends Attr
     /**
      * @return Attr_Color
      */
-    public static function of(){
+    public static function from(){
         return new Attr_Color();
     }
 

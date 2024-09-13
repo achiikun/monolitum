@@ -41,7 +41,7 @@ class TSLang implements Active
      * @param string $lang
      * @return TSLang
      */
-    public static function of($lang)
+    public static function from($lang)
     {
         return new TSLang($lang);
     }

@@ -147,7 +147,7 @@ class BSColSpanResponsive extends Responsive implements BSBuiltIntoInterface
         $voidCount = $count - count($spans);
         $lastSpan = (12 - $def) / $voidCount;
 
-        $toReturn = BSColSpanResponsive::of($lastSpan < 12 ? $lastSpan : null);
+        $toReturn = BSColSpanResponsive::from($lastSpan < 12 ? $lastSpan : null);
 
         $currentSpan = (12 - $sm) / $voidCount;
         if($currentSpan != $lastSpan)
@@ -180,7 +180,7 @@ class BSColSpanResponsive extends Responsive implements BSBuiltIntoInterface
      * @param BSColSpan $def
      * @return BSColSpanResponsive
      */
-    public static function of($def = null)
+    public static function from($def = null)
     {
         return new BSColSpanResponsive($def);
     }

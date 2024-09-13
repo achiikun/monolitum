@@ -48,7 +48,7 @@ class AttrExt_DB extends AttrExt
         return $this->autoincrement;
     }
 
-    public static function of()
+    public static function from()
     {
         return new AttrExt_DB();
     }

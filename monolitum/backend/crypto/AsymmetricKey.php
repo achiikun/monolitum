@@ -69,7 +69,7 @@ class AsymmetricKey
      * @param string|Callable|null $privateKey
      * @return AsymmetricKey
      */
-    public static function of($publicKey, $privateKey=null, $config=null)
+    public static function from($publicKey, $privateKey=null, $config=null)
     {
         $self = new AsymmetricKey();
         $self->publicKey = $publicKey;

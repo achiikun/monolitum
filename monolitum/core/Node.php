@@ -110,7 +110,7 @@ abstract class Node implements Passive {
         $this->interceptedActives[$activeClass] = $active;
         return $this;
     }
-    
+
     final function _receive($active, $currentDepth) {
 
         $processed = false;
@@ -162,7 +162,7 @@ abstract class Node implements Passive {
             }
         }
 
-        
+
     }
 
     /**
@@ -188,9 +188,9 @@ abstract class Node implements Passive {
             $this->built = true;
         }catch (Panic $panic){
             $ctx->setPanic($panic);
+            $this->panicked = true;
             if($this->panicRouter != null){
                 $this->panicRouter->_build($ctx, $this);
-                $this->panicked = true;
             }else{
                 throw $panic;
             }
@@ -199,7 +199,7 @@ abstract class Node implements Passive {
         }
 
     }
-    
+
     final function _execute(){
 
         assert($this->built || $this->panicked);
@@ -214,7 +214,7 @@ abstract class Node implements Passive {
         }
 
         $this->ctx->popPassive();
-        
+
     }
 
     /**
@@ -294,7 +294,7 @@ abstract class Node implements Passive {
      * This method cannot panic.
      */
     protected function executeNode(){
-        
+
     }
 
     public function __toString()

@@ -36,7 +36,7 @@ class Attr_Date extends Attr
     /**
      * @return Attr_Date
      */
-    public static function of(){
+    public static function from(){
         return new Attr_Date();
     }
 

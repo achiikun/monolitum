@@ -59,7 +59,7 @@ class BSDisplayResponsive extends Responsive implements BSBuiltIntoInterface
      * @param BSDisplay $def
      * @return BSDisplayResponsive
      */
-    public static function of($def = null)
+    public static function from($def = null)
     {
         return new BSDisplayResponsive($def);
     }

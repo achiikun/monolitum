@@ -22,7 +22,7 @@ class BSButton extends AbstractText
      * @var Link|Path
      */
     private $href = null;
-    
+
     /**
      * @var HrefResolver
      */
@@ -179,7 +179,7 @@ class BSButton extends AbstractText
      * @param string|Renderable_Node $content
      * @return BSButton
      */
-    public static function of($content)
+    public static function from($content)
     {
         $fc = new BSButton();
         $fc->append($content);
@@ -190,7 +190,7 @@ class BSButton extends AbstractText
      * @param callable $builder
      * @return BSButton
      */
-    public static function build($builder = null)
+    public static function of($builder = null)
     {
         return new BSButton($builder);
     }

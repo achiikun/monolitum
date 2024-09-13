@@ -131,7 +131,7 @@ class Link
      * @param Path $path
      * @return Link
      */
-    public static function of($path = null){
+    public static function from($path = null){
         return new Link($path);
     }
 

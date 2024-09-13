@@ -51,7 +51,7 @@ abstract class TS
      * @param string[] $string
      * @return TS
      */
-    public static function of($string){
+    public static function from($string){
         return TS_Default::ofStringArray($string);
     }
 
