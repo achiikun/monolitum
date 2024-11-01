@@ -53,10 +53,10 @@ class Manager_Path extends Manager
     }
 
     /**
-     * @param Active_Param_Path_PushValue $active
+     * @param Active_Param_Path_ShiftElement $active
      * @return void
      */
-    public function pushValue($active)
+    public function shiftElement($active)
     {
 
         if(count($this->path) > $this->nextIdx){
@@ -74,10 +74,10 @@ class Manager_Path extends Manager
     }
 
     /**
-     * @param Active_Param_Path_TopValue $active
+     * @param Active_Param_Path_CurrentElement $active
      * @return void
      */
-    public function topValue($active)
+    public function currentElement($active)
     {
 
         if($this->nextIdx == 0){
@@ -114,10 +114,10 @@ class Manager_Path extends Manager
 
     protected function receiveActive($active)
     {
-        if($active instanceof Active_Param_Path_PushValue){
+        if($active instanceof Active_Param_Path_ShiftElement){
             $active->setManager($this);
             return true;
-        }else if($active instanceof Active_Param_Path_TopValue){
+        }else if($active instanceof Active_Param_Path_CurrentElement){
             $active->setManager($this);
             return true;
         }else if($active instanceof Active_Make_Url) {
@@ -301,14 +301,20 @@ class Manager_Path extends Manager
         GlobalContext::add(new Manager_Path($param, $builder));
     }
 
-    public static function go_Param_Path_PushValue(){
-        $a = new Active_Param_Path_PushValue(Active_Param_Abstract::TYPE_STRING);
+    /**
+     * @return Active_Param_Path_ShiftElement
+     */
+    public static function go_Param_Path_ShiftElement(){
+        $a = new Active_Param_Path_ShiftElement(Active_Param_Abstract::TYPE_STRING);
         GlobalContext::add($a);
         return $a;
     }
 
-    public static function go_Param_Path_TopValue(){
-        $a = new Active_Param_Path_TopValue(Active_Param_Abstract::TYPE_STRING);
+    /**
+     * @return Active_Param_Path_CurrentElement
+     */
+    public static function go_Param_Path_CurrentElement(){
+        $a = new Active_Param_Path_CurrentElement(Active_Param_Abstract::TYPE_STRING);
         GlobalContext::add($a);
         return $a;
     }
@@ -316,9 +322,9 @@ class Manager_Path extends Manager
     /**
      * @return mixed|null
      */
-    public static function go_getTop()
+    public static function go_getCurrentElement()
     {
-        $a = new Active_Param_Path_TopValue(Active_Param_Abstract::TYPE_STRING);
+        $a = new Active_Param_Path_CurrentElement(Active_Param_Abstract::TYPE_STRING);
         GlobalContext::add($a);
         return $a->getValidatedValue()->getValue();
     }

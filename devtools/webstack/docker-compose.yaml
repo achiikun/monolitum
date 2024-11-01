@@ -20,7 +20,7 @@ services:
             - db
     db:
         image: mariadb
-        restart: always
+        #restart: always
         ports:
             - "3306:3306"
         environment:

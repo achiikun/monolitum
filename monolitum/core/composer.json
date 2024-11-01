@@ -1,0 +1,15 @@
+{
+  "name": "monolitum/core",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "type": "library",
+  "authors": [
+    {
+      "name": "achi",
+      "email": "email@example.com"
+    }
+  ],
+  "require": {
+  }
+}

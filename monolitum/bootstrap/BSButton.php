@@ -65,6 +65,31 @@ class BSButton extends AbstractText
     }
 
     /**
+     * @return $this
+     */
+    public function colorLink()
+    {
+        $this->addClass("btn-link");
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function large(){
+        $this->addClass("btn-lg");
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function small(){
+        $this->addClass("btn-sm");
+        return $this;
+    }
+
+    /**
      * @param Link|Path $href
      * @return $this
      */

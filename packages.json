@@ -1,0 +1,27 @@
+{
+  "providers-api": "%package%",
+  "packages": {
+    "monolitum/core": {
+      "dev-master": {
+        "name": "monolitum/core",
+        "type": "project",
+        "version": "dev-master"
+      }
+    },
+    "monolitum/auth": {
+      "dev-master": {
+        "name": "monolitum/auth",
+        "source": {
+          "type": "path",
+          "url": "monolitum/auth",
+          "reference": ""
+        },
+        "type": "project",
+        "version": "dev-master",
+        "require": {
+          "monolium/core": "dev-master"
+        }
+      }
+    }
+  }
+}

@@ -57,4 +57,10 @@ class BSPage extends HTMLPage{
         }
     }
 
+    protected function onBeforeEcho()
+    {
+        parent::onBeforeEcho();
+//        echo "<!DOCTYPE html>"; // See https://getbootstrap.com/docs/5.3/getting-started/introduction/
+    }
+
 }

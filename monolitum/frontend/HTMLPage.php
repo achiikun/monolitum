@@ -133,11 +133,24 @@ class HTMLPage extends Component {
         Renderable_Node::renderRenderedTo($this->body->render(), $html);
 
         $htmlBuilder = new HtmlBuilder();
+
+        $this->onBeforeEcho();
         echo $htmlBuilder->render($html);
+        $this->onAfterEcho();
 
     }
 
     function buildPage(){
+
+    }
+
+    protected function onBeforeEcho()
+    {
+
+    }
+
+    protected function onAfterEcho()
+    {
 
     }
 
