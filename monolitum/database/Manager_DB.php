@@ -21,7 +21,6 @@ use monolitum\entity\Entity;
 use monolitum\entity\Interface_Entity_DB;
 use monolitum\entity\Model;
 use monolitum\entity\values\Color;
-use monolitum\frontend\form\I_Form_Attr;
 use PDO;
 
 class Manager_DB extends Manager implements Active, Interface_Entity_DB
@@ -528,6 +527,8 @@ class Manager_DB extends Manager implements Active, Interface_Entity_DB
                 $stmt->bindValue($idx+1, $value, PDO::PARAM_BOOL);
             }else if(is_int($value)){
                 $stmt->bindValue($idx+1, $value, PDO::PARAM_INT);
+            }else if($value instanceof DateTime){
+                $stmt->bindValue($idx+1, date_format($value, 'Y-m-d\TH:i:s'));
             }else{
                 $stmt->bindValue($idx+1, $value);
             }
@@ -647,6 +648,20 @@ class Manager_DB extends Manager implements Active, Interface_Entity_DB
             $sql .= " IS NULL ";
         }else if($filter instanceof Query_NotNull){
             $sql .= " IS NOT NULL ";
+        }else if($filter instanceof Query_CMP){
+            $value = $filter->getValue();
+            $sign = $filter->getSign();
+            if(is_int($value)){
+                if(!($attr instanceof Attr_Int) && !($attr instanceof Attr_Decimal))
+                    throw new DevPanic("Illegal int value type");
+                $sql .= " " . $sign . " ?";
+                $values[] = $value;
+            }else if($value instanceof DateTime){
+                if(!($attr instanceof Attr_Date))
+                    throw new DevPanic("Illegal datetime value type");
+                $sql .= " " . $sign . " ?";
+                $values[] = $value;
+            }
         }else if($filter instanceof Query_Like){
 
             $string = $filter->getString();
@@ -698,6 +713,11 @@ class Manager_DB extends Manager implements Active, Interface_Entity_DB
                     throw new DevPanic("Illegal color value type");
                 $sql .= " = ?";
                 $values[] = $filter->getHexValue();
+            }else if($filter instanceof DateTime){
+                if(!($attr instanceof Attr_Date))
+                    throw new DevPanic("Illegal string value type");
+                $sql .= " = ?";
+                $values[] = $filter;
             }else{
                 $sql .= " = ?";
                 $values[] = $filter;
