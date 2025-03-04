@@ -228,6 +228,45 @@ class Manager_Path extends Manager
             }
 
             return true;
+        }else if($active instanceof Active_Transform_Url2Link) {
+
+            /** @var string $url */
+            $url = $active->getUrl();
+
+            if(strlen($url) > 0){
+                $pathStr = parse_url("s://h:0/" . $url, PHP_URL_PATH);
+                $query = parse_url("s://h:0/" . $url, PHP_URL_QUERY);
+//                $pathStr = $parsed['path'];
+//                $query = $parsed['query'];
+
+                $queryResult = [];
+                if($query !== null && strlen($query) > 0){
+                    parse_str($query, $queryResult);
+                }
+
+                $path = null;
+                if(strlen($pathStr) > 0){
+                    $newPath = [];
+                    foreach (explode("/", $pathStr) as $value){
+                        if(strlen($value) > 0){
+                            $newPath[] = $value;
+                        }
+                    }
+
+                    if(count($newPath) > 0){
+                        $path = Path::from(...$newPath);
+                    }
+                }
+
+                $link = Link::from($path !== null ? $path : Path::from());
+                $link->addParams($queryResult);
+
+                $active->setLink($link);
+            }else{
+                $active->setLink(Link::from());
+            }
+
+            return true;
         }else if($active instanceof Active_Path_BuildParent) {
 
             $currentLength = count($this->path) - $active->getParents();

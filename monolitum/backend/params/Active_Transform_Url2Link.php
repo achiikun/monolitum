@@ -3,9 +3,10 @@
 namespace monolitum\backend\params;
 
 use monolitum\core\Active;
+use monolitum\core\GlobalContext;
 use monolitum\core\panic\DevPanic;
 
-class Active_Url2Path implements Active
+class Active_Transform_Url2Link implements Active
 {
 
     /**
@@ -14,9 +15,9 @@ class Active_Url2Path implements Active
     private $url;
 
     /**
-     * @var Path
+     * @var Link
      */
-    private $path;
+    private $link;
 
     /**
      * @param string $url
@@ -27,19 +28,33 @@ class Active_Url2Path implements Active
     }
 
     /**
-     * @param Path $path
+     * @param string $url
      */
-    public function setPath($path)
+    public static function from($url)
     {
-        $this->path = $path;
+        return new self($url);
+    }
+
+    public function go()
+    {
+        GlobalContext::add($this);
+        return $this;
     }
 
     /**
-     * @return Path
+     * @param Link $link
      */
-    public function getPath()
+    public function setLink($link)
     {
-        return $this->path;
+        $this->link = $link;
+    }
+
+    /**
+     * @return Link
+     */
+    public function getLink()
+    {
+        return $this->link;
     }
 
     /**
