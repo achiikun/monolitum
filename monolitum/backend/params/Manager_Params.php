@@ -52,6 +52,42 @@ class Manager_Params extends Manager implements Validator
         $this->postModels[$model->getIdOrClass()] = $model;
     }
 
+    /**
+     * @param Attr $attr
+     * @param $name
+     * @param array $globalArray
+     * @return ValidatedValue
+     */
+    public function validateAttributeFromGlobalArray(Attr $attr, $name, array $globalArray)
+    {
+        if ($attr instanceof Attr_File) {
+
+            $value = array_key_exists($name, $_FILES) ? $_FILES[$name] : null;
+
+            if ($value !== null) {
+                if (
+                    !isset($value['error']) ||
+                    is_array($value['error'])
+                ) {
+                    return new ValidatedValue(false, false, null, Attr_File::ERROR_BAD_FORMAT);
+                }
+                if ($value['error'] == UPLOAD_ERR_NO_FILE)
+                    $value = null;
+            }
+
+            return $attr->validate($value);
+
+        } else {
+
+            if (array_key_exists($name, $globalArray)) {
+                return $attr->validate($globalArray[$name]);
+            } else {
+                return new ValidatedValue(true, true, null);
+            }
+
+        }
+    }
+
     protected function receiveActive($active)
     {
         if($active instanceof Active_Get_Params){
@@ -177,32 +213,7 @@ class Manager_Params extends Manager implements Validator
         if($prefix !== null)
             $name = $prefix . $name;
 
-        if($attr instanceof Attr_File){
-
-            $value = array_key_exists($name, $_FILES) ? $_FILES[$name] : null;
-
-            if($value !== null){
-                if (
-                    !isset($value['error']) ||
-                    is_array($value['error'])
-                ) {
-                    return new ValidatedValue(false, false, null, Attr_File::ERROR_BAD_FORMAT);
-                }
-                if($value['error'] == UPLOAD_ERR_NO_FILE)
-                    $value = null;
-            }
-
-            return $attr->validate($value);
-
-        } else {
-
-            if(array_key_exists($name, $globalArray)){
-                return $attr->validate($globalArray[$name]);
-            }else{
-                return new ValidatedValue(true, true, null);
-            }
-
-        }
+        return $this->validateAttributeFromGlobalArray($attr, $name, $globalArray);
     }
 
     /**
@@ -234,32 +245,7 @@ class Manager_Params extends Manager implements Validator
         if($prefix !== null)
             $name = $prefix . $name;
 
-        if($attr instanceof Attr_File){
-
-            $value = array_key_exists($name, $_FILES) ? $_FILES[$name] : null;
-
-            if($value !== null){
-                if (
-                    !isset($value['error']) ||
-                    is_array($value['error'])
-                ) {
-                    return new ValidatedValue(false, false, null, Attr_File::ERROR_BAD_FORMAT);
-                }
-                if($value['error'] == UPLOAD_ERR_NO_FILE)
-                    $value = null;
-            }
-
-            return $attr->validate($value);
-
-        } else {
-
-            if(array_key_exists($name, $globalArray)){
-                return $attr->validate($globalArray[$name]);
-            }else{
-                return new ValidatedValue(true, true, null);
-            }
-
-        }
+        return $this->validateAttributeFromGlobalArray($attr, $name, $globalArray);
     }
 
     function multiple(array $_files, $top = TRUE)
@@ -299,9 +285,9 @@ class Manager_Params extends Manager implements Validator
         $value = array_key_exists($name, $globalArray) ? $globalArray[$name] : null;
 
         if(is_string($value) || is_numeric($value)){
-            return new ValidatedValue(true, true, strval($value));
+            return new ValidatedValue(true, true, strval($value), null, strval($value));
         }else if(is_null($value)){
-            return new ValidatedValue(true, true, null);
+            return new ValidatedValue(true, true, null, null, "null");
         }
 
         return new ValidatedValue(false);
@@ -321,11 +307,11 @@ class Manager_Params extends Manager implements Validator
             if(strncmp($name, $prefix, $prefixLength) === 0){
                 $actionLength = strlen($name) - $prefixLength;
                 if($actionLength === 0)
-                    return new ValidatedValue(true, true, null);
+                    return new ValidatedValue(true, true, null, null, "null");
 
                 $action = substr( $name, $prefixLength, strlen($name) - $prefixLength);
 
-                return new ValidatedValue(true, true, strval($action));
+                return new ValidatedValue(true, true, strval($action), null, strval($action));
             }
 
         }

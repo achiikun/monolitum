@@ -34,16 +34,16 @@ class Attr_Decimal extends Attr
 
     public function validate($value)
     {
-        if(is_string($value)){
+        if(is_numeric($value)){
+            return new ValidatedValue(true, true, intval(intval($value) * pow(10, $this->decimals)), null, $value);
+        } else if(is_string($value)){
             try{
                 $floatValue = floatval($value);
                 $intValue = intval($floatValue * pow(10, $this->decimals));
-                return new ValidatedValue(true, true, $intValue);
+                return new ValidatedValue(true, true, $intValue, null, $value);
             }catch (Exception $e){
                 return new ValidatedValue(false);
             }
-        }else if(is_numeric($value)){
-            return new ValidatedValue(true, true, intval($value * pow(10, $this->decimals)));
         }
         return new ValidatedValue(false);
     }

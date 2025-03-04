@@ -61,20 +61,20 @@ class Attr_Quill extends Attr implements I_Attr_Databasable
             $trimmedValue = trim($value);
 
             if($trimmedValue == "")
-                return new ValidatedValue(true, true, null);
+                return new ValidatedValue(true, true, null, null, $trimmedValue);
 
             if(PHP_MAJOR_VERSION >= 7){
                 try{
-                    $quill = $this->tryToParseValue($value);
-                    return new ValidatedValue(true, true, $quill);
+                    $quill = $this->tryToParseValue($trimmedValue);
+                    return new ValidatedValue(true, true, $quill, null, $trimmedValue);
                 }catch (\Error $exception){
                     // Error
                 }
             }else{
 
                 try{
-                    $quill = $this->tryToParseValue($value);
-                    return new ValidatedValue(true, true, $quill);
+                    $quill = $this->tryToParseValue($trimmedValue);
+                    return new ValidatedValue(true, true, $quill, null, $trimmedValue);
                 }catch (\Exception $exception){
                     // PHP <7 has no Error, catch exception
                 }

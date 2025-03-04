@@ -22,12 +22,12 @@ class Attr_Date extends Attr
                 // Force to be a date, not a datetime
                 $date = date_time_set($date, 0, 0);
 
-                return new ValidatedValue(true, true, $date);
+                return new ValidatedValue(true, true, $date, null, $value);
             }else{
-                return new ValidatedValue(true, true, null);
+                return new ValidatedValue(true, true, null, null, "null");
             }
         }else if(is_null($value)){
-            return new ValidatedValue(true, true, null);
+            return new ValidatedValue(true, true, null, null, "null");
         }
 
         return new ValidatedValue(false);

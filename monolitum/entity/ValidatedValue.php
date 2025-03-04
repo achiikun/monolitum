@@ -11,12 +11,18 @@ class ValidatedValue
 
     private $error;
 
-    public function __construct($isValid=false, $wellFormat=false, $value = null, $error = null)
+    /**
+     * @var string|null
+     */
+    private $strValue;
+
+    public function __construct($isValid=false, $wellFormat=false, $value = null, $error = null, $strValue = null)
     {
         $this->isValid = $isValid;
         $this->isWellFormat = $wellFormat;
         $this->value = $value;
         $this->error = $error;
+        $this->strValue = $strValue;
     }
 
     /**
@@ -33,6 +39,14 @@ class ValidatedValue
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getStrValue()
+    {
+        return $this->strValue;
     }
 
     /**

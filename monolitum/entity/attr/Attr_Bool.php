@@ -16,20 +16,20 @@ class Attr_Bool extends Attr
     {
         if(is_string($value)){
             if($value == "true"){
-                return new ValidatedValue(true, true,true);
+                return new ValidatedValue(true, true,true, null, $value);
             }else if($value == "false"){
-                return new ValidatedValue(true, true, false);
+                return new ValidatedValue(true, true, false, null, $value);
             }else{
-                return new ValidatedValue(true, true,true);
+                return new ValidatedValue(true, true,true, null, "true");
             }
         }else if(is_numeric($value)){
             if($value == 0) {
-                return new ValidatedValue(true, true,false);
+                return new ValidatedValue(true, true,false, null, "false");
             }else {
-                return new ValidatedValue(true, true,true);
+                return new ValidatedValue(true, true,true, null, "true");
             }
         }else if(is_null($value)){
-            return new ValidatedValue(true, true,false);
+            return new ValidatedValue(true, true,false, null, "false");
         }
         return new ValidatedValue(false);
     }

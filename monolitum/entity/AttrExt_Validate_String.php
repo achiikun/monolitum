@@ -228,13 +228,13 @@ class AttrExt_Validate_String extends AttrExt_Validate
         }
 
         if($error){
-            return new ValidatedValue(false, true, $validatedValue->getValue(), $errorMessage);
+            return new ValidatedValue(false, true, $validatedValue->getValue(), $errorMessage, $validatedValue->getStrValue());
         }else{
 
             if($this->postprocessorFunction !== null){
                 $vf = $this->postprocessorFunction;
                 $result = $vf($validatedValue->getValue());
-                return new ValidatedValue($validatedValue->isValid(), $validatedValue->isWellFormat(), $result, $validatedValue->getError());
+                return new ValidatedValue($validatedValue->isValid(), $validatedValue->isWellFormat(), $result, $validatedValue->getError(), $validatedValue->getStrValue());
             }
 
             return $validatedValue;

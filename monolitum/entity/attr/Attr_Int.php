@@ -15,7 +15,7 @@ class Attr_Int extends Attr
     public function validate($value)
     {
         if(is_numeric($value)) {
-            return new ValidatedValue(true, true, intval($value));
+            return new ValidatedValue(true, true, intval($value), null, $value);
         }
         return new ValidatedValue(false);
     }

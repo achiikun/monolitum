@@ -118,7 +118,7 @@ abstract class Responsive
             $component->addClass($prefix . "-xl-" . $this->xl->getValue($inverted));
 
         if($this->xxl != null)
-            $component->addClass($prefix . "-xxl-" . $this->xl->getValue($inverted));
+            $component->addClass($prefix . "-xxl-" . $this->xxl->getValue($inverted));
 
     }
 

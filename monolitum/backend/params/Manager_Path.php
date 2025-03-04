@@ -349,12 +349,12 @@ class Manager_Path extends Manager
 
         switch ($activeType){
             case Active_Param_Abstract::TYPE_STRING:
-                return new ValidatedValue(true, true, $strValue);
+                return new ValidatedValue(true, true, $strValue, null, $strValue);
             case Active_Param_Abstract::TYPE_INT:
                 // Dangerous code, it will parse anything. If it fails, a 0 is returned.
                 // Better use https://hashids.org/php/ instead of ids
                 $intValue = intval($strValue);
-                return new ValidatedValue(true, true, $intValue);
+                return new ValidatedValue(true, true, $intValue, null, $strValue);
             default:
                 return new ValidatedValue(false);
         }

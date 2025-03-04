@@ -95,7 +95,7 @@ class AttrExt_Validate_Int extends AttrExt_Validate
         }
 
         if($error){
-            return new ValidatedValue(false, true, $validatedValue->getValue(), $errorMessage);
+            return new ValidatedValue(false, true, $validatedValue->getValue(), $errorMessage, $validatedValue->getStrValue());
         }else{
             return $validatedValue;
         }
