@@ -1,9 +1,6 @@
 <?php
 namespace monolitum\entity;
 
-use monolitum\entity\attr\Attr;
-use monolitum\core\panic\DevPanic;
-
 class Model extends AnonymousModel
 {
 
@@ -49,7 +46,10 @@ class Model extends AnonymousModel
 
     public function __toString()
     {
-        return $this->getId();
+        $id = $this->getId();
+        if(!is_null($id))
+            return $id;
+        return  parent::__toString();
     }
 
 }
