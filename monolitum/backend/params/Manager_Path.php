@@ -188,10 +188,12 @@ class Manager_Path extends Manager
                         if($key === $this->writeAsParam)
                             continue;
 
-                        if(!$querySign)
+                        if(!$querySign){
                             $url .= '/?';
-                        else
+                            $querySign = true;
+                        }else{
                             $url .= '&';
+                        }
                         $url .= urlencode($key);
                         $url .= "=";
                         $url .= urlencode($value);
