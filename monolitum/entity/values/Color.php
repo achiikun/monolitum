@@ -203,6 +203,10 @@ class Color
         $blue = null;
         $alpha = null;
 
+        if(!preg_match('/^[0-9a-f]{3,8}$/i', $hex)){
+            return null;
+        }
+
         // what kind of code do we have?
         if (strlen($hex)==8){
 
@@ -232,7 +236,7 @@ class Color
         else{
 
             // invalid code... oops
-            return new Color();
+            return null;
 
         }
 
