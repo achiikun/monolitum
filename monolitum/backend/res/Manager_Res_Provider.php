@@ -105,7 +105,7 @@ class Manager_Res_Provider extends Manager
 
         /** @var ValidatedValue $validatedValue */
         $validatedValue = $this->readResourceParam->getValidatedValue();
-        if($validatedValue->isValid()){
+        if($validatedValue->isValid() && !$validatedValue->isNull()){
 
             $active = new Active_Url2Path($validatedValue->getValue());
             GlobalContext::add($active);
