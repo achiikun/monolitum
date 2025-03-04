@@ -2,10 +2,15 @@
 
 namespace monolitum\backend\params;
 
+use monolitum\core\Find;
 use monolitum\core\GlobalContext;
 
 class Link
 {
+
+    const HISTORY_BEHAVIOR_PRESERVE = "preserve";
+    const HISTORY_BEHAVIOR_PUSH = "push";
+    const HISTORY_BEHAVIOR_POP = "pop";
 
     /**
      * @var Path
@@ -28,6 +33,11 @@ class Link
     private $addParams = [];
 
     /**
+     * @var bool
+     */
+    private $historyBehavior = self::HISTORY_BEHAVIOR_PRESERVE;
+
+    /**
      * @param Path $path
      */
     public function __construct($path = null)
@@ -46,6 +56,20 @@ class Link
     public function setCopyParams(...$specificParams)
     {
         $this->copyParams = !$specificParams ? true : $specificParams;
+        return $this;
+    }
+
+    /**
+     * @param ...$specificParams
+     * @return $this
+     */
+    public function addCopyParams(...$specificParams)
+    {
+        if($this->copyParams === false){
+            $this->setCopyParams(...$specificParams);
+        }else if(is_array($this->copyParams)){
+            $this->copyParams += $specificParams;
+        }
         return $this;
     }
 
@@ -74,7 +98,19 @@ class Link
      * @return $this
      */
     public function addParams($addParams){
-        $this->addParams += $addParams;
+        foreach($addParams as $param => $value){
+            if (($key = array_search($param, $this->removeParams)) !== false) {
+                // Remove from remove
+                unset($this->removeParams[$key]);
+            }
+
+            if (is_array($this->copyParams) && ($key = array_search($param, $this->copyParams)) !== false) {
+                // Remove from copy
+                unset($this->copyParams[$key]);
+            }
+
+            $this->addParams[$param] = $value;
+        }
         return $this;
     }
 
@@ -83,7 +119,44 @@ class Link
      * @return $this
      */
     public function removeParams(...$removeParams){
-        $this->removeParams += $removeParams;
+        foreach($removeParams as $param){
+            if (($key = array_search($param, $this->addParams)) !== false) {
+                // Remove from add
+                unset($this->addParams[$key]);
+            }else if($this->copyParams === true) {
+                $this->removeParams += $removeParams;
+            }else if(is_array($this->copyParams) && ($key = array_search($param, $this->addParams)) !== false){
+                // Remove from copyParams
+                unset($this->copyParams[$key]);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function pushHistory()
+    {
+        $this->historyBehavior = self::HISTORY_BEHAVIOR_PUSH;
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function dontPreserveHistory()
+    {
+        $this->historyBehavior = null;
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function popHistory()
+    {
+        $this->historyBehavior = self::HISTORY_BEHAVIOR_POP;
         return $this;
     }
 
@@ -128,11 +201,29 @@ class Link
     }
 
     /**
+     * @return string
+     */
+    public function getHistoryBehavior()
+    {
+        return $this->historyBehavior;
+    }
+
+    /**
      * @param Path $path
      * @return Link
      */
     public static function from($path = null){
         return new Link($path);
+    }
+
+    /**
+     * @param Link $fallbackPath
+     * @return Link
+     */
+    public static function fromPopHistory($fallbackPath = null){
+        /** @var Manager_History $h */
+        $h = Find::sync(Manager_History::class);
+        return (new Link($h->getTopHistory($fallbackPath)))->popHistory();
     }
 
     public function go_redirect(){
@@ -146,6 +237,7 @@ class Link
         $link->copyParams = $this->copyParams;
         $link->addParams = $this->addParams;
         $link->removeParams = $this->removeParams;
+        $link->historyBehavior = $this->historyBehavior;
         return $link;
     }
 

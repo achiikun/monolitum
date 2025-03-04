@@ -59,6 +59,7 @@ class Manager_Res_Resolver extends Manager
         GlobalContext::add($active);
 
         $link = new Link($this->writePath);
+        $link->dontPreserveHistory();
         $link->addParams([
             $this->writeResourceParam => $active->getUrl()
         ]);
