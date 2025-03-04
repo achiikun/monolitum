@@ -86,6 +86,6 @@ class Active_Get_Params implements Active
 
     function onNotReceived()
     {
-        throw new DevPanic("No path manager.");
+        throw new DevPanic("No Params manager.");
     }
 }

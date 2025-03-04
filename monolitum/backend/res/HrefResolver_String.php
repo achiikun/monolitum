@@ -16,9 +16,7 @@ class HrefResolver_String implements HrefResolver
     private $string;
 
     /**
-     * @param Manager_Href_Resolver $manager
-     * @param Link|Path $link
-     * @param $isSetParamsAlone
+     * @param $string
      */
     public function __construct($string)
     {
@@ -30,7 +28,7 @@ class HrefResolver_String implements HrefResolver
         return $this->string;
     }
 
-    function getParamsAlone()
+    function getAloneParamValues()
     {
         return null;
     }

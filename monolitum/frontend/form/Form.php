@@ -782,7 +782,7 @@ class Form extends Component
         if($this->linkResolver !== null){
             $this->formElement->setAttribute("action", $this->linkResolver->resolve());
 
-            $paramsAlone = $this->linkResolver->getParamsAlone();
+            $paramsAlone = $this->linkResolver->getAloneParamValues();
             if(is_array($paramsAlone)){
                 foreach ($paramsAlone as $key => $value) {
                     $input = $this->createHiddenInput($this, $key, $value);

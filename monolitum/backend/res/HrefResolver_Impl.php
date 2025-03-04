@@ -16,7 +16,7 @@ class HrefResolver_Impl implements HrefResolver
     /**
      * @var bool
      */
-    private $isSetParamsAlone;
+    private $obtainParamsAlone;
 
     /**
      * @var Manager_Href_Resolver
@@ -26,18 +26,18 @@ class HrefResolver_Impl implements HrefResolver
     /**
      * @var array<string, string>
      */
-    private $paramsAlone = null;
+    private $aloneParamValues = null;
 
     /**
      * @param Manager_Href_Resolver $manager
      * @param Link|Path $link
-     * @param $isSetParamsAlone
+     * @param $obtainParamsAlone
      */
-    public function __construct($manager, $link, $isSetParamsAlone)
+    public function __construct($manager, $link, $obtainParamsAlone)
     {
         $this->link = $link;
         $this->manager = $manager;
-        $this->isSetParamsAlone = $isSetParamsAlone;
+        $this->obtainParamsAlone = $obtainParamsAlone;
     }
 
     /**
@@ -51,25 +51,25 @@ class HrefResolver_Impl implements HrefResolver
     /**
      * @return bool
      */
-    function isSetParamsAlone()
+    function isObtainParamsAlone()
     {
-        return $this->isSetParamsAlone;
+        return $this->obtainParamsAlone;
     }
 
     /**
      * @param array<string, string> $paramsAlone
      */
-    function setParamsAlone($paramsAlone)
+    function setAloneParamValues($paramsAlone)
     {
-        $this->paramsAlone = $paramsAlone;
+        $this->aloneParamValues = $paramsAlone;
     }
 
     /**
      * @return array<string, string>
      */
-    public function getParamsAlone()
+    public function getAloneParamValues()
     {
-        return $this->paramsAlone;
+        return $this->aloneParamValues;
     }
 
     function resolve()

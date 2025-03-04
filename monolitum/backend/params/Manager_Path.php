@@ -15,7 +15,7 @@ class Manager_Path extends Manager
     private $readPathParam;
 
     /**
-     * @var string|bool
+     * @var string|false
      */
     private $writeAsParam = false;
 
@@ -40,7 +40,7 @@ class Manager_Path extends Manager
     }
 
     /**
-     * @param bool|string $paramName
+     * @param string $paramName
      */
     public function writeAsParam($paramName)
     {
@@ -125,13 +125,18 @@ class Manager_Path extends Manager
             /** @var Link|Path $link */
             $link = $active->getLink();
 
-            $setParamsAlone = $active->isSetParamsAlone();
+            $isObtainParamsAlone = $active->isObtainParamsAlone();
+
+            $writeAsParam = $active->getWriteAsParam();
+            if($writeAsParam === null)
+                $writeAsParam = $this->writeAsParam;
+
             $paramsAlone = [];
 
             if($link instanceof Path){
                 $path = $link;
             }else{
-                /** @var Path $path */
+                /** @var Path $url */
                 $path = $link->getPath();
             }
 
@@ -140,12 +145,12 @@ class Manager_Path extends Manager
 
             $stringPath = $this->writePath($path);
             if($stringPath != null){
-                if($this->writeAsParam){
-                    if($setParamsAlone){
+                if($writeAsParam){
+                    if($isObtainParamsAlone){
                         $url .= GlobalContext::getLocalAddress();
-                        $paramsAlone[$this->writeAsParam] = $stringPath;
+                        $paramsAlone[$writeAsParam] = $stringPath;
                     }else{
-                        $url .= GlobalContext::getLocalAddress() . '/?' . $this->writeAsParam . "=" . urlencode($stringPath);
+                        $url .= GlobalContext::getLocalAddress() . '/?' . $writeAsParam . "=" . urlencode($stringPath);
                         $querySign = true;
                     }
                 }else{
@@ -178,14 +183,14 @@ class Manager_Path extends Manager
                     $currentParams[$key] = $value;
                 }
 
-                if($setParamsAlone){
+                if($isObtainParamsAlone){
                     foreach ($currentParams as $key => $value) {
                         $paramsAlone[$key] = $value;
                     }
                 }else{
 
                     foreach ($currentParams as $key => $value){
-                        if($key === $this->writeAsParam)
+                        if($key === $writeAsParam || $value === null)
                             continue;
 
                         if(!$querySign){
@@ -206,8 +211,8 @@ class Manager_Path extends Manager
             // TODO unique changing key?
 
             $active->setUrl($url);
-            if($setParamsAlone)
-                $active->setParamsAlone($paramsAlone);
+            if($isObtainParamsAlone)
+                $active->setAloneParamValues($paramsAlone);
 
             return true;
         }else if($active instanceof Active_Path2UrlPath) {
@@ -220,11 +225,11 @@ class Manager_Path extends Manager
             return true;
         }else if($active instanceof Active_Url2Path) {
 
-            /** @var string $path */
-            $path = $active->getUrl();
+            /** @var string $url */
+            $url = $active->getUrl();
 
-            if(strlen($path) > 0){
-                $active->setPath(Path::from(...explode("/", $path)));
+            if(strlen($url) > 0){
+                $active->setPath(Path::from(...explode("/", $url)));
             }else{
                 $active->setPath(Path::from());
             }

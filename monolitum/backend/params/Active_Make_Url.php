@@ -18,12 +18,17 @@ class Active_Make_Url implements Active
      * Alone params help POST forms to add hidden data into it.
      * @var bool
      */
-    private $setParamsAlone;
+    private $obtainParamsAlone;
 
     /**
      * @var array<string, string>
      */
-    private $paramsAlone;
+    private $aloneParamValues;
+
+    /**
+     * @var null|false|string
+     */
+    private $writeAsParam = null;
 
     /**
      * @var string
@@ -32,12 +37,28 @@ class Active_Make_Url implements Active
 
     /**
      * @param Link|Path $link
-     * @param bool $isSetParamsAlone
+     * @param bool $obtainParamsAlone
      */
-    public function __construct($link, $isSetParamsAlone=false)
+    public function __construct($link, $obtainParamsAlone=false)
     {
         $this->link = $link;
-        $this->setParamsAlone = $isSetParamsAlone;
+        $this->obtainParamsAlone = $obtainParamsAlone;
+    }
+
+    /**
+     * @param false|string|null $writeAsParam
+     */
+    public function setWriteAsParam($writeAsParam)
+    {
+        $this->writeAsParam = $writeAsParam;
+    }
+
+    /**
+     * @return false|string|null
+     */
+    public function getWriteAsParam()
+    {
+        return $this->writeAsParam;
     }
 
     /**
@@ -49,11 +70,11 @@ class Active_Make_Url implements Active
     }
 
     /**
-     * @return bool|array<string>
+     * @return bool
      */
-    public function isSetParamsAlone()
+    public function isObtainParamsAlone()
     {
-        return $this->setParamsAlone;
+        return $this->obtainParamsAlone;
     }
 
     /**
@@ -67,9 +88,9 @@ class Active_Make_Url implements Active
     /**
      * @param array<string, string> $paramsAlone
      */
-    function setParamsAlone($paramsAlone)
+    function setAloneParamValues($paramsAlone)
     {
-        $this->paramsAlone = $paramsAlone;
+        $this->aloneParamValues = $paramsAlone;
     }
 
     /**
@@ -83,9 +104,9 @@ class Active_Make_Url implements Active
     /**
      * @return array<string, string>
      */
-    public function getParamsAlone()
+    public function getAloneParamValues()
     {
-        return $this->paramsAlone;
+        return $this->aloneParamValues;
     }
 
     function onNotReceived()
