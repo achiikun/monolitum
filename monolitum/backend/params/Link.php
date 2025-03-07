@@ -120,12 +120,12 @@ class Link
      */
     public function removeParams(...$removeParams){
         foreach($removeParams as $param){
-            if (($key = array_search($param, $this->addParams)) !== false) {
+            if (key_exists($param, $this->addParams)) {
                 // Remove from add
-                unset($this->addParams[$key]);
+                unset($this->addParams[$param]);
             }else if($this->copyParams === true) {
                 $this->removeParams += $removeParams;
-            }else if(is_array($this->copyParams) && ($key = array_search($param, $this->addParams)) !== false){
+            }else if(is_array($this->copyParams) && ($key = array_search($param, $this->copyParams)) !== false){
                 // Remove from copyParams
                 unset($this->copyParams[$key]);
             }
