@@ -131,6 +131,10 @@ class Manager_Path extends Manager
             if($writeAsParam === null)
                 $writeAsParam = $this->writeAsParam;
 
+            $isAppendUrlPrefix = $active->isAppendUrlPrefix();
+            if($isAppendUrlPrefix === null)
+                $isAppendUrlPrefix = false;
+
             $paramsAlone = [];
 
             if($link instanceof Path){
@@ -143,21 +147,23 @@ class Manager_Path extends Manager
             $url = "";
             $querySign = false;
 
+            if($isAppendUrlPrefix)
+                $url .= GlobalContext::getLocalAddress();
+
             $stringPath = $this->writePath($path);
             if($stringPath != null){
                 if($writeAsParam){
                     if($isObtainParamsAlone){
-                        $url .= GlobalContext::getLocalAddress();
                         $paramsAlone[$writeAsParam] = $stringPath;
                     }else{
-                        $url .= GlobalContext::getLocalAddress() . '/?' . $writeAsParam . "=" . urlencode($stringPath);
+                        $url .= '/?' . $writeAsParam . "=" . urlencode($stringPath);
                         $querySign = true;
                     }
                 }else{
-                    $url .= GlobalContext::getLocalAddress() . '/' . $stringPath;
+                    $url .= '/' . $stringPath;
                 }
             }else{
-                $url .= GlobalContext::getLocalAddress() . '/';
+                $url .= '/';
             }
 
             if($link instanceof Link){

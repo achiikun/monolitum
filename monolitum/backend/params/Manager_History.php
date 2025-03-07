@@ -223,6 +223,7 @@ class Manager_History extends Manager
                 }
                 $a = new Active_Make_Url($link);
                 $a->setWriteAsParam(false);
+                $a->setAppendUrlPrefix(false);
                 GlobalContext::add($a, $this->getParent());
                 $string .= urlencode($a->getUrl());
 

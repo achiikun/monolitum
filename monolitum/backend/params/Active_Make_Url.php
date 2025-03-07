@@ -31,6 +31,11 @@ class Active_Make_Url implements Active
     private $writeAsParam = null;
 
     /**
+     * @var bool
+     */
+    private $appendUrlPrefix = true;
+
+    /**
      * @var string
      */
     private $url;
@@ -59,6 +64,22 @@ class Active_Make_Url implements Active
     public function getWriteAsParam()
     {
         return $this->writeAsParam;
+    }
+
+    /**
+     * @param bool $appendUrlPrefix
+     */
+    public function setAppendUrlPrefix($appendUrlPrefix)
+    {
+        $this->appendUrlPrefix = $appendUrlPrefix;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAppendUrlPrefix()
+    {
+        return $this->appendUrlPrefix;
     }
 
     /**
