@@ -41,7 +41,7 @@ class Active_SetResourceData implements Active
     /**
      * @return callable
      */
-    public function getWriterFunction(): callable
+    public function getWriterFunction()
     {
         return $this->writerFunction;
     }
