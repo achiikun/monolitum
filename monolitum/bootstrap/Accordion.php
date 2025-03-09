@@ -2,7 +2,7 @@
 
 namespace monolitum\bootstrap;
 
-use monolitum\backend\globals\Active_NewId;
+use monolitum\backend\globals\Active_Request_NewId;
 use monolitum\core\GlobalContext;
 use monolitum\frontend\component\Div;
 use monolitum\frontend\component\H;
@@ -37,12 +37,12 @@ class Accordion extends ElementComponent
     protected function afterBuildNode()
     {
 
-        $id = Active_NewId::go_newId();
+        $id = Active_Request_NewId::go_newId();
         $this->setId($id);
 
         foreach ($this->items as $item){
 
-            $idItem = Active_NewId::go_newId();
+            $idItem = Active_Request_NewId::go_newId();
 
             $divItem = new Div();
             $divItem->addClass("accordion-item");

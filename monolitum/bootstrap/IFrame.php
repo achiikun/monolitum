@@ -3,7 +3,7 @@
 namespace monolitum\bootstrap;
 
 use monolitum\core\GlobalContext;
-use monolitum\backend\res\Active_Resolve_Res;
+use monolitum\backend\res\Active_Create_ResResolver;
 use monolitum\backend\params\Path;
 use monolitum\backend\res\ResResolver;
 use monolitum\frontend\ElementComponent;
@@ -55,7 +55,7 @@ class IFrame extends ElementComponent
     protected function afterBuildNode()
     {
         if($this->source instanceof Path){
-            $active = new Active_Resolve_Res($this->source);
+            $active = new Active_Create_ResResolver($this->source);
             GlobalContext::add($active);
             $this->sourceResolver = $active->getResResolver();
         }

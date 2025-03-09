@@ -16,7 +16,7 @@
 
 ### UX
   - [X] i18n enums
-  - [ ] Save ref stack in url to go back (e.g. recovering table filter when returning from edit)
+  - [X] Save ref stack in url to go back (e.g. recovering table filter when returning from edit)
 
 ### Security
   - [ ] encrypt resource urls

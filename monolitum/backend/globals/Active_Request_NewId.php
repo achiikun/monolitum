@@ -6,7 +6,7 @@ use monolitum\core\Active;
 use monolitum\core\GlobalContext;
 use monolitum\core\panic\DevPanic;
 
-class Active_NewId implements Active
+class Active_Request_NewId implements Active
 {
 
     /**
@@ -60,7 +60,7 @@ class Active_NewId implements Active
      * @return string
      */
     public static function go_newId($contextIds=null){
-        $active = new Active_NewId($contextIds);
+        $active = new Active_Request_NewId($contextIds);
         GlobalContext::add($active);
         return $active->getId();
     }

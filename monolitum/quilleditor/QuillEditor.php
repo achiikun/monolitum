@@ -2,7 +2,7 @@
 
 namespace monolitum\quilleditor;
 
-use monolitum\backend\globals\Active_NewId;
+use monolitum\backend\globals\Active_Request_NewId;
 use monolitum\backend\params\Path;
 use monolitum\bootstrap\BSPage;
 use monolitum\core\Find;
@@ -100,11 +100,11 @@ class QuillEditor extends ElementComponent
 
         $this->editor_id = $this->getId();
         if($this->editor_id === null){
-            $this->editor_id = Active_NewId::go_newId();
+            $this->editor_id = Active_Request_NewId::go_newId();
             $this->setId($this->editor_id);
         }
 
-        $this->container_id = Active_NewId::go_newId();
+        $this->container_id = Active_Request_NewId::go_newId();
 
     }
 

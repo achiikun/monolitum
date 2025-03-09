@@ -122,11 +122,12 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
 
                 $this->formWrapper->append($this->createFormControl());
 
-                if(is_string($this->getLabel()) && strlen($this->getLabel()) > 0){
+                $label = TS::unwrap($this->getLabel(), TSLang::findWithOverwritten($this->overwrittenLanguage));
+                if(is_string($label) && strlen($label) > 0){
                     $this->formWrapper->append(
-                        new FormLabel(function(FormLabel $it){
+                        new FormLabel(function(FormLabel $it) use ($label) {
                             $it->setName($this->getFullFieldName());
-                            $it->setContent($this->getLabel());
+                            $it->setContent($label);
                         }, "form-check-label")
                     );
                 }
@@ -146,10 +147,11 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
                 $this->formWrapper->addClass("form-group");
 
                 $formLabel = null;
-                if(is_string($this->getLabel()) && strlen($this->getLabel()) > 0) {
-                    $formLabel = new FormLabel(function (FormLabel $it) {
+                $label = TS::unwrap($this->getLabel(), TSLang::findWithOverwritten($this->overwrittenLanguage));
+                if(is_string($label) && strlen($label) > 0){
+                    $formLabel = new FormLabel(function (FormLabel $it) use ($label) {
                         $it->setName($this->getFullFieldName());
-                        $it->setContent($this->getLabel());
+                        $it->setContent($label);
                     }, $this->isRow != null ? "col-form-label" : "form-label");
                 }
 

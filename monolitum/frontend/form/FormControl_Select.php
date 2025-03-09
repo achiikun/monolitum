@@ -1,7 +1,7 @@
 <?php
 namespace monolitum\frontend\form;
 
-use monolitum\backend\globals\Active_NewId;
+use monolitum\backend\globals\Active_Request_NewId;
 use monolitum\backend\params\Path;
 use monolitum\bootstrap\BS;
 use monolitum\bootstrap\BSPage;

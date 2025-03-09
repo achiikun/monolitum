@@ -4,7 +4,7 @@ namespace monolitum\backend\params;
 
 use monolitum\core\Active;
 
-class Active_Path_BuildParent implements Active
+class Active_Get_CurrentPath implements Active
 {
 
     /**
@@ -17,10 +17,13 @@ class Active_Path_BuildParent implements Active
      */
     private $path;
 
-    public function __construct($parents)
-   {
+    /**
+     * @param int $parents amount of parents to strip off in the path
+     */
+    public function __construct($parents=0)
+    {
        $this->parents = $parents;
-   }
+    }
 
     /**
      * @return int

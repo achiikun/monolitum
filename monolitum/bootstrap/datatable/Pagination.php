@@ -315,7 +315,8 @@ class Pagination extends ElementComponent
     {
 
         return new Div(function (Div $it) {
-            $it->push(BSDisplay::inline_flex());
+            $it->push(BSDisplay::inline_flex(),
+                BSStyle::marginBottom(3));
 
             Form::addAnonymous(function (Form $it) {
 

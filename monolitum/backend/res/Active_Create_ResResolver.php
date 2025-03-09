@@ -6,7 +6,7 @@ use monolitum\core\Active;
 use monolitum\backend\params\Path;
 use monolitum\core\panic\DevPanic;
 
-class Active_Resolve_Res implements Active
+class Active_Create_ResResolver implements Active
 {
 
     /**

@@ -649,6 +649,7 @@ class Manager_DB extends Manager implements Active, Interface_Entity_DB
         }else if($filter instanceof Query_NotNull){
             $sql .= " IS NOT NULL ";
         }else if($filter instanceof Query_CMP){
+            $sql .= " IS NOT NULL AND " . $attr->getId();
             $value = $filter->getValue();
             $sign = $filter->getSign();
             if(is_int($value)){

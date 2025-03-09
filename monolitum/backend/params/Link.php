@@ -50,6 +50,36 @@ class Link
     }
 
     /**
+     * @param string $url
+     * @return Link
+     */
+    public static function fromUrl($url)
+    {
+
+        if(strlen($url) > 0){
+            $pathStr = parse_url("s://h:0/" . $url, PHP_URL_PATH);
+            $query = parse_url("s://h:0/" . $url, PHP_URL_QUERY);
+//                $pathStr = $parsed['path'];
+//                $query = $parsed['query'];
+
+            $queryResult = [];
+            if($query !== null && strlen($query) > 0){
+                parse_str($query, $queryResult);
+            }
+
+            $path = Path::fromUrl($pathStr);
+
+            $link = Link::from($path);
+            $link->addParams($queryResult);
+
+            return $link;
+        }else{
+            return Link::from();
+        }
+
+    }
+
+    /**
      * @param string[] $specificParams
      * @return $this
      */

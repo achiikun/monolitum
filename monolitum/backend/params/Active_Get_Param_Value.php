@@ -5,7 +5,7 @@ namespace monolitum\backend\params;
 use monolitum\entity\attr\Attr;
 use monolitum\entity\Model;
 
-class Active_Param_Value extends Active_Param_Abstract
+class Active_Get_Param_Value extends Active_Abstract_ValidatedValue
 {
     /**
      * @var string|Model

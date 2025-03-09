@@ -6,7 +6,7 @@ use monolitum\core\GlobalContext;
 use monolitum\core\Renderable_Node;
 use monolitum\frontend\Rendered;
 use monolitum\backend\params\Path;
-use monolitum\backend\res\Active_Resolve_Res;
+use monolitum\backend\res\Active_Create_ResResolver;
 use monolitum\backend\res\ResResolver;
 use monolitum\frontend\html\HtmlElement;
 use monolitum\frontend\html\HtmlElementContent;
@@ -47,7 +47,7 @@ class JSScript extends Renderable_Node implements Head{
 
     protected function buildNode()
     {
-        $active = new Active_Resolve_Res($this->path);
+        $active = new Active_Create_ResResolver($this->path);
         $active->setEncodeUrl(false);
         GlobalContext::add($active);
         $this->pathResolver = $active->getResResolver();
@@ -85,6 +85,6 @@ class JSScript extends Renderable_Node implements Head{
     public static function addLocal($path, $module=null, $async=false){
         GlobalContext::add(new JSScript($path, $module, $async));
     }
-    
-    
+
+
 }

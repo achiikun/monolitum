@@ -5,7 +5,7 @@ namespace monolitum\bootstrap;
 use monolitum\core\Find;
 use monolitum\frontend\component\CSSLink;
 use monolitum\frontend\component\Img;
-use monolitum\backend\globals\Active_NewId;
+use monolitum\backend\globals\Active_Request_NewId;
 use monolitum\backend\params\Link;
 use monolitum\backend\params\Path;
 use monolitum\bootstrap\style\BSStyle;
@@ -332,7 +332,7 @@ class NavBar extends ElementComponent implements Menu_Item_Holder
                 </button>
                 */
 
-                $id = Active_NewId::go_newId();
+                $id = Active_Request_NewId::go_newId();
 
                 $button = new BSButton();
                 $button->addClass("navbar-toggler");

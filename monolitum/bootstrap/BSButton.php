@@ -21,7 +21,7 @@ class BSButton extends AbstractText
     /**
      * @var Link|Path
      */
-    private $href = null;
+    private $pathOrLink = null;
 
     /**
      * @var HrefResolver
@@ -90,12 +90,12 @@ class BSButton extends AbstractText
     }
 
     /**
-     * @param Link|Path $href
+     * @param Link|Path $link
      * @return $this
      */
-    public function setHref($href)
+    public function setLink($link)
     {
-        $this->href = $href;
+        $this->pathOrLink = $link;
         return $this;
     }
 
@@ -131,7 +131,7 @@ class BSButton extends AbstractText
 
                 $this->form = Form::anonymous(function (Form $it) {
 
-                    $it->setLink($this->href);
+                    $it->setLink($this->pathOrLink);
 
                     $this->formSubmit = BS_Form_Submit::add(function (BS_Form_Submit $it) {
 
@@ -166,9 +166,9 @@ class BSButton extends AbstractText
 
         }else {
 
-            if($this->href !== null){
+            if($this->pathOrLink !== null){
 
-                $active = new Active_Create_HrefResolver($this->href);
+                $active = new Active_Create_HrefResolver($this->pathOrLink);
                 GlobalContext::add($active);
                 $this->hrefResolver = $active->getHrefResolver();
 

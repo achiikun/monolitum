@@ -8,6 +8,7 @@ use monolitum\bootstrap\values\BSSize;
 use monolitum\frontend\component\CSSLink;
 use monolitum\frontend\component\JSScript;
 use monolitum\frontend\component\Meta;
+use monolitum\frontend\html\HtmlElement;
 use monolitum\frontend\HTMLPage;
 
 class BSPage extends HTMLPage{
@@ -57,9 +58,14 @@ class BSPage extends HTMLPage{
         }
     }
 
-    protected function onBeforeEcho()
+    /**
+     * @param HtmlElement $html
+     * @return void
+     */
+    protected function onBeforeEcho($html)
     {
-        parent::onBeforeEcho();
+        parent::onBeforeEcho($html);
+        $html->setAttribute("class", "h-100");
 //        echo "<!DOCTYPE html>"; // See https://getbootstrap.com/docs/5.3/getting-started/introduction/
     }
 

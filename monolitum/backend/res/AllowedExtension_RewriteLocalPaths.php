@@ -42,25 +42,25 @@ class AllowedExtension_RewriteLocalPaths extends AllowedExtension
                             $matchedStringSplitBySlash = preg_split('/\//', $matchedString);
 
                             if($matchedStringSplitBySlash[0] === ""){
-                                $currentPath = [];
+                                $currentPathStrings = [];
                             }else{
-                                $currentPath = $path->getPath();
+                                $currentPathStrings = $path->getStrings();
                                 // Remove the file name
-                                array_pop($currentPath);
+                                array_pop($currentPathStrings);
                             }
 
                             foreach ($matchedStringSplitBySlash as $s){
                                 if($s !== ""){
                                     if($s === ".."){
-                                        if(count($currentPath) > 0)
-                                            array_pop($currentPath);
+                                        if(count($currentPathStrings) > 0)
+                                            array_pop($currentPathStrings);
                                     }else{
-                                        $currentPath[] = $s;
+                                        $currentPathStrings[] = $s;
                                     }
                                 }
                             }
 
-                            $active = new Active_Resolve_Res(Path::from(...$currentPath));
+                            $active = new Active_Create_ResResolver(Path::from(...$currentPathStrings));
                             $active->setEncodeUrl(false);
                             GlobalContext::add($active, $this->getManager());
                             $resolvedString = $active->getResResolver()->resolve();

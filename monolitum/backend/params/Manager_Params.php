@@ -106,7 +106,7 @@ class Manager_Params extends Manager implements Validator
             $active->setCurrentParams($returnArray);
 
             return true;
-        }else if($active instanceof Active_Param_Value){
+        }else if($active instanceof Active_Get_Param_Value){
             $validatedValue = $this->validate($active->getModel(), $active->getAttr());
             $active->setValidatedValue($validatedValue);
             return true;
@@ -158,6 +158,7 @@ class Manager_Params extends Manager implements Validator
      * @param AnonymousModel|Model|string $model
      * @param Attr|string $attr
      * @param string $prefix
+     * @param bool $post
      * @return ValidatedValue
      */
     public function validate($model, $attr, $prefix=null, $post=null){
@@ -192,6 +193,7 @@ class Manager_Params extends Manager implements Validator
      * @param AnonymousModel $model
      * @param Attr|string $attr
      * @param string $prefix
+     * @param bool $post
      * @return ValidatedValue
      */
     public function validateOnlyFormatAnonymous($model, $attr, $prefix, $post){
@@ -346,7 +348,7 @@ class Manager_Params extends Manager implements Validator
      * @return Param
      */
     public static function go_Param_ModelAttr($model, $attr){
-        $a = new Active_Param_Value(Active_Param_Abstract::TYPE_STRING, $model, $attr);
+        $a = new Active_Get_Param_Value(Active_Abstract_ValidatedValue::TYPE_STRING, $model, $attr);
         GlobalContext::add($a);
         return $a;
     }

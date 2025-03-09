@@ -11,14 +11,14 @@ class Path
     /**
      * @var string[]
      */
-    private $path;
+    private $strings;
 
     /**
      * @return string[]
      */
-    public function getPath()
+    public function getStrings()
     {
-        return $this->path;
+        return $this->strings;
     }
 
     /**
@@ -27,7 +27,7 @@ class Path
      */
     public static function from(...$strings){
         $path = new Path();
-        $path->path = $strings;
+        $path->strings = $strings;
         return $path;
     }
 
@@ -55,7 +55,7 @@ class Path
         );
 
         $path = new Path();
-        $path->path = $currentPath;
+        $path->strings = $currentPath;
         return $path;
     }
 
@@ -76,13 +76,62 @@ class Path
         );
 
         $path = new Path();
-        $path->path = $currentPath;
+        $path->strings = $currentPath;
         return $path;
     }
 
     public function go_redirect(){
         $active = new Active_SetRedirectPath($this);
         GlobalContext::add($active);
+    }
+
+
+    /**
+     * @param bool $encodeUrl;
+     * @param string $separator;
+     * @return string|null
+     */
+    public function writePath($encodeUrl=true, $separator="/")
+    {
+
+        if($this->strings){
+            $path = "";
+            $first = true;
+            foreach ($this->strings as $string) {
+                if($first){
+                    $first = false;
+                }else{
+                    $path .= $separator;
+                }
+                $path .= $encodeUrl ? urlencode($string) : $string;
+            }
+            return $path;
+        }else{
+            return null;
+        }
+    }
+
+    /**
+     * @param string $url
+     * @return Path
+     */
+    public static function fromUrl($url, $pathSeparator="/")
+    {
+
+        if(strlen($url) > 0){
+            $newPath = [];
+            foreach (explode($pathSeparator, $url) as $value){
+                if(strlen($value) > 0){
+                    $newPath[] = $value;
+                }
+            }
+
+            if(count($newPath) > 0){
+                return Path::from(...$newPath);
+            }
+        }
+
+        return Path::from();
     }
 
 

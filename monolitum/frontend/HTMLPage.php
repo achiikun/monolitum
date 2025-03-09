@@ -134,7 +134,8 @@ class HTMLPage extends Component {
 
         $htmlBuilder = new HtmlBuilder();
 
-        $this->onBeforeEcho();
+        $this->onBeforeEcho($html);
+        echo '<!DOCTYPE html>';
         echo $htmlBuilder->render($html);
         $this->onAfterEcho();
 
@@ -144,7 +145,11 @@ class HTMLPage extends Component {
 
     }
 
-    protected function onBeforeEcho()
+    /**
+     * @param HtmlElement $html
+     * @return void
+     */
+    protected function onBeforeEcho($html)
     {
 
     }

@@ -5,7 +5,7 @@ namespace monolitum\backend\params;
 use monolitum\core\Active;
 use monolitum\entity\ValidatedValue;
 
-class Active_Param_Abstract implements Active, Param
+class Active_Abstract_ValidatedValue implements Active, Param
 {
     const TYPE_STRING = "str";
     const TYPE_INT = "int";

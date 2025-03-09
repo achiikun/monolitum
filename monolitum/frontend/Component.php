@@ -36,7 +36,7 @@ class Component extends Renderable_Node implements Active{
     public function append($active, $idx=null)
     {
         if ($active instanceof Renderable_Node) {
-            parent::append($active);
+            parent::append($active, $idx);
         }else if(is_string($active) || $active instanceof TS){
             parent::append(new HtmlElementContent(TS::unwrap($active, TSLang::findWithOverwritten())), $idx);
         }else{
@@ -56,9 +56,9 @@ class Component extends Renderable_Node implements Active{
         return parent::receiveActive($active); // HACK: parent Renderable_Node will never recieve a child
     }
 
-    
+
     protected function buildComponent(){
-        
+
     }
 
     public function onNotReceived()

@@ -2,10 +2,11 @@
 
 namespace monolitum\frontend\form;
 
-use monolitum\backend\globals\Active_NewId;
+use monolitum\backend\globals\Active_Request_NewId;
 use monolitum\backend\params\AttrExt_Param;
 use monolitum\backend\params\Link;
 use monolitum\backend\params\Manager_Params;
+use monolitum\backend\params\Path;
 use monolitum\backend\params\Validator;
 use monolitum\backend\res\Active_Create_HrefResolver;
 use monolitum\backend\res\HrefResolver;
@@ -34,10 +35,10 @@ class Form extends Component
     private $validator;
 
     /**
-     * If flag is true, submission button has not form info, so it cannot be identified later.
+     * If flag is true, attributes' names are written as is, without any prefix, so they cannot be identified later.
      * @var bool
      */
-    private $anonymousSubmission = false;
+    private $anonymousAttributesNames = false;
 
     /**
      * @var array<string, mixed>
@@ -50,7 +51,7 @@ class Form extends Component
     private $formId;
 
     /**
-     * @var callable
+     * @var callable(Form $this, string $action)
      */
     private $onValidated = null;
 
@@ -78,9 +79,9 @@ class Form extends Component
     private $methodGET = false;
 
     /**
-     * @var Link
+     * @var Link|Path
      */
-    private $link;
+    private $linkOrPath;
 
     /**
      * @var HrefResolver
@@ -176,12 +177,12 @@ class Form extends Component
     }
 
     /**
-     * @param Link $link
+     * @param Link|Path $link
      * @return $this
      */
     public function setLink($link)
     {
-        $this->link = $link;
+        $this->linkOrPath = $link;
         return $this;
     }
 
@@ -189,7 +190,7 @@ class Form extends Component
     {
         $this->methodGET = true;
         if(is_bool($setAnonymousSubmission))
-            $this->anonymousSubmission = $setAnonymousSubmission;
+            $this->anonymousAttributesNames = $setAnonymousSubmission;
     }
 
     /**
@@ -252,24 +253,24 @@ class Form extends Component
     }
 
     /**
-     * @param $anonymousSubmission
+     * @param $anonymousAttributesNames
      * @return $this
      */
-    public function setAnonymousSubmission($anonymousSubmission=true)
+    public function setAnonymousAttributesNames($anonymousAttributesNames=true)
     {
-        $this->anonymousSubmission = $anonymousSubmission;
+        $this->anonymousAttributesNames = $anonymousAttributesNames;
         return $this;
     }
 
     /**
-     * @param callable $onValidated
+     * @param callable $onValidated void(Form $this, string $action)
      */
-    public function setOnValidated($onValidated)
+    public function setOnValidated(callable $onValidated)
     {
         $this->onValidated = $onValidated;
     }
 
-    public function validateSilently($silentValidation=true)
+    public function setSilentValidation($silentValidation=true)
     {
         $this->silentValidation = $silentValidation;
     }
@@ -282,7 +283,7 @@ class Form extends Component
         return $this->silentValidation;
     }
 
-    public function notValidate($notValidate=true)
+    public function setNotValidate($notValidate=true)
     {
         $this->notValidate = $notValidate;
     }
@@ -347,7 +348,7 @@ class Form extends Component
         }
 
 //        if($this->hasNestedForms || $this->rootForm !== null)
-        if(!$this->anonymousSubmission)
+        if(!$this->anonymousAttributesNames)
             $attrId = $this->formId . "__" . $attrId;
 
         return $attrId;
@@ -356,15 +357,18 @@ class Form extends Component
     /**
      * Returns the prefix for the attribute "name" of the input submit element.
      * It must contain the formid.
+     * @param Form_Submit $form_submit
      * @return string
      */
     function _getSubmitPrefix($form_submit){
-        if($this->anonymousSubmission)
+        if($this->anonymousAttributesNames)
             return null;
         return $this->formId . "_submit__";
     }
 
     /**
+     *
+     * @param Form_Submit $form_submit
      * @return string|null
      */
     function _getSubmitMethod($form_submit)
@@ -376,6 +380,7 @@ class Form extends Component
     }
 
     /**
+     * @param Form_Submit $form_submit
      * @return HrefResolver|null
      */
     function _getSubmitLinkResolver($form_submit)
@@ -391,7 +396,7 @@ class Form extends Component
     public function _getValidatePrefix()
     {
 //        if($this->hasNestedForms || $this->rootForm !== null)
-        if(!$this->anonymousSubmission)
+        if(!$this->anonymousAttributesNames)
             return $this->formId . "__";
         return null;
     }
@@ -476,30 +481,17 @@ class Form extends Component
 
         if($this->validator !== null){
             if($this->isValidating()){
-
                 if($this->validator->isAttrInValidateList($attr)){
-
                     $validatedValue = $this->validator->getValidatedValue($attr);
-
                     if($validatedValue->isValid() || $validatedValue->isWellFormat())
                         return $validatedValue;
-
                 }
+            }
 
-                if(key_exists($attr->getId(), $this->defaultValues)){
-                    $validatedValue = new ValidatedValue(true, true, $this->defaultValues[$attr->getId()]);
-                }else{
-                    $validatedValue = $this->validator->getDefaultValue($attr);
-                }
-
+            if(key_exists($attr->getId(), $this->defaultValues)){
+                $validatedValue = new ValidatedValue(true, true, $this->defaultValues[$attr->getId()]);
             }else{
-                // Get the value on the entity
-                if(key_exists($attr->getId(), $this->defaultValues)){
-                    $validatedValue = new ValidatedValue(true, true, $this->defaultValues[$attr->getId()]);
-                }else{
-                    $validatedValue = $this->validator->getDefaultValue($attr);
-                }
-
+                $validatedValue = $this->validator->getDefaultValue($attr);
             }
 
             if($validatedValue->isValid())
@@ -541,7 +533,7 @@ class Form extends Component
         if (!$exists) {
             $elem = new HtmlElement("input");
             $elem->setAttribute("type", "hidden");
-            if (!$this->anonymousSubmission && $form->formId !== null) {
+            if (!$this->anonymousAttributesNames && $form->formId !== null) {
                 $elem->setAttribute("name", $form->formId . "__" . $key);
             } else {
                 $elem->setAttribute("name", $key);
@@ -649,7 +641,7 @@ class Form extends Component
         if($this->validator !== null){
             return $this->validator->isAllValid();
         }else{
-            throw new DevPanic("Asing if all is valid is not supported without validator");
+            throw new DevPanic("Asking if all is valid is not supported without a validator defined.");
         }
     }
 
@@ -658,7 +650,7 @@ class Form extends Component
         // Generate an ID to identify the submission of this form if not exist
 
         if($this->formId === null)
-            $this->formId = Active_NewId::go_newId("form");
+            $this->formId = Active_Request_NewId::go_newId("form");
 
         // Find root form before all
         // If there are nested forms, they will find me and the real root form
@@ -728,8 +720,8 @@ class Form extends Component
 
         }
 
-        if($this->link !== null){
-            $active = new Active_Create_HrefResolver($this->link);
+        if($this->linkOrPath !== null){
+            $active = new Active_Create_HrefResolver($this->linkOrPath);
             $active->setParamsAlone();
             GlobalContext::add($active);
             $this->linkResolver = $active->getHrefResolver();
@@ -893,7 +885,7 @@ class Form extends Component
     public static function addAnonymous($builder)
     {
         $fc = new Form(null, null, $builder);
-        $fc->setAnonymousSubmission();
+        $fc->setAnonymousAttributesNames();
         GlobalContext::add($fc);
         return $fc;
     }
@@ -906,7 +898,7 @@ class Form extends Component
     public static function anonymous($builder)
     {
         $fc = new Form(null, null, $builder);
-        $fc->setAnonymousSubmission();
+        $fc->setAnonymousAttributesNames();
         return $fc;
     }
 

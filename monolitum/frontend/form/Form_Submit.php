@@ -113,8 +113,8 @@ abstract class Form_Submit extends ElementComponent
     }
 
     /**
-     * callable(Form $form, string $action)
-     * @param callable $onValidated
+     *
+     * @param callable $onValidated void(Form $form, string $action)
      */
     public function setOnValidated($onValidated)
     {

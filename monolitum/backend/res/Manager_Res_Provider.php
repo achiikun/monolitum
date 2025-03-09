@@ -3,14 +3,12 @@
 namespace monolitum\backend\res;
 
 use Exception;
-use monolitum\core\GlobalContext;
-use monolitum\entity\ValidatedValue;
 use monolitum\backend\Manager;
-use monolitum\backend\params\Active_Path2UrlPath;
-use monolitum\backend\params\Active_Url2Path;
 use monolitum\backend\params\Param;
 use monolitum\backend\params\Path;
+use monolitum\core\GlobalContext;
 use monolitum\core\panic\DevPanic;
+use monolitum\entity\ValidatedValue;
 
 class Manager_Res_Provider extends Manager
 {
@@ -107,14 +105,12 @@ class Manager_Res_Provider extends Manager
         $validatedValue = $this->readResourceParam->getValidatedValue();
         if($validatedValue->isValid() && !$validatedValue->isNull()){
 
-            $active = new Active_Url2Path($validatedValue->getValue());
-            GlobalContext::add($active);
-            $this->filePath = $active->getPath();
-            $path = $this->filePath->getPath();
+            $this->filePath = Path::fromUrl($validatedValue->getValue());
+            $pathStrings = $this->filePath->getStrings();
 
-            $len = count($path);
+            $len = count($pathStrings);
             if($len > 0){
-                $fileName = $path[$len-1];
+                $fileName = $pathStrings[$len-1];
 
                 foreach ($this->allowedExtensions as $string => $allowedExtension){
                     if($this->endsWith($fileName, $string)){
@@ -126,10 +122,7 @@ class Manager_Res_Provider extends Manager
                 if(!$this->fileAllowedExtension)
                     throw new DevPanic("Resource not found.");
 
-                $active = new Active_Path2UrlPath($this->filePath, false);
-                GlobalContext::add($active);
-                $resolvedUrl = $active->getUrl();
-
+                $resolvedUrl = $this->filePath->writePath(false);
                 $this->fileName = GlobalContext::getResourcesAddressResolver()->resolve($resolvedUrl);
 
                 try{

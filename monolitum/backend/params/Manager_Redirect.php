@@ -12,7 +12,12 @@ class Manager_Redirect extends Manager
     /**
      * @var Link
      */
-    private $redirectLink;
+    private $redirectLink = null;
+
+    /**
+     * @var Active_SetResourceData
+     */
+    private $resourceData = null;
 
     public function __construct($builder = null)
     {
@@ -31,15 +36,24 @@ class Manager_Redirect extends Manager
             }else{
                 $this->redirectLink = $activePath;
             }
+            $this->resourceData = null;
+
+            return true;
+        }else if($active instanceof Active_SetResourceData){
+            $this->resourceData = $active;
+            $this->redirectLink = null;
 
             return true;
         }
         return parent::receiveActive($active);
     }
 
+    /**
+     * @throws BreakExecution
+     */
     protected function executeNode()
     {
-        if($this->redirectLink){
+        if($this->redirectLink !== null){
 
             $active = new Active_Make_Url($this->redirectLink);
             GlobalContext::add($active);
@@ -48,6 +62,23 @@ class Manager_Redirect extends Manager
 
             header("HTTP/1.1 303 See Other");
             header("Location: " . $url);
+
+            // NOTE: Execution is finished here
+            throw new BreakExecution();
+
+        }else if($this->resourceData !== null){
+
+            $base64Data = $this->resourceData->getDataBase64();
+            if($base64Data !== null){
+                header('Content-Type: ' . "application/octet-stream");
+                echo $base64Data;
+            }else{
+                $callable = $this->resourceData->getWriterFunction();
+                if(is_callable($callable)){
+                    header('Content-Type: ' . "application/octet-stream");
+                    $callable();
+                }
+            }
 
             // NOTE: Execution is finished here
             throw new BreakExecution();

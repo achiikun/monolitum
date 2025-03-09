@@ -104,7 +104,7 @@ class Manager_History extends Manager
                     $myPushParams = [];
 
                     foreach ($this->pushParameters as $paramId => $model){
-                        $paramValueActive = new Active_Param_Value(null, $model, $paramId);
+                        $paramValueActive = new Active_Get_Param_Value(null, $model, $paramId);
                         GlobalContext::add($paramValueActive, $this->getParent());
                         $validatedValue = $paramValueActive->getValidatedValue();
                         if($validatedValue->isValid()){
@@ -114,7 +114,7 @@ class Manager_History extends Manager
 
                     if($active instanceof Active_Make_Url_WithPushParameters){
                         foreach ($active->getPushedParams() as $paramId => $model){
-                            $paramValueActive = new Active_Param_Value(null, $model, $paramId);
+                            $paramValueActive = new Active_Get_Param_Value(null, $model, $paramId);
                             GlobalContext::add($paramValueActive, $this->getParent());
                             $validatedValue = $paramValueActive->getValidatedValue();
                             if($validatedValue != null && $validatedValue->isValid()){
@@ -194,7 +194,7 @@ class Manager_History extends Manager
                     foreach($pathArrayStr as $pathStr){
                         if(strlen($pathStr) > 0){
                             $decoded = urldecode($pathStr);
-                            $this->linkStack[] = Active_Transform_Url2Link::from($decoded)->go()->getLink();
+                            $this->linkStack[] = Link::fromUrl($decoded);//Active_Transform_Url2Link::from($decoded)->go()->getLink();
                         }
                     }
                 }

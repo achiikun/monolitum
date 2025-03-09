@@ -53,7 +53,7 @@ class Manager_Path extends Manager
     }
 
     /**
-     * @param Active_Param_Path_ShiftElement $active
+     * @param Active_Get_Path_Top_AndShift $active
      * @return void
      */
     public function shiftElement($active)
@@ -74,7 +74,7 @@ class Manager_Path extends Manager
     }
 
     /**
-     * @param Active_Param_Path_CurrentElement $active
+     * @param Active_Get_Path_Top $active
      * @return void
      */
     public function currentElement($active)
@@ -114,10 +114,10 @@ class Manager_Path extends Manager
 
     protected function receiveActive($active)
     {
-        if($active instanceof Active_Param_Path_ShiftElement){
+        if($active instanceof Active_Get_Path_Top_AndShift){
             $active->setManager($this);
             return true;
-        }else if($active instanceof Active_Param_Path_CurrentElement){
+        }else if($active instanceof Active_Get_Path_Top){
             $active->setManager($this);
             return true;
         }else if($active instanceof Active_Make_Url) {
@@ -150,7 +150,7 @@ class Manager_Path extends Manager
             if($isAppendUrlPrefix)
                 $url .= GlobalContext::getLocalAddress();
 
-            $stringPath = $this->writePath($path);
+            $stringPath = $path !== null ? $path->writePath() : null;
             if($stringPath != null){
                 if($writeAsParam){
                     if($isObtainParamsAlone){
@@ -221,66 +221,7 @@ class Manager_Path extends Manager
                 $active->setAloneParamValues($paramsAlone);
 
             return true;
-        }else if($active instanceof Active_Path2UrlPath) {
-
-            /** @var Path $path */
-            $path = $active->getPath();
-            $url = $this->writePath($path, $active->isEncodeUrl());
-            $active->setUrl($url);
-
-            return true;
-        }else if($active instanceof Active_Url2Path) {
-
-            /** @var string $url */
-            $url = $active->getUrl();
-
-            if(strlen($url) > 0){
-                $active->setPath(Path::from(...explode("/", $url)));
-            }else{
-                $active->setPath(Path::from());
-            }
-
-            return true;
-        }else if($active instanceof Active_Transform_Url2Link) {
-
-            /** @var string $url */
-            $url = $active->getUrl();
-
-            if(strlen($url) > 0){
-                $pathStr = parse_url("s://h:0/" . $url, PHP_URL_PATH);
-                $query = parse_url("s://h:0/" . $url, PHP_URL_QUERY);
-//                $pathStr = $parsed['path'];
-//                $query = $parsed['query'];
-
-                $queryResult = [];
-                if($query !== null && strlen($query) > 0){
-                    parse_str($query, $queryResult);
-                }
-
-                $path = null;
-                if(strlen($pathStr) > 0){
-                    $newPath = [];
-                    foreach (explode("/", $pathStr) as $value){
-                        if(strlen($value) > 0){
-                            $newPath[] = $value;
-                        }
-                    }
-
-                    if(count($newPath) > 0){
-                        $path = Path::from(...$newPath);
-                    }
-                }
-
-                $link = Link::from($path !== null ? $path : Path::from());
-                $link->addParams($queryResult);
-
-                $active->setLink($link);
-            }else{
-                $active->setLink(Link::from());
-            }
-
-            return true;
-        }else if($active instanceof Active_Path_BuildParent) {
+        }else if($active instanceof Active_Get_CurrentPath) {
 
             $currentLength = count($this->path) - $active->getParents();
 
@@ -292,35 +233,6 @@ class Manager_Path extends Manager
         }
 
         return parent::receiveActive($active);
-    }
-
-    /**
-     * @param Path $path;
-     * @return string|null
-     */
-    public static function writePath($path, $encodeUrl=true)
-    {
-        if($path == null){
-            return null;
-        }else{
-            $strings = $path->getPath();
-            if($strings){
-                $path = "";
-                $first = true;
-                foreach ($strings as $string) {
-                    if($first){
-                        $first = false;
-                    }else{
-                        $path .= "/";
-                    }
-                    $path .= $encodeUrl ? urlencode($string) : $string;
-                }
-                return $path;
-
-            }else{
-                return null;
-            }
-        }
     }
 
     public static function encodeParams($params)
@@ -354,19 +266,19 @@ class Manager_Path extends Manager
     }
 
     /**
-     * @return Active_Param_Path_ShiftElement
+     * @return Active_Get_Path_Top_AndShift
      */
     public static function go_Param_Path_ShiftElement(){
-        $a = new Active_Param_Path_ShiftElement(Active_Param_Abstract::TYPE_STRING);
+        $a = new Active_Get_Path_Top_AndShift(Active_Abstract_ValidatedValue::TYPE_STRING);
         GlobalContext::add($a);
         return $a;
     }
 
     /**
-     * @return Active_Param_Path_CurrentElement
+     * @return Active_Get_Path_Top
      */
     public static function go_Param_Path_CurrentElement(){
-        $a = new Active_Param_Path_CurrentElement(Active_Param_Abstract::TYPE_STRING);
+        $a = new Active_Get_Path_Top(Active_Abstract_ValidatedValue::TYPE_STRING);
         GlobalContext::add($a);
         return $a;
     }
@@ -376,7 +288,7 @@ class Manager_Path extends Manager
      */
     public static function go_getCurrentElement()
     {
-        $a = new Active_Param_Path_CurrentElement(Active_Param_Abstract::TYPE_STRING);
+        $a = new Active_Get_Path_Top(Active_Abstract_ValidatedValue::TYPE_STRING);
         GlobalContext::add($a);
         return $a->getValidatedValue()->getValue();
     }
@@ -386,7 +298,7 @@ class Manager_Path extends Manager
      */
     public static function go_buildParent($parents = 0)
     {
-        $a = new Active_Path_BuildParent($parents);
+        $a = new Active_Get_CurrentPath($parents);
         GlobalContext::add($a);
         return $a->getPath();
     }
@@ -400,9 +312,9 @@ class Manager_Path extends Manager
     {
 
         switch ($activeType){
-            case Active_Param_Abstract::TYPE_STRING:
+            case Active_Abstract_ValidatedValue::TYPE_STRING:
                 return new ValidatedValue(true, true, $strValue, null, $strValue);
-            case Active_Param_Abstract::TYPE_INT:
+            case Active_Abstract_ValidatedValue::TYPE_INT:
                 // Dangerous code, it will parse anything. If it fails, a 0 is returned.
                 // Better use https://hashids.org/php/ instead of ids
                 $intValue = intval($strValue);

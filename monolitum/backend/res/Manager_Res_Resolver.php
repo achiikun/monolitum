@@ -55,13 +55,12 @@ class Manager_Res_Resolver extends Manager
         // p = res
         // r = path
 
-        $active = new Active_Path2UrlPath($param->getPath(), $param->isEncodeUrl());
-        GlobalContext::add($active);
+        $url = $param->getPath()->writePath($param->isEncodeUrl());
 
         $link = new Link($this->writePath);
         $link->dontPreserveHistory();
         $link->addParams([
-            $this->writeResourceParam => $active->getUrl()
+            $this->writeResourceParam => $url
         ]);
 
         $active = new Active_Make_Url($link);
@@ -72,7 +71,7 @@ class Manager_Res_Resolver extends Manager
 
     protected function receiveActive($active)
     {
-        if($active instanceof Active_Resolve_Res){
+        if($active instanceof Active_Create_ResResolver){
             $active->setResResolver(new ResResolver_Impl($this, $active->getPath(), $active->isEncodeUrl()));
             return true;
         }

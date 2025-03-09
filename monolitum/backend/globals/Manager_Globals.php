@@ -20,7 +20,7 @@ class Manager_Globals extends Manager
     protected function receiveActive($active)
     {
 
-        if($active instanceof Active_NewId){
+        if($active instanceof Active_Request_NewId){
             $context = $active->getContextIds();
             if($context === null){
 
