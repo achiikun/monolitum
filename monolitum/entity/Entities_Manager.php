@@ -22,7 +22,7 @@ class Entities_Manager extends Manager implements Active
     }
 
     /**
-     * @param class-string $class
+     * @param class-string|Model $class
      */
     public function getModel($class){
         assert($class != null);

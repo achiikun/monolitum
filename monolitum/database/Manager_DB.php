@@ -260,16 +260,29 @@ class Manager_DB extends Manager implements Active, Interface_Entity_DB
     /**
      * @param Query_Entities $query
      * @param Model $model
-     * @param array<Attr> $selectAttrs
+     * @param array<Attr> $selectAttrIds
      * @return string
      */
-    public function execute_generate_select($query, $model, &$selectAttrs)
+    public function execute_generate_select($query, $model, &$selectAttr)
     {
         $sql = "SELECT ";
 
-        $selectAttrs = $query->getSelectAttrs();
+        $selectAttrIds = $query->getSelectAttrs();
         $first = true;
-        if ($selectAttrs == null) {
+
+        // Append existing select attrs
+        foreach ($selectAttr as $attr) {
+            $ext = $attr->findExtension(AttrExt_DB::class);
+            if ($ext != null) {
+                if ($first)
+                    $first = false;
+                else
+                    $sql .= ", ";
+                $sql .= '`' . $attr->getId() . '`';
+            }
+        }
+
+        if ($selectAttrIds == null) {
             foreach ($model->getAttrs() as $attr) {
                 $ext = $attr->findExtension(AttrExt_DB::class);
                 if ($ext != null) {
@@ -278,11 +291,11 @@ class Manager_DB extends Manager implements Active, Interface_Entity_DB
                     else
                         $sql .= ", ";
                     $sql .= '`' . $attr->getId() . '`';
-                    $selectAttrs[] = $attr;
+                    $selectAttr[] = $attr;
                 }
             }
         } else {
-            foreach ($selectAttrs as $attrId) {
+            foreach ($selectAttrIds as $attrId) {
                 $attr = $model->getAttr($attrId);
                 $ext = $attr->findExtension(AttrExt_DB::class);
                 if ($ext != null) {
@@ -290,8 +303,8 @@ class Manager_DB extends Manager implements Active, Interface_Entity_DB
                         $first = false;
                     else
                         $sql .= ", ";
-                    $sql .= $attr->getId();
-                    $selectAttrs[] = $attr;
+                    $sql .= '`' . $attr->getId() . '`';
+                    $selectAttr[] = $attr;
                 }
             }
         }
@@ -475,6 +488,10 @@ class Manager_DB extends Manager implements Active, Interface_Entity_DB
 
         $selectAttrs = [];
         if($query instanceof Query_Entities_Executor){
+            // Append ids if you want to update the entity, they are required to run the update
+            if($query->isForUpdate())
+                $this->append_model_ids($model, $selectAttrs);
+
             $sql = $this->execute_generate_select($query, $model, $selectAttrs);
         }else if($query instanceof Query_Aggregation_Executor){
             $sql = "SELECT " . $query->getOperation() . "(`" . $query->getSelectAttr()->getId() . "`)" ;
@@ -810,6 +827,26 @@ class Manager_DB extends Manager implements Active, Interface_Entity_DB
             $ext = $attr->findExtension(AttrExt_DB::class);
             if ($ext !== null && $ext->isId())
                 $ids[$attr->getId()] = $entity->getValue($attr);
+        }
+        return $ids;
+    }
+
+    /**
+     * @param Model $entity
+     * @param array<Attr> $selectAttrs
+     * @return array
+     */
+    public function append_model_ids(Model $entity, &$selectAttrs)
+    {
+        $ids = [];
+        foreach ($entity->getAttrs() as $attr) {
+            if(in_array($attr, $selectAttrs))
+                continue;
+
+            /** @var AttrExt_DB $ext */
+            $ext = $attr->findExtension(AttrExt_DB::class);
+            if ($ext !== null && $ext->isId())
+                $selectAttrs[] = $attr;
         }
         return $ids;
     }
