@@ -5,6 +5,8 @@ namespace monolitum\core\util;
 class ResourceAddressResolver
 {
 
+    private $strictMode = true;
+
     /**
      * @var array<callable>
      */
@@ -24,17 +26,30 @@ class ResourceAddressResolver
         return $this;
     }
 
+    public function nonStrictMode($nonStrictMode = true)
+    {
+        $this->strictMode = !$nonStrictMode;
+        return $this;
+    }
+
     /**
      * @param $url
-     * @return string
+     * @return string|null
      */
     public function resolve($url){
+        // Split url into parts and instafail if it has illegal terms
+        $split_res = preg_split("/\//", $url, -1);
+        foreach ($split_res as $part) {
+            if($part === '.' || $part === '..' || trim($part) === '' || substr($part, 0, 1) === '$') {
+                return null;
+            }
+        }
         foreach ($this->prefixes as $prefix => $callable){
             if(substr($url, 0, strlen($prefix)) === $prefix){
                 return $callable($url);
             }
         }
-        return $url;
+        return $this->strictMode ? null : $url;
     }
 
     public static function idle()

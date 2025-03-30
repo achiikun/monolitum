@@ -2,6 +2,7 @@
 
 namespace monolitum\backend\res;
 
+use backend\res\ResourceNotFoundPanic;
 use Exception;
 use monolitum\backend\Manager;
 use monolitum\backend\params\Param;
@@ -125,10 +126,16 @@ class Manager_Res_Provider extends Manager
                 $resolvedUrl = $this->filePath->writePath(false);
                 $this->fileName = GlobalContext::getResourcesAddressResolver()->resolve($resolvedUrl);
 
+                if($this->fileName == null)
+                    throw new ResourceNotFoundPanic("Illegal url.");
+
                 try{
 
                     $this->fileMime = mime_content_type($this->fileName);
                     $this->fileLastModified = filemtime($this->fileName);
+
+                    if($this->fileLastModified == null)
+                        throw new ResourceNotFoundPanic("Resource not found.");
 
                     $this->fileLastModifiedString = gmdate('D, d M Y H:i:s ',  $this->fileLastModified) . 'GMT';
 
@@ -140,14 +147,14 @@ class Manager_Res_Provider extends Manager
                     }
 
                 }catch (Exception $e){
-                    throw new DevPanic("Resource not found.");
+                    throw new ResourceNotFoundPanic("Exception.");
                 }
 
             }
 
 
         }else{
-            throw new DevPanic("Resource not found.");
+            throw new ResourceNotFoundPanic("Resource not found.");
         }
 
 //        parent::afterBuildNode();
