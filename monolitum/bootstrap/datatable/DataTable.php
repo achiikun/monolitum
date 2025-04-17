@@ -19,6 +19,7 @@ use monolitum\frontend\ElementComponent;
 use monolitum\frontend\html\HtmlElement;
 use monolitum\frontend\Rendered;
 
+// DataTable uses ElementComponent to allow adding attributes and classes into the <table> element
 class DataTable extends ElementComponent
 {
 
@@ -73,6 +74,11 @@ class DataTable extends ElementComponent
     private $sortedColumnDesc = null;
 
     /**
+     * @var bool
+     */
+    private $responsiveTable = true;
+
+    /**
      * @param callable $builder
      */
     public function __construct($builder = null)
@@ -80,6 +86,14 @@ class DataTable extends ElementComponent
         parent::__construct(new HtmlElement("table"), $builder);
         $this->addClass("table");
         $this->push(BSVerticalAlign::middle());
+    }
+
+    /**
+     * @param bool $responsiveTable
+     */
+    public function setResponsiveTable($responsiveTable)
+    {
+        $this->responsiveTable = $responsiveTable;
     }
 
     /**
@@ -216,6 +230,12 @@ class DataTable extends ElementComponent
         return parent::receiveActive($active);
     }
 
+    public function canBeAppended($active)
+    {
+        // Anything can be appended into a datatable except columns, which are handled in receiveActive()
+        return false;
+    }
+
     protected function afterBuildNode()
     {
         $this->detectSorting();
@@ -345,7 +365,15 @@ class DataTable extends ElementComponent
 
         $element->addChildElement($tbody);
 
-        return parent::render();
+        if($this->responsiveTable){
+            $responsiveDiv = new HtmlElement("div");
+            $responsiveDiv->addClass("table-responsive");
+            $responsiveDiv->addChildElement($element);
+            return Rendered::of($responsiveDiv);
+        }else{
+            return Rendered::of($element);
+        }
+
     }
 
     public static function add($builder)
