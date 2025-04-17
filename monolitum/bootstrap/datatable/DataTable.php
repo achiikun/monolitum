@@ -127,6 +127,45 @@ class DataTable extends ElementComponent
         return $this->sortedColumnDesc;
     }
 
+    /**
+     * @param mixed $entity
+     * @return array
+     */
+    public function createRow($entity)
+    {
+        $row = [];
+
+        foreach ($this->columns as $column) {
+
+            $renderer = $column->getRenderer();
+
+            if ($renderer instanceof CellRenderer) {
+                $rendered = $renderer->render($entity);
+            } else if (is_callable($renderer)) {
+                $rendered = $renderer($entity);
+            } else {
+                $rendered = Rendered::ofEmpty();
+            }
+
+            if (is_array($rendered)) {
+                foreach ($rendered as $item) {
+                    if ($item instanceof Renderable_Node)
+                        $this->buildChild($item);
+                }
+                $rendered = Rendered::of($rendered);
+            } else {
+
+                if ($rendered instanceof Renderable_Node)
+                    $this->buildChild($rendered);
+
+            }
+
+            $row[] = $rendered;
+
+        }
+        return $row;
+    }
+
     private function detectSorting()
     {
         if ($this->sortable_model !== null && $this->sortable_attr_sort !== null) {
@@ -217,48 +256,22 @@ class DataTable extends ElementComponent
 
             $callable = $this->rowRetriever;
 
-            /** @var Query_Result $iterator */
+            /** @var Query_Result|array $iterator */
             $iterator = $callable($this);
 
-            while ($iterator->hasNext()){
-                $entity = $iterator->next();
-
-                $row = [];
-
-                foreach($this->columns as $column){
-
-                    $renderer = $column->getRenderer();
-
-                    if($renderer instanceof CellRenderer){
-                        $rendered = $renderer->render($entity);
-                    }else if(is_callable($renderer)){
-                        $rendered = $renderer($entity);
-                    }else{
-                        $rendered = Rendered::ofEmpty();
-                    }
-
-                    if(is_array($rendered)){
-                        foreach ($rendered as $item) {
-                            if($item instanceof Renderable_Node)
-                                $this->buildChild($item);
-                        }
-                        $rendered = Rendered::of($rendered);
-                    }else{
-
-                        if($rendered instanceof Renderable_Node)
-                            $this->buildChild($rendered);
-
-                    }
-
-                    $row[] = $rendered;
-
+            if($iterator instanceof Query_Result){
+                while ($iterator->hasNext()){
+                    $entity = $iterator->next();
+                    $row = $this->createRow($entity);
+                    $this->rowComponents[] = $row;
                 }
-
-                $this->rowComponents[] = $row;
-
+                $iterator->close();
+            }else if(is_array($iterator)){
+                foreach ($iterator as $item) {
+                    $row = $this->createRow($item);
+                    $this->rowComponents[] = $row;
+                }
             }
-
-            $iterator->close();
 
         }
 
