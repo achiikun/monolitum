@@ -135,4 +135,11 @@ class Attr_Quill extends Attr implements I_Attr_Databasable
         return null;
     }
 
+    public function stringValue($value)
+    {
+        if($value instanceof QuillDocument) {
+            return $value->makeDelta();
+        }
+        return "";
+    }
 }

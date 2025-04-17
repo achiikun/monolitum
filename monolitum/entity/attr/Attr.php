@@ -79,6 +79,13 @@ abstract class Attr
      */
     public abstract function validate($value);
 
+    /**
+     * Converts a valid value into a string
+     * @param mixed $value
+     * @return ValidatedValue
+     */
+    public abstract function stringValue($value);
+
     public function __toString()
     {
         return $this->getModel() . "->" . $this->getId();

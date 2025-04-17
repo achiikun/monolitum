@@ -2,6 +2,7 @@
 namespace monolitum\entity\attr;
 
 use monolitum\entity\ValidatedValue;
+use monolitum\entity\values\Color;
 
 class Attr_Date extends Attr
 {
@@ -24,13 +25,21 @@ class Attr_Date extends Attr
 
                 return new ValidatedValue(true, true, $date, null, $value);
             }else{
-                return new ValidatedValue(true, true, null, null, "null");
+                return new ValidatedValue(true, true, null, null, "");
             }
         }else if(is_null($value)){
-            return new ValidatedValue(true, true, null, null, "null");
+            return new ValidatedValue(true, true, null, null, "");
         }
 
         return new ValidatedValue(false);
+    }
+
+    public function stringValue($value)
+    {
+        if($value instanceof \DateTime){
+            return $value->format('Y-m-d');
+        }
+        return "";
     }
 
     /**

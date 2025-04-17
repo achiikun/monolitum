@@ -19,5 +19,13 @@ class Attr_Int extends Attr
         }
         return new ValidatedValue(false);
     }
+
+    public function stringValue($value)
+    {
+        if(is_numeric($value)) {
+            return strval($value);
+        }
+        return "";
+    }
 }
 

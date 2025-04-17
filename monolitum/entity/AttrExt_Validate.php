@@ -54,7 +54,7 @@ class AttrExt_Validate extends AttrExt
     public function validate($validatedValue){
 
         if(!$this->isNullable() && $validatedValue->isNull())
-            return new ValidatedValue(false, true, $validatedValue->getValue(), $this->nullableError);
+            return new ValidatedValue(false, true, $validatedValue->getValue(), $this->nullableError, $validatedValue->getStrValue());
 
         return $validatedValue;
 

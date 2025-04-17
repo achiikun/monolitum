@@ -75,5 +75,13 @@ class Attr_File extends Attr
 
         return new ValidatedValue(false);
     }
+
+    public function stringValue($value)
+    {
+        if($value instanceof File){
+            return $value->getName();
+        }
+        return "";
+    }
 }
 

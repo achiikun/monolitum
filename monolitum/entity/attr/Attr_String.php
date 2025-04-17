@@ -35,5 +35,12 @@ class Attr_String extends Attr
         return new Attr_String();
     }
 
+    public function stringValue($value)
+    {
+        if(is_string($value)) {
+            return $value;
+        }
+        return "";
+    }
 }
 

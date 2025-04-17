@@ -33,5 +33,13 @@ class Attr_Bool extends Attr
         }
         return new ValidatedValue(false);
     }
+
+    public function stringValue($value)
+    {
+        if(is_bool($value)){
+            return $value ? "true" : "false";
+        }
+        return "";
+    }
 }
 

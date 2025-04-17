@@ -29,6 +29,14 @@ class Attr_Color extends Attr
         return new ValidatedValue(false);
     }
 
+    public function stringValue($value)
+    {
+        if($value instanceof Color){
+            return $value->getHexValue();
+        }
+        return "";
+    }
+
     /**
      * @return Attr_Color
      */

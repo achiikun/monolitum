@@ -156,10 +156,13 @@ class AttrExt_Validate_String extends AttrExt_Validate
         // Transform the value before validating
         if($validatedValue->isWellFormat() && $this->trim){
             $value = $validatedValue->getValue();
+            $value = is_string($value) ? trim($value) : $value;
             $validatedValue = new ValidatedValue(
                 $validatedValue->isValid(),
                 $validatedValue->isWellFormat(),
-                is_string($value) ? trim($value) : $value
+                $value,
+                null,
+                $value === null ? "" : strval($value)
             );
         }
 

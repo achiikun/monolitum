@@ -35,17 +35,30 @@ class Attr_Decimal extends Attr
     public function validate($value)
     {
         if(is_numeric($value)){
-            return new ValidatedValue(true, true, intval(intval($value) * pow(10, $this->decimals)), null, $value);
+            $withoutPoint = intval(intval($value) * pow(10, $this->decimals));
+            return new ValidatedValue(true, true, $withoutPoint, null, $this->stringValue($value));
         } else if(is_string($value)){
             try{
                 $floatValue = floatval($value);
                 $intValue = intval($floatValue * pow(10, $this->decimals));
-                return new ValidatedValue(true, true, $intValue, null, $value);
+                return new ValidatedValue(true, true, $intValue, null, $this->stringValue($intValue));
             }catch (Exception $e){
                 return new ValidatedValue(false);
             }
         }
         return new ValidatedValue(false);
     }
+
+    public function stringValue($value)
+    {
+        if(is_int($value)){
+            $zeros = pow(10, $this->decimals);
+            $integerPart = intval($value / $zeros);
+            $floatingPart = $value - ($integerPart * $zeros);
+            return $integerPart . "." . $floatingPart;
+        }
+        return "";
+    }
+
 }
 
