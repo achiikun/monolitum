@@ -190,4 +190,17 @@ abstract class Form_Validator
         $this->overwritten_validatedValues[$attr->getId()] = $value;
     }
 
+    /**
+     * @param string|Attr $attrId
+     * @param string|TS $errorString
+     */
+    public function invalidate($attrId, $errorString)
+    {
+        $attr = $this->getAttr($attrId);
+        $validatedValue = $this->getValidatedValue($attr->getId());
+        $this->overwritten_validatedValues[$attr->getId()] = new ValidatedValue(
+            false, $validatedValue->isWellFormat(), $validatedValue->getValue(), $errorString, $validatedValue->getStrValue()
+        );
+    }
+
 }

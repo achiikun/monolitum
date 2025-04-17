@@ -235,6 +235,21 @@ class Form extends Component
     }
 
     /**
+     * @param string $attr
+     * @param string|TS $errorString
+     * @return $this
+     */
+    public function invalidate($attr, $errorString)
+    {
+        if($this->validator !== null){
+            $this->validator->invalidate($attr, $errorString);
+            return $this;
+        }else{
+            throw new DevPanic("Invalidating attributes is not supported without validator.");
+        }
+    }
+
+    /**
      * @param Entity $currentEntity
      * @return $this
      */
