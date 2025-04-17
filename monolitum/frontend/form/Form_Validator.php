@@ -5,6 +5,7 @@ namespace monolitum\frontend\form;
 use monolitum\backend\params\Manager_Params;
 use monolitum\core\Find;
 use monolitum\core\panic\DevPanic;
+use monolitum\core\ts\TS;
 use monolitum\entity\attr\Attr;
 use monolitum\entity\AttrExt_Validate;
 use monolitum\entity\Entities_Manager;
@@ -14,6 +15,7 @@ use monolitum\entity\ValidatedValue;
 
 abstract class Form_Validator
 {
+    use Trait_Form_Validate_Attrs;
 
     /**
      * @var array<string, ValidatedValue>
@@ -36,49 +38,9 @@ abstract class Form_Validator
     protected $build_isAlreadyValidated = false;
 
     /**
-     * @var bool
-     */
-    protected $validate_attrs_all = true;
-
-    /**
-     * @var array<string>
-     */
-    protected $validate_attrs = [];
-
-    /**
      * @var Form
      */
     protected $form;
-
-    /**
-     * @param string ...$attrs
-     * @return void
-     */
-    public function validate_all_except(...$attrs){
-        $this->validate_attrs_all = true;
-        $this->validate_attrs = $attrs;
-
-//        for($i = 0; $i < count($this->validate_attrs); $i++){
-//            if(is_string($this->validate_attrs[$i]))
-//                $this->validate_attrs[$i] = $this->getAttr($this->validate_attrs[$i]);
-//        }
-
-    }
-
-    /**
-     * @param string ...$attrs
-     * @return void
-     */
-    public function validate_only(...$attrs){
-        $this->validate_attrs_all = false;
-        $this->validate_attrs = $attrs;
-
-//        for($i = 0; $i < count($this->validate_attrs); $i++){
-//            if(is_string($this->validate_attrs[$i]))
-//                $this->validate_attrs[$i] = $this->getAttr($this->validate_attrs[$i]);
-//        }
-
-    }
 
     /**
      * @param Form $form

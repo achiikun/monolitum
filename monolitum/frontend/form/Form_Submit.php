@@ -13,6 +13,7 @@ use monolitum\frontend\html\HtmlElement;
 
 abstract class Form_Submit extends ElementComponent
 {
+    use Trait_Form_Validate_Attrs;
 
     /**
      * @var Form
@@ -143,6 +144,23 @@ abstract class Form_Submit extends ElementComponent
     public function getOnValidated()
     {
         return $this->onValidated;
+    }
+
+    /**
+     * @param Form_Validator $validator
+     * @return bool true if set
+     */
+    public function _setValidateAttrs($validator)
+    {
+        if($this->validate_attrs_hasBeenSet){
+            if($this->validate_attrs_all){
+                $validator->validate_all_except(...$this->validate_attrs);
+            }else{
+                $validator->validate_only(...$this->validate_attrs);
+            }
+            return true;
+        }
+        return false;
     }
 
     protected function buildNode()
