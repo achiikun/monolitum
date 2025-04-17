@@ -47,7 +47,7 @@ class Component extends Renderable_Node implements Active{
 
     protected function receiveActive($active)
     {
-        if(Renderable_Node::isAppendableRenderableNode($active)
+        if($this->canBeAppended($active)
             || $active instanceof HtmlElement){
             $this->append($active);
             return true;
@@ -56,6 +56,14 @@ class Component extends Renderable_Node implements Active{
         return parent::receiveActive($active); // HACK: parent Renderable_Node will never recieve a child
     }
 
+    /**
+     * @param Active $active
+     * @return bool
+     */
+    public function canBeAppended($active)
+    {
+        return $active instanceof HtmlElement || parent::canBeAppended($active);
+    }
 
     protected function buildComponent(){
 

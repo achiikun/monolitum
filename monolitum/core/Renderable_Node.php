@@ -20,7 +20,11 @@ abstract class Renderable_Node extends Node implements Active {
         parent::__construct($builder);
     }
 
-    public static function isAppendableRenderableNode(Active $active)
+    /**
+     * @param $active
+     * @return bool
+     */
+    public function canBeAppended($active)
     {
         return $active instanceof Renderable_Node
             && !($active instanceof Head)
@@ -63,7 +67,7 @@ abstract class Renderable_Node extends Node implements Active {
 
     protected function receiveActive($active)
     {
-        if(Renderable_Node::isAppendableRenderableNode($active)){
+        if($this->canBeAppended($active)){
             $this->append($active);
             return true;
         }
