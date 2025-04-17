@@ -245,7 +245,7 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
 
         } if($attr instanceof Attr_String){
 
-            if($validateExt instanceof AttrExt_Validate_String && $validateExt->hasEnum()){
+            if($validateExt instanceof AttrExt_Validate_String && $validateExt->hasEnum() || $this->hasOverriddenEnum){
 
                 $formControl = new FormControl_Select(function (FormControl_Select $it) use ($isValid, $finalLanguage, $formExt, $validateExt) {
                     $it->setId($this->getFullFieldName());
@@ -274,7 +274,7 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
                         $it->setSearchable($formExt->isSearchable());
                     }
 
-                    if($validateExt->isNullable()){
+                    if($validateExt == null || $validateExt->isNullable()){
 
                         FormControl_Select_Option::add(function (FormControl_Select_Option $it) use ($finalLanguage, $selected, $nullLabel) {
 
@@ -301,26 +301,54 @@ class BS_Form_Attr extends Form_Attr_ElementComponent
 
                     }
 
-                    foreach ($validateExt->getEnums() as $itemKey => $itemValue) {
+                    if($this->hasOverriddenEnum){
+                        foreach ($this->overriddenEnum as $itemKey => $itemValue) {
+                            FormControl_Select_Option::add(function (FormControl_Select_Option $it) use ($finalLanguage, $validateExt, $selected, $itemKey, $itemValue) {
 
-                        FormControl_Select_Option::add(function (FormControl_Select_Option $it) use ($finalLanguage, $validateExt, $selected, $itemKey, $itemValue) {
+                                if (is_string($itemKey)) {
+                                    $item = $itemKey;
+                                    $content = $itemValue;
+                                } else if (is_array($itemValue)) {
+                                    $item = $itemValue[0];
+                                    $content = $itemValue[1];
+                                }else{
+                                    $item = $itemValue;
+                                    $content = $itemValue;
+                                }
 
-                            $item = null;
-                            if(is_string($itemKey)){
-                                $item = $itemKey;
-                            }else if(is_array($itemValue)){
-                                $item = $itemValue[0];
-                            }
+                                if(is_string($content)){
+                                    $content = TS::unwrap($content, $finalLanguage);
+                                }
 
-                            $it->setValue($item);
-                            $it->setContent(TS::unwrap($validateExt->getEnumString($item), $finalLanguage));
+                                $it->setValue($item);
+                                $it->setContent($content);
 
-                            if($item == $selected)
-                                $it->setSelected();
+                                if ($item == $selected)
+                                    $it->setSelected();
 
-                        });
+                            });
+                        }
+                    }else{
+                        foreach ($validateExt->getEnums() as $itemKey => $itemValue) {
+                            FormControl_Select_Option::add(function (FormControl_Select_Option $it) use ($finalLanguage, $validateExt, $selected, $itemKey, $itemValue) {
 
+                                $item = null;
+                                if (is_string($itemKey)) {
+                                    $item = $itemKey;
+                                } else if (is_array($itemValue)) {
+                                    $item = $itemValue[0];
+                                }
+
+                                $it->setValue($item);
+                                $it->setContent(TS::unwrap($validateExt->getEnumString($item), $finalLanguage));
+
+                                if ($item == $selected)
+                                    $it->setSelected();
+
+                            });
+                        }
                     }
+
 
                 });
 

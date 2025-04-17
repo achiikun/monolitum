@@ -79,6 +79,16 @@ abstract class Form_Attr_ElementComponent extends ElementComponent implements I_
     private $overriddenValue;
 
     /**
+     * @var bool
+     */
+    protected $hasOverriddenEnum = false;
+
+    /**
+     * @var string[]|TS[]
+     */
+    protected $overriddenEnum;
+
+    /**
      * @param HtmlElement $element
      * @param Attr|string $attrid
      * @param callable|null $builder
@@ -143,6 +153,18 @@ abstract class Form_Attr_ElementComponent extends ElementComponent implements I_
     {
         $this->hasOverriddenValue = true;
         $this->overriddenValue = $value;
+        return $this;
+    }
+
+    /**
+     * Needs to be an associative array: (string $key) -> (string|TS $text)
+     * @param string[]|TS[] $enum
+     * @return $this
+     */
+    public function setOverrideEnum($enum)
+    {
+        $this->hasOverriddenEnum = true;
+        $this->overriddenEnum = $enum;
         return $this;
     }
 
