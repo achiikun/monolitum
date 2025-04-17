@@ -36,6 +36,9 @@ class QuillDocument
      */
     public function renderHTML()
     {
+        if($this->rendered === null){
+            $this->rendered = $this->lexer->render();
+        }
         return $this->rendered;
     }
 
@@ -46,7 +49,20 @@ class QuillDocument
      */
     public function replace($search, $replace)
     {
-        $this->rendered = str_replace($search, "$replace", $this->rendered);
+        $json = $this->lexer->getJsonArray();
+
+        foreach ($json as &$jsonValue) {
+            if(isset($jsonValue["insert"])){
+                $insert = $jsonValue["insert"];
+                if(is_string($insert)){
+                    $insert = str_replace($search, "$replace", $insert);
+                    $jsonValue["insert"] = $insert;
+                }
+            }
+        }
+
+        $this->lexer = new Lexer($json);
+        $this->rendered = $this->lexer->render();//str_replace($search, "$replace", $this->rendered);
     }
 
 }
