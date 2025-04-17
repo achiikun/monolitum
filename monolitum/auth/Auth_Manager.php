@@ -277,6 +277,17 @@ class Auth_Manager extends Renderable_Node implements Active
         $manager->requirePermission($permissionId);
     }
 
+    /**
+     * @param string $permissionId
+     * @return bool
+     */
+    public static function go_hasPermission($permissionId)
+    {
+        /** @var Auth_Manager $manager */
+        $manager = Find::sync(Auth_Manager::class);
+        return $manager->hasPermission($permissionId);
+    }
+
     public static function go_logout()
     {
         /** @var Auth_Manager $manager */
