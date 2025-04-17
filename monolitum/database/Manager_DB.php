@@ -47,6 +47,16 @@ class Manager_DB extends Manager implements Active, Interface_Entity_DB
     }
 
     /**
+     * @return Manager_DB
+     */
+    public static function find()
+    {
+        /** @var Manager_DB $m */
+        $m = Find::sync(Manager_DB::class);
+        return $m;
+    }
+
+    /**
      * @param PDO $pdo
      */
     public function setPdo($pdo)
