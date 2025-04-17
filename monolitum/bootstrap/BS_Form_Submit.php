@@ -77,5 +77,14 @@ class BS_Form_Submit extends Form_Submit
         return $fc;
     }
 
+    /**
+     * @param callable $builder
+     * @return BS_Form_Submit
+     */
+    public static function of($builder)
+    {
+        return new BS_Form_Submit($builder);
+    }
+
 }
 
