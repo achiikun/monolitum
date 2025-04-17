@@ -116,7 +116,8 @@ class Form_Validator_Entity extends Form_Validator
                 /** @var AttrExt_Form $ext */
                 $ext = $attr->findExtension(AttrExt_Form::class);
                 if($ext !== null && $ext->isSubstituteNotValid()){
-                    $validatedValue = new ValidatedValue(true, true, $ext->getDef());
+                    $value = $ext->getDef();
+                    return new ValidatedValue(true, true, $ext->getDef(), $attr->stringValue($value));
                 }
 
             }
@@ -143,8 +144,6 @@ class Form_Validator_Entity extends Form_Validator
      */
     public function getDefaultValue($attr)
     {
-        if($this->currentEntity !== null)
-            return new ValidatedValue(true, true, $this->currentEntity->getValue($attr));
 
         // Retrieve model
         if(is_string($this->model))
@@ -154,11 +153,17 @@ class Form_Validator_Entity extends Form_Validator
         if(!($attr instanceof Attr))
             $attr = $this->model->getAttr($attr);
 
+        if($this->currentEntity !== null){
+            $value = $this->currentEntity->getValue($attr);
+            return new ValidatedValue(true, true, $value, null, $attr->stringValue($value));
+        }
+
         // Skip attribute without Form specification
         /** @var AttrExt_Form $ext */
         $ext = $attr->findExtension(AttrExt_Form::class);
         if($ext !== null && $ext->isDefaultSet()){
-            return new ValidatedValue(true, true, $ext->getDef());
+            $value = $ext->getDef();
+            return new ValidatedValue(true, true, $ext->getDef(), $attr->stringValue($value));
         }
 
         return new ValidatedValue(false);
