@@ -1,6 +1,6 @@
 <?php
 
-namespace core\util;
+namespace monolitum\core\util;
 
 class ListUtils
 {
