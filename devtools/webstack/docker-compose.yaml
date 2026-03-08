@@ -18,6 +18,8 @@ services:
             - ./build/php/conf.d/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
         depends_on:
             - db
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
     db:
         image: mariadb
         #restart: always

@@ -5,7 +5,7 @@ RUN a2enmod rewrite
 RUN pecl install xdebug \
     && apt-get update -y \
     && apt-get install -y libzip-dev zlib1g-dev libpng-dev \
-    && docker-php-ext-install pdo pdo_mysql zip gd \
+    && docker-php-ext-install pdo pdo_mysql zip gd mysqli \
     && docker-php-ext-enable xdebug \
     && echo "xdebug.remote_enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     # host.docker.internal does not work on Linux yet: https://github.com/docker/for-linux/issues/264
